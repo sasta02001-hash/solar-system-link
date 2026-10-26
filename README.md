@@ -1,2 +1,11 @@
-# solar-system-link
-Solar System Link desktop remote-control releases and signed update distribution.
+# Solar System Link
+
+Solar System Link 的桌面遠端控制與簽章更新發佈專區。
+
+目前正在整合 SSS 的持續主控授權與 GitHub Releases 線上更新，尚未發佈可自動套用的正式版本。已授權主控的 SSS 模式設計為首次綁定後即可重新連線，不必在 POS 每次確認。
+
+更新檔將使用固定發行公鑰驗證簽章及 SHA-256；更新失敗保留前版，設備固定六碼與主控綁定資料保留。更新期間必須停止遠端工作階段並重新開啟程式。
+
+本儲存庫只發佈程式與公開發行資料。請勿上傳設備密碼、私鑰、授權設定、門市連線設定或任何營業資料。
+
+實機 POS 操作與完整 SSS 整合仍須驗收；開發測試通過不代表這些項目已完成。

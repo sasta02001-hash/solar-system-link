@@ -1,0 +1,65 @@
+{
+  "Schema": 1,
+  "Product": "Solar System Shield",
+  "Version": "0.4.5 UX",
+  "Stage": "Development candidate",
+  "Recommended": "SSS-0.4.5-UX-Auto-Setup-r3.exe",
+  "Selection": "Installer reads actual Windows, native architecture, client type, .NET and package identity; compatible child files are verified before launch",
+  "MinimumNetFrameworkRelease": 528040,
+  "Targets": [
+    {
+      "Variant": "Win7",
+      "OS": "Windows 7 SP1",
+      "Architecture": "x64",
+      "MinimumBuild": 7601,
+      "MinimumServicePack": 1,
+      "ActualWin7Accepted": false
+    },
+    {
+      "Variant": "Win10-11",
+      "OS": "Windows 10 or Windows 11",
+      "Architecture": "x64",
+      "MinimumBuild": 19041,
+      "ActualOrdinaryWindows11Installed": true
+    }
+  ],
+  "NativeProtectionEnabled": false,
+  "ProductionReady": false,
+  "SssAssistedSslRecoveryImplemented": false,
+  "Assets": [
+    {
+      "Name": "SSS-0.4.5-UX-Auto-Setup-r3.exe",
+      "Bytes": 1448428,
+      "SHA256": "5EBED1F9DF2F7E6904A9CB28C81B68BC72ED237FAB4B07FE84C2E19C08E72EE6"
+    },
+    {
+      "Name": "SSS-0.4.5-UX-Auto-Setup-r3.zip",
+      "Bytes": 2686368,
+      "SHA256": "B40EA3C7DB26AEFD91CB4EED56C61383DA98F283FD96A04FF49A70AB8F2A97AB"
+    },
+    {
+      "Name": "SSS-0.4.5-UX-Win7-Setup-r2.exe",
+      "Bytes": 934235,
+      "SHA256": "C56847EB33B95254AD49214A73892F8CBA42F253DA9108B49CE684198BA674D6"
+    },
+    {
+      "Name": "SSS-0.4.5-UX-Win7-Setup-r2.zip",
+      "Bytes": 1162591,
+      "SHA256": "F3798EE5A95F2DF5C518EA5491DA1EB9CAC7BCFBA4203D8DDCEB1244E671137C"
+    },
+    {
+      "Name": "SSS-0.4.5-UX-Win10-11-Setup-r2.exe",
+      "Bytes": 936327,
+      "SHA256": "8EF3A31C7E18190103A9345F9F8EE5B8DD4C046A97F56ADB74E62C0D9D95CD16"
+    },
+    {
+      "Name": "SSS-0.4.5-UX-Win10-11-Setup-r2.zip",
+      "Bytes": 1164728,
+      "SHA256": "9CC645F2673BEFBE023F75307F98EA80EE8113F56A425070F712F102C857AF85"
+    }
+  ],
+  "AdditionalFees": 0,
+  "PaidCredits": 0,
+  "ExactTaskTokens": null,
+  "PackagingRevision": "Corrected portable desktop installer and public four-file Win7 package"
+}

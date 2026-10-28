@@ -1,0 +1,94 @@
+{
+  "Schema": 1,
+  "Purpose": "SSS.TempLatestBackground.Profile.v1",
+  "Product": "SolarSystemShield",
+  "Version": "0.4.5.0",
+  "ReleaseTag": "sss-ux-0.4.5-r2",
+  "CatalogSHA256": "b72dfbbdf8a72157ba0fcab762e48a6e6fdfe9abba7bcff695665c73fd9a3497",
+  "SourceRuntimeArchiveSHA256": "5ec69b1f07fcc560c7ba2d909b89ab1aa2b99d837d13511a9b3c70489314d15b",
+  "Profiles": [
+    {
+      "Name": "Windows7Sp1X64",
+      "OperatingSystemMajor": 6,
+      "OperatingSystemMinor": 1,
+      "MinimumBuild": 7601,
+      "MinimumServicePack": 1,
+      "NativeArchitecture": "x64",
+      "MinimumNetFrameworkRelease": 528040,
+      "KnownFolder": "LocalApplicationData",
+      "RelativeInstallRoot": "SolarSystemShield-Win7-Preview\\0.4.5-ux-r1",
+      "RelativeExecutable": "SSS-development\\SSS.exe",
+      "Arguments": []
+    },
+    {
+      "Name": "Windows10Or11X64",
+      "OperatingSystemMajor": 10,
+      "OperatingSystemMinor": 0,
+      "MinimumBuild": 19041,
+      "MinimumServicePack": 0,
+      "NativeArchitecture": "x64",
+      "MinimumNetFrameworkRelease": 528040,
+      "KnownFolder": "LocalApplicationData",
+      "RelativeInstallRoot": "SolarSystemShield-Desktop-Preview\\0.4.5-ux-r1",
+      "RelativeExecutable": "SSS-development\\SSS.exe",
+      "Arguments": []
+    }
+  ],
+  "RuntimeFiles": [
+    {
+      "Name": "SSS.exe",
+      "Length": 560640,
+      "SHA256": "3ab8c2a36d07f0b437667f8341aab8ca60eb9ffc58cdd24de3bff7856f037820"
+    },
+    {
+      "Name": "SSS.Core.dll",
+      "Length": 59392,
+      "SHA256": "311477989c18ab89ff63ded2723f9a3af864a7614d80c4adb1e55568c17705e1"
+    },
+    {
+      "Name": "SSS.Functional.dll",
+      "Length": 179712,
+      "SHA256": "ee99dd7f6f9da70585b5167550e7099df4b9c70efb3629270ce75cbd2e0c8bd9"
+    },
+    {
+      "Name": "SSS.Operations.dll",
+      "Length": 114176,
+      "SHA256": "cb9549321c2eeee412fe5c6a909100ee8dab6e703b56ca668a48b0d6c91d8b3a"
+    },
+    {
+      "Name": "SSS.Updates.dll",
+      "Length": 46080,
+      "SHA256": "dd386bc5b2e506629d3297a9068b052d9e47bd030f7b3a3a7596f48f8af63431"
+    },
+    {
+      "Name": "SSS.OperationsHost.exe",
+      "Length": 4096,
+      "SHA256": "030aa3f65915f1efdcd50d699db1465399a666e49992137f57f926a60d91343d"
+    },
+    {
+      "Name": "SSS.OperationsHost.exe.config",
+      "Length": 258,
+      "SHA256": "1adaf379f1dcb7f1a491564adf3f4ae618f89a47c0310005a6be589e995355d9"
+    },
+    {
+      "Name": "SSS.exe.config",
+      "Length": 329,
+      "SHA256": "2ea4c99e3c0a2f7fa50d84dd67d47ee165fc3243a0e526b83724d9b29106442a"
+    },
+    {
+      "Name": "Scripts/ReadStatus.ps1",
+      "Length": 13017,
+      "SHA256": "c379b56f47006d82fbac60ab2a83a87871e641d6d82ec64b8809cd4971a71200"
+    },
+    {
+      "Name": "Scripts/FirewallOperation.ps1",
+      "Length": 11920,
+      "SHA256": "5ff4913f48fa91ac3d304059efe1b792f7527c5225606d2db7367595dbec6422"
+    },
+    {
+      "Name": "README.zh-TW.txt",
+      "Length": 1968,
+      "SHA256": "a0ee0134295af68bc6c923529bbbd96e145616db86c7c1a240c1ce236344f888"
+    }
+  ]
+}

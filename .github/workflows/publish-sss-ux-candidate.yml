@@ -1,0 +1,27 @@
+# INERT TEMPLATE: not under .github/workflows and not installed by this task.
+# Root must first freeze exact source pins and review the final source/hash tuple.
+name: Publish reviewed SSS UX development candidate
+on:
+  push:
+    branches: [main]
+    paths: [updates/sss-ux/publish-request.json]
+permissions:
+  contents: write
+concurrency:
+  group: sss-ux-candidate-publisher
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'sasta02001-hash/solar-system-link' && github.ref == 'refs/heads/main' && github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Read reviewed public candidate inputs
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Verify and publish fixed candidate only
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tools/sss_ux_candidate_publisher.py

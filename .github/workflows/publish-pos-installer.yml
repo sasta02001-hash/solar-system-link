@@ -1,0 +1,25 @@
+name: Publish reviewed POS development installer
+on:
+  push:
+    branches: [main]
+    paths: [updates/ssl-pos/publish-request.json]
+permissions:
+  contents: write
+concurrency:
+  group: ssl-pos-installer-publisher
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'sasta02001-hash/solar-system-link' && github.ref == 'refs/heads/main' && github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Read reviewed public installer inputs
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Verify and publish the fixed POS development release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tools/pos_installer_publisher.py

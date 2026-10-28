@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "tag": "ssl-pos-v0.6.0-r1",
+  "classification": "development-manual-share",
+  "files": [
+    {
+      "name": "SolarSystemLink-POS-Setup-0.6.0-r1.exe",
+      "encoding": "raw",
+      "size": 186023,
+      "sha256": "df14955050856867f6dd573453d05cbc5849e29219ac79cd44b0d4b951a1959f"
+    },
+    {
+      "name": "SolarSystemLink-POS-Setup-0.6.0-r1.zip",
+      "encoding": "raw",
+      "size": 131841,
+      "sha256": "fc671d93d26e9f265d18358eb6a03846c92c2870ac279571f177fda0d8bae3fe"
+    },
+    {
+      "name": "README-SETUP.txt",
+      "encoding": "raw",
+      "size": 3362,
+      "sha256": "15a773fa9ec00ccab99d7255e2b2879ed6c61a27a37bc3c46014799db035ca73"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "encoding": "raw",
+      "size": 293,
+      "sha256": "bd75140097002d44cd7bb8b7c036f7b881971a7f1f672f858b5c39a9748cd8e2"
+    }
+  ]
+}

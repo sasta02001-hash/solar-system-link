@@ -19,11 +19,11 @@ import urllib.parse
 import urllib.request
 
 REPOSITORY = "sasta02001-hash/solar-system-link"
-TAG = "ssl-pos-v0.6.0-r1"
+TAG = "ssl-pos-v0.6.8-r1"
 CLASSIFICATION = "development-manual-share"
 NAMES = (
-    "SolarSystemLink-POS-Setup-0.6.0-r1.exe",
-    "SolarSystemLink-POS-Setup-0.6.0-r1.zip",
+    "SolarSystemLink-POS-Setup-0.6.8-r1.exe",
+    "SolarSystemLink-POS-Setup-0.6.8-r1.zip",
     "README-SETUP.txt",
     "SHA256SUMS.txt",
 )
@@ -34,14 +34,14 @@ MAX_JSON = 1024 * 1024
 API = "https://api.github.com/repos/" + REPOSITORY
 UPLOADS = "https://uploads.github.com/repos/" + REPOSITORY
 PUBLIC = "https://github.com/" + REPOSITORY + "/releases/download/" + TAG + "/"
-TITLE = "Solar System Link POS 0.6.0-r1（手動分享開發測試版）"
+TITLE = "Solar System Link POS 0.6.8-r1（手動分享開發測試版）"
 NOTICE = (
     "POS 手動分享開發測試版",
     "不含 SSS",
     "不是無人值守",
     "尚未完成 POS 實機驗收",
 )
-README_MARKERS = ("每次連線仍須", "不是完整 SSS", "無人值守", "實機", "0.6.0")
+README_MARKERS = ("每次連線仍須", "不是完整 SSS", "無人值守", "實機", "0.6.8")
 BODY = "SSL-POS-INSTALLER-V1\n\n" + "\n".join(NOTICE) + "\n"
 
 

@@ -1,31 +1,31 @@
 {
   "schema": 1,
-  "tag": "ssl-pos-v0.6.0-r1",
+  "tag": "ssl-pos-v0.6.8-r1",
   "classification": "development-manual-share",
   "files": [
     {
-      "name": "SolarSystemLink-POS-Setup-0.6.0-r1.exe",
+      "name": "SolarSystemLink-POS-Setup-0.6.8-r1.exe",
       "encoding": "raw",
-      "size": 186023,
-      "sha256": "df14955050856867f6dd573453d05cbc5849e29219ac79cd44b0d4b951a1959f"
+      "size": 2179105,
+      "sha256": "b088894a463ba4914f787153082c3cca7ce0ce075c4989f6e1854c3c097ec150"
     },
     {
-      "name": "SolarSystemLink-POS-Setup-0.6.0-r1.zip",
+      "name": "SolarSystemLink-POS-Setup-0.6.8-r1.zip",
       "encoding": "raw",
-      "size": 131841,
-      "sha256": "fc671d93d26e9f265d18358eb6a03846c92c2870ac279571f177fda0d8bae3fe"
+      "size": 4017150,
+      "sha256": "cf526122851c045aab97d6b0d13d78376c2a210d7102678cb4a79da75ed6de4c"
     },
     {
       "name": "README-SETUP.txt",
       "encoding": "raw",
-      "size": 3362,
-      "sha256": "15a773fa9ec00ccab99d7255e2b2879ed6c61a27a37bc3c46014799db035ca73"
+      "size": 2403,
+      "sha256": "c4d603f6d5bf908467652813ccefd055fa292068bbf846bcc7198611a7bbe3db"
     },
     {
       "name": "SHA256SUMS.txt",
       "encoding": "raw",
       "size": 293,
-      "sha256": "bd75140097002d44cd7bb8b7c036f7b881971a7f1f672f858b5c39a9748cd8e2"
+      "sha256": "8532ee06be963c0af84e9df7c22e0a8d30ecbff9e3799b6f82967d60cc12ef28"
     }
   ]
 }

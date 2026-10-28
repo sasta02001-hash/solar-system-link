@@ -16,7 +16,7 @@ COMMIT = "a" * 40
 
 
 def fixture(encoding="raw", readme_bom=False):
-    readme = "0.6.0 開發版；每次連線仍須本人允許；不是完整 SSS，不含無人值守。尚未通過實機驗收。\n".encode("utf-8")
+    readme = "0.6.8 開發版；每次連線仍須本人允許；不是完整 SSS，不含無人值守。尚未通過實機驗收。\n".encode("utf-8")
     if readme_bom:
         readme = b"\xef\xbb\xbf" + readme
     contents = {p.NAMES[0]: b"MZ-owned-fixture-not-an-executable", p.NAMES[1]: b"PK\x03\x04-owned-fixture-not-a-zip", p.NAMES[2]: readme}

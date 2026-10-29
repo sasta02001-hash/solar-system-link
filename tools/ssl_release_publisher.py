@@ -70,8 +70,21 @@ RELEASE_BODY_070 = (MARKER + "\n\n"
     "保留既有裝置綁定、固定更新公鑰、完整套件驗證及回復機制。")
 
 
+RELEASE_BODY_071 = (MARKER + "\n\n"
+    "Solar System Link 0.7.1 維護修復發行\n\n"
+    "修正 Windows 執行期的框架中繼資料，並整合 SSS 0.4.7 新版固定啟動元件與正常移轉流程。"
+    "連線前仍先核對及準備本機 SSS，取得最新版本與真正背景程序的新鮮證據後才開始連線；"
+    "認證後也核對對端 SSS。\n\n"
+    "保留既有固定更新公鑰、完整簽章與套件驗證、裝置信任和有效操作授權。"
+    "不強制結束舊 SSS，不因背景或版本檢查自行授予鍵盤滑鼠權限。\n\n"
+    "Windows 7 POS 實際更新、連線、鍵鼠及持續操作仍待實機驗收；"
+    "本次發行不代表 Native C1／Ready 或100分已完成。")
+
+
 def version_body(tag):
-    """Only the reviewed 070 version changes copy; stable ownership stays exact."""
+    """Only reviewed version copy changes; stable and070 ownership stay exact."""
+    if tag == "ssl-v0.7.1.0":
+        return RELEASE_BODY_071
     return RELEASE_BODY_070 if tag == "ssl-v0.7.0.0" else RELEASE_BODY
 
 

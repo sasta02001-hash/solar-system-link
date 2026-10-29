@@ -16,7 +16,7 @@ COMMIT = "a" * 40
 
 
 def fixture(encoding="raw", readme_bom=False):
-    readme = "0.7.0-r1 Windows x64 整合開發候選；不是完整 SSS。操作需有效授權，已保存的 standing grant 仍需逐次 bound RSA 驗證。無人值守與 POS 實機持續操作尚未完成驗收。\n".encode("utf-8")
+    readme = "0.7.1-r1 Windows x64 整合開發候選；不是完整 SSS。操作需有效授權，已保存的 standing grant 仍需逐次 bound RSA 驗證。無人值守與 POS 實機持續操作尚未完成驗收。\n".encode("utf-8")
     if readme_bom:
         readme = b"\xef\xbb\xbf" + readme
     contents = {p.NAMES[0]: b"MZ-owned-fixture-not-an-executable", p.NAMES[1]: b"PK\x03\x04-owned-fixture-not-a-zip", p.NAMES[2]: readme}
@@ -122,9 +122,9 @@ class InputTests(unittest.TestCase):
             self.assertEqual(bundle("raw", bom)["contents"], bundle("base64", bom)["contents"])
 
     def test_purpose_schema_and_unknown_fields_refused(self):
-        self.assertEqual(p.TAG, "ssl-windows-v0.7.0-r1")
-        self.assertEqual(p.NAMES[:2], ("SolarSystemLink-Windows-x64-Setup-0.7.0-r1.exe",
-                                      "SolarSystemLink-Windows-x64-Setup-0.7.0-r1.zip"))
+        self.assertEqual(p.TAG, "ssl-windows-v0.7.1-r1")
+        self.assertEqual(p.NAMES[:2], ("SolarSystemLink-Windows-x64-Setup-0.7.1-r1.exe",
+                                      "SolarSystemLink-Windows-x64-Setup-0.7.1-r1.zip"))
         self.assertEqual(p.CLASSIFICATION, "development-sss-preconnect-update-candidate")
         for key, value in (("schema", True), ("tag", "ssl-stable"), ("tag", "ssl-v0.6.7.0"),
                            ("classification", "unattended"), ("unknown", 1)):

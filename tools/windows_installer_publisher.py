@@ -19,11 +19,11 @@ import urllib.parse
 import urllib.request
 
 REPOSITORY = "sasta02001-hash/solar-system-link"
-TAG = "ssl-windows-v0.7.0-r1"
+TAG = "ssl-windows-v0.7.1-r1"
 CLASSIFICATION = "development-sss-preconnect-update-candidate"
 NAMES = (
-    "SolarSystemLink-Windows-x64-Setup-0.7.0-r1.exe",
-    "SolarSystemLink-Windows-x64-Setup-0.7.0-r1.zip",
+    "SolarSystemLink-Windows-x64-Setup-0.7.1-r1.exe",
+    "SolarSystemLink-Windows-x64-Setup-0.7.1-r1.zip",
     "README-SETUP.txt",
     "SHA256SUMS.txt",
 )
@@ -34,14 +34,14 @@ MAX_JSON = 1024 * 1024
 API = "https://api.github.com/repos/" + REPOSITORY
 UPLOADS = "https://uploads.github.com/repos/" + REPOSITORY
 PUBLIC = "https://github.com/" + REPOSITORY + "/releases/download/" + TAG + "/"
-TITLE = "Solar System Link Windows x64 0.7.0-r1（SSS 連線前檢查整合開發候選版）"
+TITLE = "Solar System Link Windows x64 0.7.1-r1（SSS 連線前檢查整合開發候選版）"
 NOTICE = (
     "Windows x64 SSS 連線前檢查與自動更新整合開發候選版",
     "不包含完整 SSS 防火牆",
     "SSS 版本與背景狀態不等於操作授權",
     "無人值守與 POS 實機鍵鼠、持續操作尚未完成驗收",
 )
-README_MARKERS = ("Windows x64", "0.7.0-r1", "不是完整 SSS", "有效授權", "尚未完成驗收")
+README_MARKERS = ("Windows x64", "0.7.1-r1", "不是完整 SSS", "有效授權", "尚未完成驗收")
 BODY = "SSL-WINDOWS-INSTALLER-V1\n\n" + "\n".join(NOTICE) + "\n"
 
 

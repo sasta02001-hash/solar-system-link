@@ -1,33 +1,42 @@
-"""Local data-only s1 crypto/ZIP checks plus explicitly synthetic memory HTTP.
-No signing/new key, real HTTP, extraction, installation or product execution.
-"""
+"""Three focused activation047 cases. No old19/7/14 or repair suite replay."""
+import ast
+import inspect
+import base64
 import copy
+import hashlib
 import io
 import json
 from pathlib import Path
 import socket
-import stat
-import sys
-import unittest
-from unittest.mock import patch
-import urllib.error
 import urllib.parse
+import urllib.request
 import zipfile
 import sss_ui_release_publisher as p
-
-DATA=Path(__file__).resolve().parent/"public-data"
-if not DATA.is_dir():
-    DATA=Path(__file__).resolve().parent.parent/"updates"/"sss-ui"/"payload"
-ZIP=(DATA/p.PACKAGE_NAME).read_bytes()
-ENV=(DATA/p.ENVELOPE_NAME).read_bytes()
-INITIAL=(DATA/p.INITIAL_NAME).read_bytes()
-CAT=p.verify_envelope(ENV)
+def forbidden(*args,**kwargs):raise AssertionError("Real network forbidden")
+socket.socket=forbidden
+socket.create_connection=forbidden
+urllib.request.urlopen=forbidden
+urllib.request.OpenerDirector.open=forbidden
+ROOT=Path(__file__).resolve().parent
+STAGE=ROOT.parent if ROOT.name=="tools" else ROOT/"repository-staging"
+DATA=STAGE/"updates/sss-ui/payload"
 COMMIT="a"*40
-
-def request(catalog=CAT,envelope=ENV,old=""):
-    return {"schema":1,"version":p.VERSION,"sequence":catalog["sequence"],"packageBytes":catalog["packageBytes"],
-            "packageSha256":catalog["packageSha256"],"envelopeSha256":p.sha(envelope),
-            "initialSetupBytes":p.INITIAL_BYTES,"initialSetupSha256":p.INITIAL_SHA256,"expectedStableEnvelopeSha256":old}
+def denied(action,code):
+    try:action()
+    except p.PublishError as error:assert str(error)==code,(str(error),code)
+    else:raise AssertionError("Expected fail-closed result")
+def funcs(tree):
+    result={}
+    for node in tree.body:
+        if isinstance(node,ast.FunctionDef):result[node.name]=node
+        elif isinstance(node,ast.ClassDef):
+            for child in node.body:
+                if isinstance(child,ast.FunctionDef):result[node.name+"."+child.name]=child
+    return result
+PROTECTED_AST_SHA256 = {'GitHub.rename': 'f60f0bd422ca1532ca7ef89e7bdd0d82e690b1852d41803c704d219fbc2921f8', 'stable_preflight': 'e1a759d2632ba0c02e79310673b0662abffbcdc1f8c1b69e17bb107c808f499d', 'restore_old_if_safe': '222c9d48f97d9ea24169d6dde1867bdb0f4f3cd097e4006b0ec3f84ee971c21d', 'require_advance': 'c37b8adf6e693e58203ddc51b1f55e5702bda9a8b8b1726b0f45de88d502c278', 'pending_name': '278dfa81a833108892ba5651333b41e4cc1035106082677ff84260cb902c754a', 'archived_name': 'f85ede3e41815ac7548b127a3cb0cf2898e9d2404267c94f642775c80db3f3f3', 'allowed_feed_name': '7f75e6dfafad81d7439a160ac5179a92087dbb4ae69c699a445cb9ccf9168fb6', 'GitHub.fetch': 'a8998d75d99d22777e9a8987d8121193c0eb2867dd6241561870a453b1cbb6af', 'GitHub.public_check': '209c3201a02bf3a343d23e970ecd70dab81ef310539b65709316a2ae93be1ad6', 'main': 'e9dc22904e2f350b0f8d382b41354298f33bf5e478e48a8a4900ca7c7965f5b4'}
+PUBLISH_EXPIRY_CALLS_SHA256 = '91d84e7b15ac5e0186e91d33d219dc87895e346af67e2fd6540652d4a94c4da7'
+OLD_ENV = base64.b64decode('eyJwYXlsb2FkQmFzZTY0IjoiZXlKelkyaGxiV0VpT2pFc0luQnliMlIxWTNRaU9pSlRiMnhoY2xONWMzUmxiVk5vYVdWc1pDSXNJbkIxY25CdmMyVWlPaUpUYjJ4aGNsTjVjM1JsYlZOb2FXVnNaQzVEZFhKeVpXNTBWWE5sY2xWcFZYQmtZWFJsTG5ZeElpd2ljSEp2Wm1sc1pTSTZJbU4xY25KbGJuUXRkWE5sY2kxMWFTMWpZVzVrYVdSaGRHVXRkakVpTENKamFHRnVibVZzSWpvaWMzUmhZbXhsSWl3aWEyVjVTV1FpT2lJeU5HTTFZMk0xWlRNMlpUa3lPR1ZoWlRRMk56ZGxZbUV4WkRaaU1qVTJZMk5qWVRrd05EQTVOalV5WXpObE5ETmlaalk1WkRjek5UZ3hZV1ZrTVdJeElpd2lkbVZ5YzJsdmJpSTZJakF1TkM0MkxqQWlMQ0p6WlhGMVpXNWpaU0k2TVN3aWNIVmliR2x6YUdWa1ZYUmpWR2xqYTNNaU9qWXpPVEk0T0RJM016QXdPREUyTWpJNE5Dd2laWGh3YVhKbGMxVjBZMVJwWTJ0eklqbzJNemt5T1RRek1qRXdNRGd4TmpJeU9EUXNJbkJoWTJ0aFoyVlZjbXdpT2lKb2RIUndjem92TDJkcGRHaDFZaTVqYjIwdmMyRnpkR0V3TWpBd01TMW9ZWE5vTDNOdmJHRnlMWE41YzNSbGJTMXNhVzVyTDNKbGJHVmhjMlZ6TDJSdmQyNXNiMkZrTDNOemN5MTFhUzEyTUM0MExqWXVNQzlUVTFNdE1DNDBMall1TUMxVlNTMTROalF1ZW1sd0lpd2ljR0ZqYTJGblpVSjVkR1Z6SWpvM05qQTNOak1zSW5CaFkydGhaMlZUYUdFeU5UWWlPaUk1WlRRNE56a3pNRFZtTnprd1ltUmlaV0kyTjJSbFlqSTVNekU1TVRRMk5UVXdZVGsxT1RnelpqQmxOR0l5TW1SbU5UWTJaRFl4T0dJNFlXWmhNbUZoSWl3aVptbHNaWE1pT2x0N0luQmhkR2dpT2lKVFUxTXVaWGhsSWl3aVlubDBaWE1pT2pjME56VXlNQ3dpYzJoaE1qVTJJam9pTlRkaU1qSm1ZbVV4T1dKaU16RXhOR0poWVRaaVl6VTBNekF4TVRJek9UQmxOVEF3WWpNNE16aGpaVEl5TkdSa05UYzJPV0ZpWm1ZeU1qbGlOR1UwT0NKOUxIc2ljR0YwYUNJNklsTlRVeTVEYjNKbExtUnNiQ0lzSW1KNWRHVnpJam8xT1RNNU1pd2ljMmhoTWpVMklqb2lNekV4TkRjM09UZzVZekU0WVdJNE9XWm1Oak5rWldReU56SXpaamxoTTJGbU9EWTBZVGMyTVRSa09EQmpOR0ZrWWpGbE5UVTFOamhqTVRjM01EVmxNU0o5TEhzaWNHRjBhQ0k2SWxOVFV5NUdkVzVqZEdsdmJtRnNMbVJzYkNJc0ltSjVkR1Z6SWpveE56azNNVElzSW5Ob1lUSTFOaUk2SW1WbE9UbGtaRGRtTm1ZNVpHRTNNRFU0TldJMU1UWTNOVFV3WlRjd09UbGtaalJpT1dNM01HVm1Zak0yTWpreU56QmpaVGMxWTJKa01tVXdZemhpWkRraWZTeDdJbkJoZEdnaU9pSlRVMU11VDNCbGNtRjBhVzl1Y3k1a2JHd2lMQ0ppZVhSbGN5STZNVEUwTVRjMkxDSnphR0V5TlRZaU9pSmpZamsxTkRrek1qRmpNbVZsWldVME1USm1aVFZqTm1FNU1Ea3hNREJsWlRoa1lXSTJaVGN3TTJJMU5tTmhOalk0WVRRNFlqQmtObU01TVdRNFlqTmhJbjBzZXlKd1lYUm9Jam9pVTFOVExsVndaR0YwWlhNdVpHeHNJaXdpWW5sMFpYTWlPalEyTURnd0xDSnphR0V5TlRZaU9pSmtaRE00Tm1Kak5XSXlaVFV3TmpZeU9XUXpNamszWVRrd05qaGlNRFV5WkRsbE5EZGlaREF6TUdZM1lqTmhNMkUzTlRrMlpqUTRaamhoWmpZek5ETXhJbjBzZXlKd1lYUm9Jam9pVTFOVExrOXdaWEpoZEdsdmJuTkliM04wTG1WNFpTSXNJbUo1ZEdWeklqbzBNRGsyTENKemFHRXlOVFlpT2lJd016QmhZVE5tTmpVNU1UVm1NV1ZtWkdOa05UQmtOams1WkdJeE5EWTFNems1WVRZMk5tVTBPVGs1TWpFek4yWTFOMlk1TWpaaE5qQmtPVEV6TkROa0luMHNleUp3WVhSb0lqb2lVMU5UTGs5d1pYSmhkR2x2Ym5OSWIzTjBMbVY0WlM1amIyNW1hV2NpTENKaWVYUmxjeUk2TWpVNExDSnphR0V5TlRZaU9pSXhZV1JoWmpNM09XWXhaR05pTjJZeFlUUTVNVFUyTkdGa1pqTm1OR0ZsTmpFNFpqZzVZVFEzWXpBek1UQXdNRFZoTm1KbE5UZzVaVGs1TlRNMU5XUTVJbjBzZXlKd1lYUm9Jam9pVTFOVExtVjRaUzVqYjI1bWFXY2lMQ0ppZVhSbGN5STZNekk1TENKemFHRXlOVFlpT2lJeVpXRTBZems1WlROak1HRXlaamRtWVRVd1pEZzBaR1EyTjJRME4yVmxNVFkxWm1Nek1qUXpZVEJsTlRJMllqZ3pOekkwWkRsaU1qa3hNRFkwTkRKaEluMHNleUp3WVhSb0lqb2lVMk55YVhCMGN5OVNaV0ZrVTNSaGRIVnpMbkJ6TVNJc0ltSjVkR1Z6SWpveE16QXhOeXdpYzJoaE1qVTJJam9pWXpNM09XSTFObVkwTnpBd05tUTRNbVppWVdNMk1HRmlNbUU0TTJFNE56ZzNNV1UyTkRGa05tUTRNbVZqTmpSaU9EZ3dPV05rTkRrM01XRTNNVEl3TUNKOUxIc2ljR0YwYUNJNklsTmpjbWx3ZEhNdlJtbHlaWGRoYkd4UGNHVnlZWFJwYjI0dWNITXhJaXdpWW5sMFpYTWlPakV4T1RJd0xDSnphR0V5TlRZaU9pSTFabVkwT1RFelpqUTRabUU1TVdGak0yUXpNRFF3TlRsbFptVXhZamM1TW1ZM05USTNZelV5TWpVMk1EWmtNbVJpTnpNMk56VTVOV1JpWldNMk5ESXlJbjBzZXlKd1lYUm9Jam9pVWtWQlJFMUZMbnBvTFZSWExuUjRkQ0lzSW1KNWRHVnpJam94TlRVNExDSnphR0V5TlRZaU9pSTNORGhsWkdObE5tTTJOMlE0TW1JNU0yUTFaR1l5WWpWbE9UUmhaV1EwTmpFM09UY3hOVEpoWmprMlpESTVORGc1WmpSbU1ETXdNekU0WTJaaU5XRXhJbjFkZlE9PSIsInNpZ25hdHVyZUJhc2U2NCI6ImJPM2kxRmtlcmI1dW1STWdRM01IQ2h2Y3lwcXdUeHFtbkFVUlRYV1pwWnBVQ0dGb1lEUWV1Z0hxamFPVjFBQzQyMGx6WCtjWVpiMWZ6Z2h1cUlLUDRleklJdWZMdVJ5bGsrSDJ4RUxvRHAzYVpyV2gzb0xuWDFaR09pM1Z3c1A1bTJ1SVh4VDNsMHdpbFVkVnYyNGhrdXYrV3A1RFA0M3Exb0pNQ1dlN090TzdEYmdzNXVEZXFSMk81eVB6bnEvWCtkR3d3cXJkeUptV3JWYWNockZvanpaUDB4VENEWHVTQk43YTAxTW5XSzcybDVFWFN5M2h6V3pBdVJKM0ZnZWxuTVpiaUNjZU5OQ256N3BzQmJJSVRqdmY1SDdrRmh6VVphaWJ4VFhvd0wzOWc0bVIrc1BVSHFEYW5QNTExODlSbmVlbU5DVjBVTWdJaEw2ZXFKam8xQT09In0=')
+LEGACY_BODY = 'SSS-UI-PUBLISHER-V1: signed current-user UI assets only.\n\nSSS 0.4.6.0 CurrentUser UI 更新通道；不是 NativeReady/C1 或操作授權。Windows7 POS、無人值守與持續鍵鼠操作仍待實機驗收，非100分交付。\n\n既有0.4.5須先正常選一次『結束SSS』，再由新背景更新流程接續；不強殺舊程序。新Run登入啟動登錄已讀回，但下次真登入自啟尚未測試；不是Native全功能驗收。'
 
 class MemoryGitHub(p.GitHub):
     """Actual GitHub adapter/state machine, replacing only its HTTP boundary."""
@@ -93,226 +102,89 @@ class MemoryGitHub(p.GitHub):
         raise AssertionError("unexpected HTTP operation")
     def fixed(self,tag):return next(r for r in self.releases.values() if r["tag_name"]==tag)
 
-def publish(client,catalog=CAT,envelope=ENV,old=""):
-    return p.publish(client,request(catalog,envelope,old),catalog,{p.PACKAGE_NAME:ZIP,p.ENVELOPE_NAME:envelope,p.INITIAL_NAME:INITIAL},COMMIT)
+def test_true_four_delivery_inputs_and_request_bindings():
+    request,catalog,members=p.load_bundle(STAGE)
+    assert set(members)==set(p.VERSION_ASSET_NAMES)|{p.ENVELOPE_NAME,p.ACTIVATION_NAME}
+    assert catalog["version"]=="0.4.7.0" and catalog["sequence"]==2
+    assert request["initialSetupBytes"]==849998 and request["repairBytes"]==914735
+    assert len(p.INITIAL_FILES)==7 and len(p.REPAIR_FILES)==7
+    for data,vector in ((members[p.INITIAL_NAME],p.INITIAL_FILES),(members[p.REPAIR_NAME],p.REPAIR_FILES)):
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            assert len(archive.infolist())==7 and set(archive.namelist())==set(vector)
+            for name,(size,digest) in vector.items():
+                raw=archive.read(name);assert len(raw)==size and p.sha(raw)==digest
+    p.verify_known_ui(members[p.PACKAGE_NAME],members[p.ENVELOPE_NAME])
+    with zipfile.ZipFile(io.BytesIO(members[p.REPAIR_NAME])) as archive:
+        p.verify_known_bootstrap({name:archive.read("repair-input/"+name) for name in p.KNOWN_BOOTSTRAP})
+    for field,value in (("initialSetupBytes",True),("repairSha256","0"*64)):
+        changed=dict(request);changed[field]=value
+        denied(lambda:p.validate_inputs(p.canonical(changed),members[p.PACKAGE_NAME],members[p.ENVELOPE_NAME],members[p.INITIAL_NAME],members[p.REPAIR_NAME],members[p.ACTIVATION_NAME]),"initial-or-repair-request-pin")
+    denied(lambda:p.verify_final_initial_and_repair(members[p.INITIAL_NAME],members[p.PACKAGE_NAME]),"repair-approved-package-binding")
+    bad=members[p.REPAIR_NAME][:-1]+bytes([members[p.REPAIR_NAME][-1]^1])
+    denied(lambda:p.verify_final_initial_and_repair(members[p.INITIAL_NAME],bad),"repair-approved-package-binding")
+    return request,catalog,members
 
-class ActualPublicData(unittest.TestCase):
-    def test_actual_repository_stage_fixed_request_and_two_payloads(self):
-        if DATA.name != "payload":
-            self.skipTest("stage-only filesystem layout case")
-        req,catalog,members=p.load_bundle(DATA.parents[2])
-        self.assertEqual(req["expectedStableEnvelopeSha256"],"")
-        self.assertEqual(catalog,CAT)
-        self.assertEqual(members,{p.PACKAGE_NAME:ZIP,p.ENVELOPE_NAME:ENV,p.INITIAL_NAME:INITIAL})
-    def test_actual_s1_fixed24c_signature_and_exact_eleven_zip(self):
-        self.assertEqual((len(ZIP),p.sha(ZIP)),(760763,"9e4879305f790bdbeb67deb29319146550a95983f0e4b22df566d618b8afa2aa"))
-        self.assertEqual((len(ENV),p.sha(ENV)),(2921,"ff58613e4b1dbd1aa1b181cbf340646506fb1d239d75bc54e264f09f6a440f01"))
-        self.assertEqual(CAT["sequence"],1)
-        p.validate_inputs(p.canonical(request()),ZIP,ENV,INITIAL)
-    def test_actual_pinned_initial_setup_seven_data_files_and_mutation_refusal(self):
-        self.assertEqual((len(INITIAL),p.sha(INITIAL)),(850627,"248bb18c9b37f7bdc46fde729a345aa2b62b499f9c5b11990c3dea9fc347f05f"))
-        p.verify_initial(INITIAL)
-        with self.assertRaises(p.PublishError):p.verify_initial(INITIAL[:-1]+b"x")
-        changed=request();changed["initialSetupSha256"]="0"*64
-        with self.assertRaises(p.PublishError):p.validate_inputs(p.canonical(changed),ZIP,ENV,INITIAL)
-        changed=request();changed["initialSetupBytes"]=True
-        with self.assertRaises(p.PublishError):p.validate_inputs(p.canonical(changed),ZIP,ENV,INITIAL)
-    def test_signature_mutation_wrong_domain_and_expired_are_rejected(self):
-        outer=p.codec.decode(ENV);signature=bytearray(p.codec.canonical_base64(outer["signatureBase64"]));signature[40]^=1
-        import base64
-        outer["signatureBase64"]=base64.b64encode(signature).decode("ascii")
-        with self.assertRaises(p.PublishError):p.verify_envelope(p.canonical(outer))
-        with self.assertRaises(ValueError):p.codec.verify_catalog(ENV,now_ticks=CAT["expiresUtcTicks"])
-        with patch.object(p.codec,"PURPOSE","SolarSystemLink"):
-            with self.assertRaises(p.PublishError):p.verify_envelope(ENV)
-    def test_duplicate_escaped_duplicate_noninteger_bom_and_unknown_fields(self):
-        for raw in (b'{"a":1,"a":2}',b'{"a":1,"\\u0061":2}',b'{"a":-0}',b'{"a":1.0}',b'{"a":NaN}',b'\xef\xbb\xbf{}'):
-            with self.assertRaises((p.PublishError,ValueError)):p.parse_json(raw,8192)
-        changed=request();changed["unknown"]=1
-        with self.assertRaises(p.PublishError):p.validate_inputs(p.canonical(changed),ZIP,ENV,INITIAL)
-    def test_request_wrong_version_sequence_size_hash_and_oldpin(self):
-        for key,value in (("version","0.4.5.0"),("sequence",True),("sequence",2),("packageBytes",1),("packageSha256","0"*64),("envelopeSha256","A"*64),("expectedStableEnvelopeSha256","bad")):
-            changed=request();changed[key]=value
-            with self.assertRaises(p.PublishError):p.validate_inputs(p.canonical(changed),ZIP,ENV,INITIAL)
-    def test_zip_no_extra_duplicate_traversal_symlink_or_bad_bytes(self):
-        with zipfile.ZipFile(io.BytesIO(ZIP)) as z:contents={i.filename:z.read(i) for i in z.infolist()}
-        for variant in range(5):
-            data=io.BytesIO()
-            with zipfile.ZipFile(data,"w",zipfile.ZIP_DEFLATED) as z:
-                for name,raw in contents.items():z.writestr(name,raw)
-                if variant==0:z.writestr("publisher.exe",b"owned")
-                elif variant==1:z.writestr("../outside",b"owned")
-                elif variant==2:
-                    info=zipfile.ZipInfo("SSS.exe");info.create_system=3;info.external_attr=(stat.S_IFLNK|0o777)<<16;z.writestr(info,b"owned")
-                elif variant==3:z.writestr("SSS.exe",b"owned duplicate")
-            raw=data.getvalue();fake=copy.deepcopy(CAT);fake["packageBytes"]=len(raw);fake["packageSha256"]=p.sha(raw)
-            if variant==4:fake["files"][0]["sha256"]="0"*64
-            with self.assertRaises(p.PublishError):p.verify_zip(raw,fake)
+def assert_protected_ast_and_ownership():
+    assert p.VERSION_ASSET_NAMES==("SSS-0.4.7.0-UI-x64.zip","SSS-0.4.7.0-Background-Initial-Setup.zip","SSS-0.4.7.0-Background-Repair-From-0.4.6.zip")
+    assert p.RELEASE_BODY==LEGACY_BODY and p.release_body(p.STABLE_TAG)==LEGACY_BODY
+    assert p.release_body(p.VERSION_TAG)==p.RELEASE_BODY_047!=LEGACY_BODY
+    current=funcs(ast.parse(Path(p.__file__).read_text(encoding="utf-8-sig")))
+    for name,digest in PROTECTED_AST_SHA256.items():assert hashlib.sha256(ast.dump(current[name]).encode("utf-8")).hexdigest()==digest,name
+    expiry=[ast.dump(call) for call in ast.walk(current["publish"]) if isinstance(call,ast.Call) and isinstance(call.func,ast.Name) and call.func.id=="verify_envelope"]
+    assert hashlib.sha256(json.dumps(expiry,separators=(",",":")).encode("utf-8")).hexdigest()==PUBLISH_EXPIRY_CALLS_SHA256
 
-class DeliveryStateMachine(unittest.TestCase):
-    def test_initial_two_tags_exact_three_final_assets_and_public_readback(self):
-        client=MemoryGitHub();publish(client)
-        self.assertEqual(set(r["tag_name"] for r in client.releases.values()),{p.VERSION_TAG,p.STABLE_TAG})
-        self.assertEqual(set(client.assets(client.fixed(p.VERSION_TAG))),{p.PACKAGE_NAME,p.INITIAL_NAME})
-        self.assertEqual(set(client.assets(client.fixed(p.STABLE_TAG))),{p.ENVELOPE_NAME})
-    def test_identical_published_idempotent_even_immutable_version(self):
-        client=MemoryGitHub();publish(client);client.fixed(p.VERSION_TAG)["immutable"]=True;client.mutations.clear();publish(client)
-        self.assertEqual(client.mutations,[])
-    def test_version_byte_conflict_and_foreign_release_body_no_mutation(self):
-        for variant in range(2):
-            client=MemoryGitHub();publish(client);client.mutations.clear()
-            release=client.fixed(p.VERSION_TAG)
-            if variant==0:
-                item=client.assets_by_release[release["id"]][p.PACKAGE_NAME];client.data[item["id"]]=b"X"+ZIP[1:]
-            else:release["body"]="not owned"
-            with self.assertRaises(p.PublishError):publish(client)
-            self.assertEqual(client.mutations,[])
-    def test_synthetic_s1_to_s2_same_bits_archive_without_delete(self):
-        client=MemoryGitHub();publish(client);fake=copy.deepcopy(CAT);fake["sequence"]=2;raw=b"owned-synthetic-s2-not-a-24c-signature"
-        actual=p.verify_envelope
-        with patch.object(p,"verify_envelope",side_effect=lambda data,current=True:fake if data==raw else actual(data,current)):
-            publish(client,fake,raw,p.sha(ENV))
-        self.assertEqual(client.asset_bytes(client.assets(client.fixed(p.STABLE_TAG))[p.ENVELOPE_NAME],8192),raw)
-        self.assertIn(p.archived_name(CAT,ENV),client.assets(client.fixed(p.STABLE_TAG)))
-    def test_synthetic_rollback_same_sequence_and_same_version_bits_reject(self):
-        for key,value in (("sequence",1),("sequence",0),("version","0.4.5.0"),("packageSha256","0"*64),("packageBytes",1)):
-            fake=copy.deepcopy(CAT);fake["sequence"]=2;fake[key]=value
-            with self.assertRaises(p.PublishError):p.require_advance(fake,CAT)
-        fake=copy.deepcopy(CAT);fake["sequence"]=2;fake["files"][0]["sha256"]="0"*64
-        with self.assertRaises(p.PublishError):p.require_advance(fake,CAT)
-    def test_old_pin_mismatch_and_unknown_stable_asset_before_mutation(self):
-        client=MemoryGitHub();publish(client);client.mutations.clear()
-        fake=copy.deepcopy(CAT);fake["sequence"]=2
-        with self.assertRaises(p.PublishError):p.stable_preflight(client,client.fixed(p.STABLE_TAG),request(fake,b"fake","0"*64),fake,b"fake")
-        assets=client.assets_by_release[client.fixed(p.STABLE_TAG)["id"]];assets["publisher.exe"]={"id":999,"name":"publisher.exe","state":"uploaded","size":1}
-        with self.assertRaises(p.PublishError):publish(client)
-        self.assertEqual(client.mutations,[])
-    def test_unknown_upload_never_retries_or_claims_success(self):
-        client=MemoryGitHub();client.unknown_upload=True
-        with self.assertRaises(p.PublishError):publish(client)
-        self.assertEqual(sum(row[0]=="upload" for row in client.mutations),1)
-    def test_unknown_rename_preserves_state_and_never_deletes(self):
-        client=MemoryGitHub();client.unknown_rename=True
-        with self.assertRaises(p.PublishError):publish(client)
-        self.assertEqual(sum(row[0]=="rename" for row in client.mutations),1)
-        self.assertTrue(any(row[0]=="rename" for row in client.mutations))
-    def test_wrong_public_bytes_is_failure(self):
-        client=MemoryGitHub();client.bad_public=True
-        with self.assertRaises(p.PublishError):publish(client)
-    def test_api_blocks_ssl_native_unknown_tags_delete_and_overwrite(self):
-        client=MemoryGitHub()
-        for path,method,value in (("/releases/tags/ssl-stable","GET",None),("/releases/tags/sss-stable","GET",None),("/releases/1","DELETE",None),("/releases/assets/1","PATCH",{"name":"NativeReady"})):
-            with self.assertRaises(p.PublishError):client.api("/repos/"+p.REPOSITORY+path,method,value)
-        self.assertEqual(client.calls,[])
-    def test_adapter_forbids_publisher_source_profiles_or_extra_upload(self):
-        client=MemoryGitHub();release=client.create_draft(p.VERSION_TAG,COMMIT);client.mutations.clear()
-        for name in ("publisher.exe","source.py","authorizations.dpapi",p.ENVELOPE_NAME):
-            with self.assertRaises(p.PublishError):client.ensure_asset(release,name,b"owned")
-        self.assertEqual(client.mutations,[])
-        with self.assertRaises(p.PublishError):client.rename(release,{"id":1},"publisher.exe",p.ENVELOPE_NAME,b"owned")
+def test_real_record_allows_only_memory_publish(request,catalog,members):
+    assert_protected_ast_and_ownership()
+    record=members[p.ACTIVATION_NAME]
+    assert len(record)==1247 and p.sha(record)=="9336e58820af11d9f26f0b3b837f2378cc3611e860e13183ef0c76c917c96bbc"
+    value=p.require_actual_repair_activation(record,request,catalog,members[p.ENVELOPE_NAME],members[p.REPAIR_NAME])
+    assert value["sourceReceiptSha256"]=="b01f2d5eed23e701e13ab410987cc60784a4c5e6817a8623e541e18a8f52ce7f"
+    assert value["sourceReceiptBytes"]==3592 and value["sourceObservedUtc"]=="2026-10-29T07:59:27.8704907Z"
+    assert value["latestVerified"] is False and value["nativeReady"] is False and value["grantsMaintenanceOrRemoteInput"] is False
+    client=MemoryGitHub()
+    # Seed only the actual historical signed046 feed in memory. Existing046
+    # version assets are outside both new target tags and are never requested.
+    stable=client.create_draft(p.STABLE_TAG,COMMIT);client.ensure_asset(stable,p.ENVELOPE_NAME,OLD_ENV);stable=client.publish_draft(stable)
+    client.calls.clear();client.mutations.clear()
+    p.publish(client,request,catalog,members,COMMIT)
+    version=client.fixed(p.VERSION_TAG)
+    assert set(client.assets(version))==set(p.VERSION_ASSET_NAMES)
+    stable=client.fixed(p.STABLE_TAG)
+    assert client.release(stable["id"])["body"]==LEGACY_BODY
+    assert client.asset_bytes(client.assets(stable)[p.ENVELOPE_NAME],8192)==members[p.ENVELOPE_NAME]
+    assert p.ACTIVATION_NAME not in client.assets(version) and p.ACTIVATION_NAME not in client.assets(stable)
+    assert any(event["operation"]=="stable-feed-verified" for event in client.receipt["events"])
+    count=len(client.mutations)
+    denied(lambda:client.ensure_asset(version,p.ACTIVATION_NAME,record),"upload-name-or-size")
+    denied(lambda:client.validate_release(dict(stable,body=p.RELEASE_BODY_047)),"release-metadata-unknown")
+    assert len(client.mutations)==count
 
-class ExpiryCurrentness(unittest.TestCase):
-    """Incremental real s1 signature checks with a controlled clock/HTTP memory boundary."""
-    def setUp(self):
-        self.now=[(CAT["expiresUtcTicks"]-621355968000000000-1)*100]
-        self.clock=patch.object(p.codec.time,"time_ns",side_effect=lambda:self.now[0]);self.clock.start()
-        self.network=patch.object(socket,"create_connection",side_effect=AssertionError("real network forbidden"));self.network.start()
-    def tearDown(self):
-        self.network.stop();self.clock.stop()
-    def expire(self):self.now[0]=(CAT["expiresUtcTicks"]-621355968000000000)*100
-    def seeded(self):
-        client=MemoryGitHub();publish(client);client.mutations.clear();client.receipt["events"].clear()
-        return client
-    def assert_no_success(self,client):
-        self.assertFalse(any(row["operation"]=="stable-feed-verified" for row in client.receipt["events"]))
-    def test_true_s1_last_valid_tick_succeeds(self):
-        client=MemoryGitHub();publish(client)
-        self.assertTrue(any(row["operation"]=="stable-feed-verified" for row in client.receipt["events"]))
-    def test_archive_final_byte_read_crosses_expiry_before_patch(self):
-        client=self.seeded();stable=client.fixed(p.STABLE_TAG);asset=client.assets(stable)[p.ENVELOPE_NAME]
-        actual=client.asset_matches
-        def cross(item,data):
-            actual(item,data);self.expire()
-        with patch.object(client,"asset_matches",side_effect=cross):
-            with self.assertRaisesRegex(p.PublishError,"signed-catalog-invalid"):
-                client.rename(stable,asset,p.ENVELOPE_NAME,p.archived_name(CAT,ENV),ENV,admission_envelope=ENV)
-        self.assertEqual(client.mutations,[]);self.assertIn(p.ENVELOPE_NAME,client.assets(stable));self.assert_no_success(client)
-    def test_promote_final_byte_read_crosses_expiry_before_patch(self):
-        client=MemoryGitHub();actual_check=client.public_check;actual_match=client.asset_matches;armed=[False]
-        def check(tag,name,data):
-            actual_check(tag,name,data)
-            if tag==p.STABLE_TAG and name==p.pending_name(CAT,ENV):armed[0]=True
-        def match(asset,data):
-            actual_match(asset,data)
-            if armed[0] and asset["name"]==p.pending_name(CAT,ENV):self.expire()
-        with patch.object(client,"public_check",side_effect=check),patch.object(client,"asset_matches",side_effect=match):
-            with self.assertRaisesRegex(p.PublishError,"signed-catalog-invalid"):publish(client)
-        self.assertFalse(any(row[0]=="rename" for row in client.mutations))
-        self.assertNotIn(p.ENVELOPE_NAME,client.assets(client.fixed(p.STABLE_TAG)));self.assert_no_success(client)
-    def test_final_public_read_crosses_expiry_reports_failure_after_mutation(self):
-        client=MemoryGitHub();actual=client.public_check
-        def cross(tag,name,data):
-            actual(tag,name,data)
-            if tag==p.STABLE_TAG and name==p.ENVELOPE_NAME:self.expire()
-        with patch.object(client,"public_check",side_effect=cross):
-            with self.assertRaisesRegex(p.PublishError,"signed-catalog-invalid"):publish(client)
-        self.assertIn(p.ENVELOPE_NAME,client.assets(client.fixed(p.STABLE_TAG)))
-        self.assertEqual(sum(row[0]=="rename" for row in client.mutations),1);self.assert_no_success(client)
-    def test_first_idempotent_public_read_crosses_expiry_no_success_or_mutation(self):
-        client=self.seeded();actual=client.public_check
-        def cross(tag,name,data):
-            actual(tag,name,data)
-            if tag==p.STABLE_TAG and name==p.ENVELOPE_NAME:self.expire()
-        with patch.object(client,"public_check",side_effect=cross):
-            with self.assertRaisesRegex(p.PublishError,"signed-catalog-invalid"):publish(client)
-        self.assertEqual(client.mutations,[]);self.assert_no_success(client)
-    def test_second_idempotent_after_concurrent_promote_crosses_expiry(self):
-        client=self.seeded();stable=client.fixed(p.STABLE_TAG);candidate=p.pending_name(CAT,ENV)
-        asset=client.assets(stable)[p.ENVELOPE_NAME]
-        client.rename(stable,asset,p.ENVELOPE_NAME,candidate,ENV);client.mutations.clear()
-        actual=client.public_check
-        def cross(tag,name,data):
-            actual(tag,name,data)
-            if tag==p.STABLE_TAG and name==candidate:
-                # Explicitly synthetic second publisher completes the same bytes
-                # between the two real preflights; no crypto/admission seam.
-                asset=client.assets(stable)[candidate]
-                client.rename(stable,asset,candidate,p.ENVELOPE_NAME,ENV,admission_envelope=ENV)
-            elif tag==p.STABLE_TAG and name==p.ENVELOPE_NAME:self.expire()
-        with patch.object(client,"public_check",side_effect=cross):
-            with self.assertRaisesRegex(p.PublishError,"signed-catalog-invalid"):publish(client)
-        self.assertEqual(client.asset_bytes(client.assets(stable)[p.ENVELOPE_NAME],8192),ENV);self.assert_no_success(client)
-    def test_main_final_success_boundary_rechecks_true_catalog(self):
-        client=MemoryGitHub();output=io.StringIO();workspace=Path(p.__file__).resolve().parents[1]
-        environment={"GITHUB_ACTIONS":"true","GITHUB_EVENT_NAME":"push","GITHUB_REPOSITORY":p.REPOSITORY,
-                     "GITHUB_REF":"refs/heads/main","GITHUB_WORKSPACE":str(workspace),"GITHUB_SHA":COMMIT,"GITHUB_TOKEN":"owned-dummy"}
-        with patch.dict(p.os.environ,environment),patch.object(p.sys,"argv",["owned"]),patch.object(p,"GitHub",return_value=client),\
-                patch.object(p,"publish",side_effect=lambda *_:self.expire()),patch.object(p.sys,"stdout",output):
-            self.assertEqual(p.main(),1)
-        receipt=json.loads(output.getvalue());self.assertEqual(receipt["code"],"signed-catalog-invalid")
-        self.assertEqual(receipt["status"],"failed-or-external-state-unknown");self.assertEqual(client.calls,[])
-
-class Transport(unittest.TestCase):
-    def test_token_dropped_on_allowed_cdn_redirect_and_bounded_read(self):
-        class Response:
-            def __init__(self,data):self.data=io.BytesIO(data)
-            def __enter__(self):return self
-            def __exit__(self,*_):self.data.close()
-            def read(self,count):return self.data.read(count)
-        class Opener:
-            def __init__(self):self.calls=[]
-            def open(self,request,timeout):
-                self.calls.append(request)
-                if len(self.calls)==1:raise urllib.error.HTTPError(request.full_url,302,"owned",{"Location":"https://release-assets.githubusercontent.com/owned"},io.BytesIO())
-                return Response(b"abc")
-        client=p.GitHub("owned-dummy",{"events":[]});opener=Opener();client.opener=opener
-        self.assertEqual(client.fetch(p.API+"/repos/"+p.REPOSITORY+"/releases/assets/1",3,authenticated=True,binary=True),b"abc")
-        self.assertIsNotNone(opener.calls[0].get_header("Authorization"));self.assertIsNone(opener.calls[1].get_header("Authorization"))
-        with self.assertRaises(p.PublishError):client.fetch("https://evil.invalid/x",3)
-        with self.assertRaises(p.PublishError):client.fetch("https://github.com/x",2)
+def test_bad_or_missing_record_wrong_tuple_and_caller_flags_before_api(request,catalog,members):
+    cases=[]
+    client=MemoryGitHub();missing=dict(members);missing.pop(p.ACTIVATION_NAME)
+    denied(lambda:p.publish(client,request,catalog,missing,COMMIT),"fixed-five-inputs");cases.append("missing-record")
+    changed=dict(members);changed[p.ACTIVATION_NAME]=members[p.ACTIVATION_NAME][:-1]+bytes([members[p.ACTIVATION_NAME][-1]^1])
+    denied(lambda:p.publish(client,request,catalog,changed,COMMIT),"activation-record-byte-pin");cases.append("changed-raw-bytes")
+    for fake in (True,b"true"):
+        changed=dict(members);changed[p.ACTIVATION_NAME]=fake
+        denied(lambda:p.publish(client,request,catalog,changed,COMMIT),"activation-record-size")
+    cases.append("bool-or-true-is-not-a-record")
+    changed_request=dict(request);changed_request["activationRecordSha256"]="0"*64
+    denied(lambda:p.publish(client,changed_request,catalog,members,COMMIT),"activation-record-request-pin");cases.append("wrong-request-binding")
+    changed_request=dict(request);changed_request["envelopeSha256"]="0"*64
+    denied(lambda:p.require_actual_repair_activation(members[p.ACTIVATION_NAME],changed_request,catalog,members[p.ENVELOPE_NAME],members[p.REPAIR_NAME]),"activation-record-bundle-binding");cases.append("real-record-wrong-catalog-tuple")
+    changed_catalog=dict(catalog);changed_catalog["sequence"]=3
+    denied(lambda:p.publish(client,request,changed_catalog,members,COMMIT),"catalog-object-not-verified-bytes");cases.append("caller-manifest-replaced")
+    for key,value in (("activationAllowed",True),("root","owned-alternate-root")):
+        changed_request=dict(request);changed_request[key]=value
+        denied(lambda:p.publish(client,changed_request,catalog,members,COMMIT),"unexpected-fields")
+    cases.append("caller-bool-or-root-not-accepted")
+    assert tuple(inspect.signature(p.require_actual_repair_activation).parameters)==("raw","request","catalog","envelope","repair")
+    assert not client.calls and not client.mutations
+    return cases
 
 if __name__=="__main__":
-    with patch.object(socket,"create_connection",side_effect=AssertionError("real network forbidden")):
-        result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__]))
-    print(json.dumps({"schema":1,"testsRun":result.testsRun,"failures":len(result.failures),"errors":len(result.errors),"actualS1PublicSignatureAndZip":True,"syntheticS2StateMachineOnly":True,"realS2Signature":False,"realNetwork":False,"productExecuted":False,"privateKeyRead":False,"newFees":0,"paidCredits":0}))
-    sys.exit(0 if result.wasSuccessful() else 1)
+    request,catalog,members=test_true_four_delivery_inputs_and_request_bindings()
+    test_real_record_allows_only_memory_publish(request,catalog,members)
+    negatives=test_bad_or_missing_record_wrong_tuple_and_caller_flags_before_api(request,catalog,members)
+    print(json.dumps({"owned047R3FocusedResult":{"passed":3,"failed":0,"negativeSubcases":negatives,"exactSanitizedRaw1247AndAllFields":True,"realRecordBoundToActualBundle":True,"sourceCommitmentB01Fixed":True,"validRecordMemoryPublishOnly":True,"activationNotAReleaseAssetOrKeyProof":True,"badInputsRejectedBeforeAnyApi":True,"protectedStableAndExpiryAstUnchanged":True,"old19OrExpiry7OrInitial14OrRepairSuitesRerun":False,"privateRawReceiptRead":False,"realHTTP":False,"productExecuted":False,"actualPublicationExecuted":False,"newFees":0,"paidCredits":0,"exactTaskTokens":None}},separators=(",",":")))

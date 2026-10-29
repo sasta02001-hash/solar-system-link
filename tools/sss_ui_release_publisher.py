@@ -22,22 +22,51 @@ API = "https://api.github.com"
 UPLOADS = "https://uploads.github.com"
 PUBLIC = "https://github.com/" + REPOSITORY + "/releases/download/"
 API_VERSION = "2022-11-28"
-VERSION = "0.4.6.0"
+VERSION = "0.4.7.0"
 VERSION_TAG = "sss-ui-v" + VERSION
 STABLE_TAG = "sss-ui-stable"
 ENVELOPE_NAME = "sss-ui-update-v1.json"
 PACKAGE_NAME = "SSS-" + VERSION + "-UI-x64.zip"
-INITIAL_NAME = "SSS-0.4.6.0-Background-Initial-Setup.zip"
-INITIAL_BYTES = 850627
-INITIAL_SHA256 = "248bb18c9b37f7bdc46fde729a345aa2b62b499f9c5b11990c3dea9fc347f05f"
+INITIAL_NAME = "SSS-0.4.7.0-Background-Initial-Setup.zip"
+REPAIR_NAME = "SSS-0.4.7.0-Background-Repair-From-0.4.6.zip"
+VERSION_ASSET_NAMES = (PACKAGE_NAME, INITIAL_NAME, REPAIR_NAME)
+WAIT_FINAL_ASSETS = "WAIT_FINAL_INITIAL_AND_REPAIR_ASSETS_NOT_RUN"
+# Exact initial/repair delivery tuples come from producer handoffs and Root.
+# These delivery pins and the UI catalog do not prove actual repair activation.
+INITIAL_BYTES = 849998
+INITIAL_SHA256 = "335bc5b3a2142ba7280ba0aefbcc1b60558499c837029d586f4e41065fd2199b"
 INITIAL_FILES = {
-    "SSS.UiInitialSetup.exe": (66048,"4b70e0840710aa51df3fba397c1a463e843b60dbe760f000140e8ce26d0a1ef3"),
-    "SSS.UiInitialSetup.exe.config": (138,"008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337"),
-    "Install-SSS-Background.vbs": (306,"d1a614d9926ee6ddb86ede0ec575010fec93d70dd3399bee426a957aada86963"),
-    "initial-input/SSS.UiUpdateCoordinator.exe": (132608,"075a0bc57bc81eb56b9a9251ad76bee8c7164eb73b3d4f0c7366d315091dfe69"),
-    "initial-input/SSS.UiUpdateCoordinator.exe.config": (138,"008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337"),
-    "initial-input/sss-ui-update-v1.json": (2921,"ff58613e4b1dbd1aa1b181cbf340646506fb1d239d75bc54e264f09f6a440f01"),
-    "initial-input/SSS-0.4.6.0-UI-x64.zip": (760763,"9e4879305f790bdbeb67deb29319146550a95983f0e4b22df566d618b8afa2aa"),
+    'Install-SSS-Background.vbs': (306,'d1a614d9926ee6ddb86ede0ec575010fec93d70dd3399bee426a957aada86963'),
+    'SSS.UiInitialSetup.exe': (61952,'35769fd587227b54a0c83e36c117c511bb718d4cec6646756633f51f6f82ee80'),
+    'SSS.UiInitialSetup.exe.config': (138,'008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'),
+    'initial-input/SSS-0.4.7.0-UI-x64.zip': (761226,'adf1130765f0af6c6700c11eaef74c0782a6e84edc8533a754709cd07b11f692'),
+    'initial-input/sss-ui-update-v1.json': (2921,'fa00368aefab1da55b859f2e6515676284481c27f6283063dac1307f9db8bdea'),
+    'initial-input/SSS.UiUpdateCoordinator.exe': (132608,'4784177d30d249830567b914efd22793d7241dcc0af6c834fbe4c3ad2170752e'),
+    'initial-input/SSS.UiUpdateCoordinator.exe.config': (138,'008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'),
+}
+REPAIR_BYTES = 914735
+REPAIR_SHA256 = "d0b4434e51d4d922b7067bb465dda3a5eb35d4ee98ba9b7df3c5011c40b36a96"
+REPAIR_FILES = {
+    'SSS.UiRepair.exe': (223744,'a462ad6606262cc047275011377426481845f7f2b020181946577155fbf1435e'),
+    'SSS.UiRepair.exe.config': (138,'008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'),
+    'Repair-SSS-Background.vbs': (357,'830da38e5a846244c25565c05e4ee13e96dc6a8a86e10378cc26c3ffd7c7e835'),
+    'repair-input/SSS.UiUpdateCoordinator.exe': (132608,'4784177d30d249830567b914efd22793d7241dcc0af6c834fbe4c3ad2170752e'),
+    'repair-input/SSS.UiUpdateCoordinator.exe.config': (138,'008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'),
+    'repair-input/sss-ui-update-v1.json': (2921,'fa00368aefab1da55b859f2e6515676284481c27f6283063dac1307f9db8bdea'),
+    'repair-input/SSS-0.4.7.0-UI-x64.zip': (761226,'adf1130765f0af6c6700c11eaef74c0782a6e84edc8533a754709cd07b11f692'),
+}
+ACTIVATION_NAME = "repair-activation-v1.json"
+ACTIVATION_RECORD_BYTES = 1247
+ACTIVATION_RECORD_SHA256 = "9336e58820af11d9f26f0b3b837f2378cc3611e860e13183ef0c76c917c96bbc"
+SOURCE_ACTIVATION_RECEIPT_SHA256 = "b01f2d5eed23e701e13ab410987cc60784a4c5e6817a8623e541e18a8f52ce7f"
+ACTIVATION_EXPECTED = {'schema': 1, 'purpose': 'SSS047.PublicationOrderActivationEvidence.v1', 'status': 'Reviewed047MaintenanceActivated', 'sourceReceiptSha256': 'b01f2d5eed23e701e13ab410987cc60784a4c5e6817a8623e541e18a8f52ce7f', 'sourceReceiptBytes': 3592, 'sourceObservedUtc': '2026-10-29T07:59:27.8704907Z', 'previousVersion': '0.4.6.0', 'version': '0.4.7.0', 'sequence': 2, 'catalogSha256': 'fa00368aefab1da55b859f2e6515676284481c27f6283063dac1307f9db8bdea', 'repairZipSha256': 'd0b4434e51d4d922b7067bb465dda3a5eb35d4ee98ba9b7df3c5011c40b36a96', 'bootstrapExecutableSha256': '4784177d30d249830567b914efd22793d7241dcc0af6c834fbe4c3ad2170752e', 'originalRootIdentityPreserved': True, 'ordinaryPackageAbsent': True, 'normalOldProductAndWorkerExited': True, 'retiredOriginalHistoryFileCount': 4, 'ownedJobTerminal': 'Cancelled', 'originalIoSettled': True, 'exclusionsReleased': True, 'installedSignedRuntimeCount': 11, 'ownRunReadback': True, 'ordinaryInstallerExitCode': 0, 'forcedTermination': False, 'machineRestarted': False, 'latestVerified': False, 'productLaunched': False, 'nativeReady': False, 'grantsMaintenanceOrRemoteInput': False, 'newFees': 0, 'paidCredits': 0}
+KNOWN_UI_BYTES = 761226
+KNOWN_UI_SHA256 = "adf1130765f0af6c6700c11eaef74c0782a6e84edc8533a754709cd07b11f692"
+KNOWN_CATALOG_BYTES = 2921
+KNOWN_CATALOG_SHA256 = "fa00368aefab1da55b859f2e6515676284481c27f6283063dac1307f9db8bdea"
+KNOWN_BOOTSTRAP = {
+    "SSS.UiUpdateCoordinator.exe": (132608,"4784177d30d249830567b914efd22793d7241dcc0af6c834fbe4c3ad2170752e"),
+    "SSS.UiUpdateCoordinator.exe.config": (138,"008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337"),
 }
 MAX_FILE = 16777216
 MAX_ENVELOPE = 8192
@@ -48,6 +77,17 @@ RELEASE_BODY = ("SSS-UI-PUBLISHER-V1: signed current-user UI assets only.\n\n"
                 "Windows7 POS、無人值守與持續鍵鼠操作仍待實機驗收，非100分交付。\n\n"
                 "既有0.4.5須先正常選一次『結束SSS』，再由新背景更新流程接續；不強殺舊程序。"
                 "新Run登入啟動登錄已讀回，但下次真登入自啟尚未測試；不是Native全功能驗收。")
+
+RELEASE_BODY_047 = ("SSS-UI-PUBLISHER-V1: signed current-user UI assets only.\n\n"
+    "SSS 0.4.7.0 維護修復：補齊 .NET Framework 4.8 中繼資料，並提供正常維護升級流程。\n\n"
+    "首次安裝包只供尚無既有SSS更新根的電腦；既有0.4.6只使用專用 Background-Repair-From-0.4.6 修復包。"
+    "UI簽章目錄只涵蓋UI套件，不能自行授權替換固定啟動元件。\n\n"
+    "既有0.4.5與背景程序須依正常維護退出流程處理，不強制結束。"
+    "Windows7 POS、登入啟動、連線、鍵鼠與持續操作仍待實機驗收；不是NativeReady/C1或操作授權，也不宣稱100分。")
+
+def release_body(tag):
+    """New047 version copy only; stable retains exact historical ownership."""
+    return RELEASE_BODY_047 if tag == VERSION_TAG else RELEASE_BODY
 
 class PublishError(Exception):
     pass
@@ -126,30 +166,91 @@ def verify_zip(data, catalog):
     except (zipfile.BadZipFile, RuntimeError, OSError, ValueError, NotImplementedError):
         fail("zip-invalid")
 
-def verify_initial(data):
-    if type(data) is not bytes or len(data) != INITIAL_BYTES or sha(data) != INITIAL_SHA256:
-        fail("initial-approved-package-binding")
+def verify_known_ui(package, envelope):
+    """Real fixed24c UI vector only; never bootstrap repair authority."""
+    if (len(package) != KNOWN_UI_BYTES or sha(package) != KNOWN_UI_SHA256 or
+            len(envelope) != KNOWN_CATALOG_BYTES or sha(envelope) != KNOWN_CATALOG_SHA256):
+        fail("known047-ui-vector-binding")
+    catalog = verify_envelope(envelope)
+    if catalog["version"] != VERSION or catalog["sequence"] != 2:
+        fail("known047-catalog-purpose")
+    verify_zip(package,catalog)
+    return catalog
+
+def verify_known_bootstrap(contents):
+    """Exact public bytes only, no store write, installation or authority."""
+    if type(contents) is not dict or set(contents) != set(KNOWN_BOOTSTRAP):
+        fail("known047-bootstrap-inventory")
+    for name,(size,digest) in KNOWN_BOOTSTRAP.items():
+        data=contents[name]
+        if type(data) is not bytes or len(data)!=size or sha(data)!=digest:
+            fail("known047-bootstrap-tuple")
+
+def verify_exact_delivery_zip(data, size, digest, files, label):
+    """Only compiled approved exact7 bytes, never a caller-selected inventory."""
+    if type(data) is not bytes or len(data)!=size or sha(data)!=digest:
+        fail(label+"-approved-package-binding")
     try:
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
             entries=archive.infolist()
-            if len(entries)!=7 or {entry.filename for entry in entries}!=set(INITIAL_FILES):
-                fail("initial-exact-seven-files")
+            if len(entries)!=7 or {entry.filename for entry in entries}!=set(files):
+                fail(label+"-exact-seven-files")
             seen=set();total=0
             for entry in entries:
-                size,digest=INITIAL_FILES[entry.filename]
+                expected_size,expected_hash=files[entry.filename]
                 if (entry.filename in seen or entry.orig_filename!=entry.filename or entry.is_dir() or entry.flag_bits&1 or entry.external_attr&16 or
-                        stat.S_IFMT(entry.external_attr>>16) not in (0,stat.S_IFREG) or entry.compress_type not in (zipfile.ZIP_STORED,zipfile.ZIP_DEFLATED) or entry.file_size!=size):
-                    fail("initial-member-type-or-size")
-                seen.add(entry.filename);total+=size
-                if total>MAX_FILE:fail("initial-total-size")
-                with archive.open(entry) as stream:raw=stream.read(size+1)
-                if len(raw)!=size or sha(raw)!=digest:fail("initial-member-hash")
+                        stat.S_IFMT(entry.external_attr>>16) not in (0,stat.S_IFREG) or
+                        entry.compress_type not in (zipfile.ZIP_STORED,zipfile.ZIP_DEFLATED) or entry.file_size!=expected_size or
+                        not 1<=expected_size<=8388608):
+                    fail(label+"-member-type-or-size")
+                seen.add(entry.filename);total+=expected_size
+                if total>MAX_FILE:fail(label+"-total-size")
+                with archive.open(entry) as stream:raw=stream.read(expected_size+1)
+                if len(raw)!=expected_size or sha(raw)!=expected_hash:
+                    fail(label+"-member-hash")
     except (zipfile.BadZipFile,RuntimeError,OSError,ValueError,NotImplementedError):
-        fail("initial-zip-invalid")
+        fail(label+"-zip-invalid")
 
-def validate_inputs(request_raw, package, envelope, initial):
+def verify_final_initial_and_repair(initial, repair):
+    # Exact producer-reviewed delivery packages are separate from the signed UI
+    # catalog's authority. Nothing here executes a bootstrap or formal repair.
+    verify_exact_delivery_zip(initial,INITIAL_BYTES,INITIAL_SHA256,INITIAL_FILES,"initial")
+    verify_exact_delivery_zip(repair,REPAIR_BYTES,REPAIR_SHA256,REPAIR_FILES,"repair")
+
+def require_actual_repair_activation(raw, request, catalog, envelope, repair):
+    """Fixed redacted publication-order attestation, not a key/input grant.
+
+    Root separately qualified the private actual receipt and retained it locally.
+    Only these fixed public bytes/fields can satisfy this release-order check;
+    no caller bool, root path, role, environment switch or arbitrary record does.
+    """
+    if type(raw) is not bytes or len(raw)!=ACTIVATION_RECORD_BYTES:
+        fail("activation-record-size")
+    if request.get("activationRecordSha256")!=ACTIVATION_RECORD_SHA256:
+        fail("activation-record-request-pin")
+    if sha(raw)!=ACTIVATION_RECORD_SHA256:
+        fail("activation-record-byte-pin")
+    value=parse_json(raw,4096)
+    exact(value,ACTIVATION_EXPECTED)
+    for name,expected in ACTIVATION_EXPECTED.items():
+        if type(value[name]) is not type(expected) or value[name]!=expected:
+            fail("activation-record-domain")
+    if (value["purpose"]!="SSS047.PublicationOrderActivationEvidence.v1" or
+            value["sourceReceiptSha256"]!=SOURCE_ACTIVATION_RECEIPT_SHA256 or value["sourceReceiptBytes"]!=3592 or
+            value["version"]!=VERSION or value["version"]!=request["version"] or value["version"]!=catalog["version"] or
+            value["sequence"]!=request["sequence"] or value["sequence"]!=catalog["sequence"] or
+            value["catalogSha256"]!=sha(envelope) or value["catalogSha256"]!=request["envelopeSha256"] or
+            value["repairZipSha256"]!=sha(repair) or value["repairZipSha256"]!=request["repairSha256"] or
+            value["bootstrapExecutableSha256"]!=KNOWN_BOOTSTRAP["SSS.UiUpdateCoordinator.exe"][1] or
+            value["bootstrapExecutableSha256"]!=REPAIR_FILES["repair-input/SSS.UiUpdateCoordinator.exe"][1] or
+            catalog["keyId"]!=codec.KEY_ID or catalog["purpose"]!=codec.PURPOSE or catalog["profile"]!=codec.PROFILE or
+            catalog["product"]!="SolarSystemShield" or catalog["channel"]!="stable"):
+        fail("activation-record-bundle-binding")
+    return value
+
+def validate_inputs(request_raw, package, envelope, initial, repair, activation):
     request = parse_json(request_raw, 4096)
-    exact(request, ("schema", "version", "sequence", "packageBytes", "packageSha256", "envelopeSha256", "initialSetupBytes", "initialSetupSha256", "expectedStableEnvelopeSha256"))
+    exact(request, ("schema", "version", "sequence", "packageBytes", "packageSha256", "envelopeSha256", "initialSetupBytes", "initialSetupSha256", "repairBytes", "repairSha256", "activationRecordSha256", "expectedStableEnvelopeSha256"))
     if (type(request["schema"]) is not int or request["schema"] != 1 or request["version"] != VERSION or
             type(request["sequence"]) is not int or not 1 <= request["sequence"] <= 2**63 - 1 or
             type(request["packageBytes"]) is not int or not 1 <= request["packageBytes"] <= MAX_FILE):
@@ -165,13 +266,17 @@ def validate_inputs(request_raw, package, envelope, initial):
             len(envelope) > MAX_ENVELOPE or sha(envelope) != request["envelopeSha256"] or
             catalog["packageBytes"] != request["packageBytes"] or catalog["packageSha256"] != request["packageSha256"]):
         fail("request-catalog-binding")
-    verify_zip(package, catalog)
-    if type(request["initialSetupBytes"]) is not int or request["initialSetupBytes"]!=INITIAL_BYTES or request["initialSetupSha256"]!=INITIAL_SHA256:
-        fail("initial-request-pin")
-    verify_initial(initial)
-    return request, catalog, {PACKAGE_NAME: package, ENVELOPE_NAME: envelope, INITIAL_NAME:initial}
+    verify_zip(package,catalog)
+    if (type(request["initialSetupBytes"]) is not int or request["initialSetupBytes"]!=INITIAL_BYTES or request["initialSetupSha256"]!=INITIAL_SHA256 or
+            type(request["repairBytes"]) is not int or request["repairBytes"]!=REPAIR_BYTES or request["repairSha256"]!=REPAIR_SHA256):
+        fail("initial-or-repair-request-pin")
+    verify_final_initial_and_repair(initial,repair)
+    require_actual_repair_activation(activation,request,catalog,envelope,repair)
+    return request, catalog, {PACKAGE_NAME:package, ENVELOPE_NAME:envelope, INITIAL_NAME:initial, REPAIR_NAME:repair, ACTIVATION_NAME:activation}
 
 def load_bundle(root):
+    if INITIAL_FILES is None or REPAIR_FILES is None:
+        fail(WAIT_FINAL_ASSETS)
     folder = root / "updates" / "sss-ui"
     for directory in (root, root / "updates", folder, folder / "payload"):
         if directory.is_symlink() or not directory.is_dir():
@@ -179,7 +284,9 @@ def load_bundle(root):
     return validate_inputs(read_local(folder / "publish-request.json", 4096),
                            read_local(folder / "payload" / PACKAGE_NAME, MAX_FILE),
                            read_local(folder / "payload" / ENVELOPE_NAME, MAX_ENVELOPE),
-                           read_local(folder / "payload" / INITIAL_NAME, MAX_FILE))
+                           read_local(folder / "payload" / INITIAL_NAME, MAX_FILE),
+                           read_local(folder / "payload" / REPAIR_NAME, MAX_FILE),
+                           read_local(folder / ACTIVATION_NAME,4096))
 
 # The following delivery transport is derived from the reviewed SSL publisher.
 
@@ -267,7 +374,7 @@ class GitHub:
         create = (method == "POST" and suffix == "/releases" and type(value) is dict and
                   set(value) == {"tag_name","target_commitish","name","body","draft","prerelease","make_latest"} and
                   value["tag_name"] in (VERSION_TAG,STABLE_TAG) and value["name"] == value["tag_name"] and
-                  re.fullmatch(r"[0-9a-f]{40}",value["target_commitish"]) and value["body"] == RELEASE_BODY and
+                  re.fullmatch(r"[0-9a-f]{40}",value["target_commitish"]) and value["body"] == release_body(value["tag_name"]) and
                   value["draft"] is True and value["prerelease"] is False and value["make_latest"] == "false")
         publish = method == "PATCH" and re.fullmatch(r"/releases/[1-9][0-9]*",suffix) and value == {"draft":False,"make_latest":"false"}
         rename = method == "PATCH" and re.fullmatch(r"/releases/assets/[1-9][0-9]*",suffix) and type(value) is dict and set(value) == {"name"} and allowed_feed_name(value["name"])
@@ -286,7 +393,7 @@ class GitHub:
         if (not isinstance(value, dict) or type(value.get("id")) is not int or value["id"] < 1 or
                 type(value.get("draft")) is not bool or type(value.get("immutable")) is not bool or
                 value.get("prerelease") is not False or value.get("tag_name") not in (VERSION_TAG,STABLE_TAG) or
-                value.get("name") != value["tag_name"] or value.get("body") != RELEASE_BODY):
+                value.get("name") != value["tag_name"] or value.get("body") != release_body(value["tag_name"])):
             fail("release-metadata-unknown")
         if value["immutable"] and value["tag_name"] == STABLE_TAG:
             fail("release-immutable-stop")
@@ -346,7 +453,7 @@ class GitHub:
         self.event("draft-create-submitted", tag=tag, commit=commit)
         value = self.api("/repos/" + REPOSITORY + "/releases", "POST",
                          {"tag_name": tag, "target_commitish": commit, "name": tag,
-                          "body": RELEASE_BODY, "draft": True, "prerelease": False,
+                          "body": release_body(tag), "draft": True, "prerelease": False,
                           "make_latest": "false"})
         release = self.validate_release(value)
         if release["tag_name"] != tag or release["draft"] is not True:
@@ -361,7 +468,7 @@ class GitHub:
         if current["draft"]:
             if current["immutable"]:
                 fail("immutable-draft-refused")
-            if current.get("body") != RELEASE_BODY:
+            if current.get("body") != release_body(current["tag_name"]):
                 fail("draft-not-owned-by-publisher")
             self.event("release-publish-submitted", tag=current["tag_name"], releaseId=current["id"])
             result = self.api("/repos/" + REPOSITORY + "/releases/" + str(current["id"]),
@@ -378,16 +485,16 @@ class GitHub:
         current = self.release(release["id"])
         if current.get("tag_name") != release["tag_name"]:
             fail("release-tag-changed")
-        if ((current["tag_name"] == VERSION_TAG and name not in (PACKAGE_NAME,INITIAL_NAME)) or
+        if ((current["tag_name"] == VERSION_TAG and name not in VERSION_ASSET_NAMES) or
                 (current["tag_name"] == STABLE_TAG and not allowed_feed_name(name)) or
-                type(data) is not bytes or not 1 <= len(data) <= (MAX_FILE if name in (PACKAGE_NAME,INITIAL_NAME) else MAX_ENVELOPE)):
+                type(data) is not bytes or not 1 <= len(data) <= (MAX_FILE if name in VERSION_ASSET_NAMES else MAX_ENVELOPE)):
             fail("upload-name-or-size")
         assets = self.assets(current)
         if name in assets:
             self.asset_matches(assets[name], data)
             self.event("asset-already-matches", name=name, assetId=assets[name]["id"], sha256=sha(data))
             return assets[name]
-        if current.get("body") != RELEASE_BODY:
+        if current.get("body") != release_body(current["tag_name"]):
             fail("draft-not-owned-by-publisher")
         if current["immutable"] or current["tag_name"] == VERSION_TAG and not current["draft"]:
             fail("immutable-version-or-published-missing-asset")
@@ -511,12 +618,13 @@ def restore_old_if_safe(github,stable,old):
 def publish(github,request,catalog,members,commit):
     if type(commit) is not str or re.fullmatch(r"[0-9a-f]{40}",commit) is None:
         fail("commit-format")
-    if set(members) != {PACKAGE_NAME,ENVELOPE_NAME,INITIAL_NAME}:
-        fail("fixed-three-payloads")
+    if set(members) != {PACKAGE_NAME,ENVELOPE_NAME,INITIAL_NAME,REPAIR_NAME,ACTIVATION_NAME}:
+        fail("fixed-five-inputs")
     # Revalidate signed bytes immediately before the first API call.
-    request,actual,members=validate_inputs(canonical(request),members[PACKAGE_NAME],members[ENVELOPE_NAME],members[INITIAL_NAME])
+    request,actual,members=validate_inputs(canonical(request),members[PACKAGE_NAME],members[ENVELOPE_NAME],members[INITIAL_NAME],members[REPAIR_NAME],members[ACTIVATION_NAME])
     if actual != catalog:
         fail("catalog-object-not-verified-bytes")
+    require_actual_repair_activation(members[ACTIVATION_NAME],request,actual,members[ENVELOPE_NAME],members[REPAIR_NAME])  # Before first API.
     repo=github.api("/repos/"+REPOSITORY)
     if (type(repo) is not dict or repo.get("full_name") != REPOSITORY or repo.get("private") is not False or
             repo.get("default_branch") != "main" or repo.get("archived") is not False):
@@ -528,15 +636,15 @@ def publish(github,request,catalog,members,commit):
     release=releases.get(VERSION_TAG)
     if release is None:
         release=github.create_draft(VERSION_TAG,commit)
-    if set(github.assets(release))-{PACKAGE_NAME,INITIAL_NAME}:
+    if set(github.assets(release))-set(VERSION_ASSET_NAMES):
         fail("version-unexpected-assets")
-    github.ensure_asset(release,PACKAGE_NAME,members[PACKAGE_NAME])
-    github.ensure_asset(release,INITIAL_NAME,members[INITIAL_NAME])
+    for name in VERSION_ASSET_NAMES:
+        github.ensure_asset(release,name,members[name])
     release=github.publish_draft(release)
-    if set(github.assets(release)) != {PACKAGE_NAME,INITIAL_NAME}:
+    if set(github.assets(release)) != set(VERSION_ASSET_NAMES):
         fail("version-inventory")
-    github.public_check(VERSION_TAG,PACKAGE_NAME,members[PACKAGE_NAME])
-    github.public_check(VERSION_TAG,INITIAL_NAME,members[INITIAL_NAME])
+    for name in VERSION_ASSET_NAMES:
+        github.public_check(VERSION_TAG,name,members[name])
     if already is not None:
         github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope)
         verify_envelope(envelope)

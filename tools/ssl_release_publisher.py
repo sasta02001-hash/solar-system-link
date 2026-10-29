@@ -57,6 +57,24 @@ RELEASE_BODY = (MARKER + "\n\n"
     "SSS 正式 C1／Ready 與 Windows 7 POS 的持續鍵盤滑鼠操作仍待實機驗收。"
     "這次發行不代表上述驗收完成，也不代表軟體已達 100 分。\n\n"
     "更新器會沿用既有固定公鑰、套件驗證及回復機制。")
+RELEASE_BODY_070 = (MARKER + "\n\n"
+    "Solar System Link 0.7.0 維護發行\n\n"
+    "主控開始連線前會先準備本機 SSS，核對公開最新版，必要時透過固定信任更新器更新並啟動背景程序。"
+    "需要正常結束舊 SSS 或尚未完成驗證時會保持等待；取得新鮮有效證據後才開始連線。\n\n"
+    "認證後的對端同樣須通過 SSS 最新版與背景狀態檢查。"
+    "鍵盤滑鼠操作沿用既有裝置信任及有效操作授權；SSS 狀態檢查不會自行授予操作權限。\n\n"
+    "加入已簽署線上更新、正常退出後重新開啟及有限重連。"
+    "重新開啟或重連不會自行恢復鍵盤滑鼠操作允許。\n\n"
+    "Windows 7 POS 的實際連線、鍵鼠及持續操作仍須實機驗收。"
+    "本次發行不代表 Native C1／Ready 已驗收，也不宣稱軟體已達 100 分。\n\n"
+    "保留既有裝置綁定、固定更新公鑰、完整套件驗證及回復機制。")
+
+
+def version_body(tag):
+    """Only the reviewed 070 version changes copy; stable ownership stays exact."""
+    return RELEASE_BODY_070 if tag == "ssl-v0.7.0.0" else RELEASE_BODY
+
+
 HEX64 = re.compile(r"[0-9a-f]{64}\Z")
 VERSION = re.compile(r"(?:0|[1-9][0-9]{0,4})(?:\.(?:0|[1-9][0-9]{0,4})){3}\Z")
 POSITIVE = re.compile(r"[1-9][0-9]{0,17}\Z")
@@ -439,7 +457,7 @@ class GitHub:
         self.event("draft-create-submitted", tag=tag, commit=commit)
         value = self.api("/repos/" + REPOSITORY + "/releases", "POST",
                          {"tag_name": tag, "target_commitish": commit, "name": tag,
-                          "body": RELEASE_BODY, "draft": True, "prerelease": False,
+                          "body": version_body(tag), "draft": True, "prerelease": False,
                           "make_latest": "false"})
         release = self.validate_release(value)
         if release["tag_name"] != tag or release["draft"] is not True:
@@ -452,7 +470,7 @@ class GitHub:
         if current.get("tag_name") != release["tag_name"]:
             fail("release-tag-changed")
         if current["draft"]:
-            if current.get("body") != RELEASE_BODY:
+            if current.get("body") != version_body(current["tag_name"]):
                 fail("draft-not-owned-by-publisher")
             self.event("release-publish-submitted", tag=current["tag_name"], releaseId=current["id"])
             result = self.api("/repos/" + REPOSITORY + "/releases/" + str(current["id"]),
@@ -474,7 +492,7 @@ class GitHub:
             self.asset_matches(assets[name], data)
             self.event("asset-already-matches", name=name, assetId=assets[name]["id"], sha256=sha(data))
             return assets[name]
-        if current.get("body") != RELEASE_BODY:
+        if current.get("body") != version_body(current["tag_name"]):
             fail("draft-not-owned-by-publisher")
         url = UPLOADS + "/repos/" + REPOSITORY + "/releases/" + str(current["id"]) + "/assets?name=" + urllib.parse.quote(name, safe="")
         self.event("asset-upload-submitted", name=name, releaseId=current["id"], bytes=len(data), sha256=sha(data))
@@ -602,7 +620,7 @@ def publish(github, request, manifest, members, commit):
     release = releases.get(tag)
     if release is None:
         release = github.create_draft(tag, commit)
-    elif release.get("body") != RELEASE_BODY:
+    elif release.get("body") != version_body(tag):
         fail("version-release-not-owned")
     if set(github.assets(release)) - set(FILES):
         fail("version-release-unexpected-assets")

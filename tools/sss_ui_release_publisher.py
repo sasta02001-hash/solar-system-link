@@ -910,19 +910,19 @@ def load_bundle(root, *, validation_only=False):
     # Before reading payload, genuine049 must have been independently qualified.
     # No048 bytes, guessed artifact or caller pin can satisfy these constants.
     _require049_assets_bound()
-    for directory in (root,root/"updates",folder,folder/"payload"):
+    for directory in (root,root/"updates",folder,folder/"payload049"):
         if directory.is_symlink() or not directory.is_dir():fail("checkout-directory-type")
     expected={PACKAGE_NAME_049,INITIAL_NAME_049,ENVELOPE_NAME}
-    if {p.name for p in (folder/"payload").iterdir()}!=expected:fail("049-payload-exact-three")
+    if {p.name for p in (folder/"payload049").iterdir()}!=expected:fail("049-payload-exact-three")
     activation=compatibility=None
     if ACTIVATION049_RECORD_SHA256 is not None:
         activation=read_local(folder/ACTIVATION_NAME,4096)
     if COMPATIBILITY049_RECORD_SHA256 is not None:
         compatibility=read_local(folder/COMPATIBILITY049_NAME,4096)
     return validate049_inputs(request_raw,
-        read_local(folder/"payload"/PACKAGE_NAME_049,MAX_FILE),
-        read_local(folder/"payload"/ENVELOPE_NAME,MAX_ENVELOPE),
-        read_local(folder/"payload"/INITIAL_NAME_049,MAX_FILE),
+        read_local(folder/"payload049"/PACKAGE_NAME_049,MAX_FILE),
+        read_local(folder/"payload049"/ENVELOPE_NAME,MAX_ENVELOPE),
+        read_local(folder/"payload049"/INITIAL_NAME_049,MAX_FILE),
         activation,compatibility,validation_only=validation_only)
 
 def _publish048(github,request,catalog,members,commit):

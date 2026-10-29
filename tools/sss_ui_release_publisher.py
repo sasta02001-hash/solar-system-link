@@ -33,6 +33,85 @@ PACKAGE_NAME = "SSS-" + VERSION + "-UI-x64.zip"
 INITIAL_NAME = "SSS-0.4.7.0-Background-Initial-Setup.zip"
 REPAIR_NAME = "SSS-0.4.7.0-Background-Repair-From-0.4.6.zip"
 VERSION_ASSET_NAMES = (PACKAGE_NAME, INITIAL_NAME, REPAIR_NAME)
+
+# Explicit048 branch. Historical047 constants and activation stay immutable.
+VERSION_048 = "0.4.8.0"
+VERSION_TAG_048 = "sss-ui-v0.4.8.0"
+PACKAGE_NAME_048 = "SSS-0.4.8.0-UI-x64.zip"
+INITIAL_NAME_048 = "SSS-0.4.8.0-Background-Initial-Setup.zip"
+UI048_BYTES = 760932
+UI048_SHA256 = "8bb2dda57da5a8eceb95853939c13cab65d0d9385ec92d42ebb5368962524764"
+CATALOG048_BYTES = 2921
+CATALOG048_SHA256 = "c58f69ce19aee53cc4dc7309227f80ac9dd5dde075eb7cae0917ee01ba3e5727"
+INITIAL048_BYTES = 855417
+INITIAL048_SHA256 = "6f7940e5a045fa031ece86a85c79d75b3a356be5e4e8594253c76d9d3475d6b6"
+PREDECESSOR048_SHA256 = "369a16eb4efeca86a7c3f0152e62ba15841692bdca031bafe842b75b82ec39db"
+WAIT_ACTUAL048 = "WAITING_ACTUAL_REPAIR_ACTIVATION"
+# None is an intentional non-authorizing veto. Root must first derive a true,
+# redacted maintenance-before-first-start record from actual source-qualified
+# ordinary activation evidence, then bind all three exact constants in a new
+# reviewed revision. A caller bool, old047 record or source qualification alone
+# can never satisfy this gate. No key or remote input authority is conveyed.
+ACTIVATION048_RECORD_BYTES = None
+ACTIVATION048_RECORD_SHA256 = None
+ACTIVATION048_EXPECTED = None
+REQUEST048_FIELDS = ("schema","product","purpose","version","sequence",
+    "publicationGuard","packageBytes","packageSha256","envelopeSha256",
+    "initialSetupBytes","initialSetupSha256","activationRecordSha256",
+    "expectedStableEnvelopeSha256")
+RELEASE_BODY_048 = ("SSS-UI-PUBLISHER-V1: signed current-user UI assets only.\n\n"
+    "SSS 0.4.8.0 更新背景啟動元件整合與維護診斷，UI套件與首次安裝包分開提供。"
+    "首次安裝包只供沒有SSS更新根的電腦；已有安裝時會拒絕接管。"
+    "本發行不提供本機專用維修工具，也不把UI簽章當成啟動元件維修授權。\n\n"
+    "Windows7 POS、登入啟動、遠端連線、鍵鼠與持續操作仍須各自實機驗收；"
+    "不是完整防火牆、NativeReady或操作授權，不宣稱99或100分。")
+
+INITIAL048_FILES = {'SSS.UiInitialSetup.exe': (61952, 'c51307558c7ec08c8c179a4c41f833494008e00af53518eaad5499ae08cb4ae9'), 'SSS.UiInitialSetup.exe.config': (138, '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'), 'Install-SSS-Background.vbs': (306, 'd1a614d9926ee6ddb86ede0ec575010fec93d70dd3399bee426a957aada86963'), 'initial-input/SSS.UiUpdateCoordinator.exe': (146432, 'b457d95ccf64e711e20704bb85a5ca04b66384ebb26ed989b34c8838c6727b8c'), 'initial-input/SSS.UiUpdateCoordinator.exe.config': (138, '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'), 'initial-input/sss-ui-update-v1.json': (2921, 'c58f69ce19aee53cc4dc7309227f80ac9dd5dde075eb7cae0917ee01ba3e5727'), 'initial-input/SSS-0.4.8.0-UI-x64.zip': (760932, '8bb2dda57da5a8eceb95853939c13cab65d0d9385ec92d42ebb5368962524764')}
+
+# New049 data is intentionally unbound. None is not a wildcard or permission.
+VERSION_049 = "0.4.9.0"
+VERSION_TAG_049 = "sss-ui-v0.4.9.0"
+PACKAGE_NAME_049 = "SSS-0.4.9.0-UI-x64.zip"
+INITIAL_NAME_049 = "SSS-0.4.9.0-Background-Initial-Setup.zip"
+UI049_BYTES = 761651
+UI049_SHA256 = 'ad10c1f61bd221498cdc53bda401d703e6df073d6f350e5d68261c10cdf90e93'
+CATALOG049_BYTES = 2921
+CATALOG049_SHA256 = 'f881f72b5ad759138c58a8201f2292c0df03f298d3ca4afb662e12756635eea1'
+INITIAL049_BYTES = 856150
+INITIAL049_SHA256 = '993c360cd8405900592b576f3ad22dcad2465c91688935d124e5df2b87e41a9b'
+INITIAL049_FILES = {'SSS.UiInitialSetup.exe': (61952, 'cbfe0137ff2c4768039e2449133ae1ffa3ba3c8ebdf8342c03a21e22a231249a'), 'SSS.UiInitialSetup.exe.config': (138, '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'), 'Install-SSS-Background.vbs': (306, 'd1a614d9926ee6ddb86ede0ec575010fec93d70dd3399bee426a957aada86963'), 'initial-input/SSS.UiUpdateCoordinator.exe': (146432, 'b457d95ccf64e711e20704bb85a5ca04b66384ebb26ed989b34c8838c6727b8c'), 'initial-input/SSS.UiUpdateCoordinator.exe.config': (138, '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'), 'initial-input/sss-ui-update-v1.json': (2921, 'f881f72b5ad759138c58a8201f2292c0df03f298d3ca4afb662e12756635eea1'), 'initial-input/SSS-0.4.9.0-UI-x64.zip': (761651, 'ad10c1f61bd221498cdc53bda401d703e6df073d6f350e5d68261c10cdf90e93')}
+BOOTSTRAP049_EXECUTABLE_SHA256 = 'b457d95ccf64e711e20704bb85a5ca04b66384ebb26ed989b34c8838c6727b8c'
+BOOTSTRAP049_CONFIG_SHA256 = '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'
+# The existing stable predecessor is047 sequence3, never superseded048.
+PREDECESSOR049_SHA256 = "369a16eb4efeca86a7c3f0152e62ba15841692bdca031bafe842b75b82ec39db"
+# Root must bind four real producer/independent qualification receipt hashes in
+# a reviewed revision. Source proposals and caller booleans cannot fill this.
+ASSET049_PRODUCER_COMMITMENT = {'productionSourceQualificationSha256': 'ffe1bf44e30c54a0ea7490a1976a245c76bf3dac7e07e45c03e6d58f9956100a', 'catalogProducerQualificationSha256': 'e1670e3115540dd6af62fe13ccd5c5bc5ad79c0b0f0f4a955ae0efffa284d097', 'initialProducerQualificationSha256': 'a81bfb97c7f0b4c8fec86ef41df76b687525bbed06b7c60a6a308add06bb0af3', 'independentGenuineVectorQualificationSha256': '385e3a4d78f3461d7571f99f6d3364961943181a77e67c7409cc1626ea0c9a0d'}
+WAIT_ASSETS049 = "WAITING_GENUINE049_ASSET_AND_PRODUCER_QUALIFICATION"
+WAIT_SOURCE049 = "WAITING_049_PRODUCTION_SOURCE_QUALIFICATION"
+ASSET049_GENUINE_DATA_COMMITMENT = {'genuineUIHandoffSha256': '93a7ddb3ca4c9244573591454bf0f95ce46fc4063c7a75bc69305d87feaa7fca', 'rootRawCryptoAndExactElevenDataQualificationSha256': '385e3a4d78f3461d7571f99f6d3364961943181a77e67c7409cc1626ea0c9a0d', 'freshInitialProducerReceiptSha256': 'a81bfb97c7f0b4c8fec86ef41df76b687525bbed06b7c60a6a308add06bb0af3', 'freshInitialRootDataQualificationSha256': '37433bd1c5af748c11495bf11059387819f11a2c90947976d9304f0d78bd9577'}
+WAIT_ACTUAL049 = "WAITING_ACTUAL049_REPAIR_ACTIVATION"
+WAIT_COMPATIBILITY049 = "WAITING_049_AUDIENCE_MIGRATION_COMPATIBILITY"
+WAIT_PUBLICATION049 = "WAITING_GENUINE049_ASSETS_ACTIVATION_AND_COMPATIBILITY"
+SUPERSEDED048 = "PERMANENTLY_SUPERSEDED048_DO_NOT_PUBLISH"
+ACTIVATION049_RECORD_BYTES = 1394
+ACTIVATION049_RECORD_SHA256 = '3d5fdd3a03624163c20084b78cfc3a05b5cd4319c50160cb7f9c101c7406fc11'
+ACTIVATION049_EXPECTED = {'schema': 1, 'purpose': 'SSS049.PublicationOrderActivationEvidence.v1', 'status': 'Reviewed049MaintenanceActivated', 'sourceReceiptSha256': 'd909a8cb0a578c72314328db33be4f30edc0f6904c059caf1d394b1cdd43d3e1', 'sourceReceiptBytes': 3684, 'sourceObservedUtc': '2026-10-29T14:43:52.1536524Z', 'previousVersion': '0.4.7.0', 'previousSequence': 2, 'version': '0.4.9.0', 'sequence': 5, 'catalogSha256': 'f881f72b5ad759138c58a8201f2292c0df03f298d3ca4afb662e12756635eea1', 'bootstrapExecutableSha256': 'b457d95ccf64e711e20704bb85a5ca04b66384ebb26ed989b34c8838c6727b8c', 'bootstrapConfigSha256': '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337', 'sourceQualified': True, 'actualActivation': True, 'durableCancellationPresent': True, 'originalIoSettled': True, 'handlesSettled': True, 'originalRootIdentityPreserved': True, 'ordinaryPackageAbsent': True, 'exclusionsReleased': True, 'ownRunReadback': True, 'forcedTermination': False, 'machineRestarted': False, 'latestVerified': False, 'sssUiLaunchedByMaintenance': False, 'sslOrPosOperationStarted': False, 'nativeReady': False, 'grantsMaintenanceOrRemoteInput': False, 'originalCurrentVersionAtQuiescence': '0.4.7.0', 'originalCurrentSequenceAtQuiescence': 2, 'oldProcessNativeExitCode': 0, 'ownedWorkerNativeExitCode': 16, 'ownedJobTerminal': 'Cancelled', 'originalFailedHistoryArchivedFileCount': 3, 'originalLedgerBackupFileCount': 5, 'installedSignedRuntimeCount': 11, 'maintenanceDoctorMainExitCode': 0}
+COMPATIBILITY049_NAME = "audience-compatibility-v1.json"
+COMPATIBILITY049_RECORD_BYTES = 1096
+COMPATIBILITY049_RECORD_SHA256 = '160ff75dc8eb47625cce2b1778248c154c38815c967f20c936087fb0ec3f9106'
+COMPATIBILITY049_EXPECTED = {'schema': 1, 'purpose': 'SSS049.AudienceMigrationCompatibilityEvidence.v1', 'status': 'Reviewed049KnownAudienceCompatible', 'sourceReceiptSha256': 'fbf87ae5612ae909d15d1060514d74ed5c3d03baa1b1ed2c7a24189f4f8b8668', 'sourceReceiptBytes': 4321, 'sourceObservedUtc': '2026-10-29T14:28:28.223732Z', 'version': '0.4.9.0', 'sequence': 5, 'catalogSha256': 'f881f72b5ad759138c58a8201f2292c0df03f298d3ca4afb662e12756635eea1', 'packageSha256': 'ad10c1f61bd221498cdc53bda401d703e6df073d6f350e5d68261c10cdf90e93', 'initialSetupSha256': '993c360cd8405900592b576f3ad22dcad2465c91688935d124e5df2b87e41a9b', 'audienceScope': 'EXACT_KNOWN_R6_R7_TUPLES_ONLY', 'qualifiedKnownBootstrapTupleCount': 2, 'productionSourceQualified': True, 'completeKnownTupleMatchingQualified': True, 'singleBindingPerOperationQualified': True, 'unknownOrMixedTupleRejected': True, 'existing047AudienceQualified': True, 'freshInitialExistingRootRejected': True, 'notDerivedFromSingleLocalRoot': True, 'grantsMaintenanceOrRemoteInput': False, 'nativeReady': False, 'posAccepted': False}
+REQUEST049_FIELDS = ("schema","product","purpose","version","sequence",
+    "publicationGuard","packageBytes","packageSha256","envelopeSha256",
+    "initialSetupBytes","initialSetupSha256","activationRecordSha256",
+    "compatibilityRecordSha256","expectedStableEnvelopeSha256")
+RELEASE_BODY_049 = ("SSS-UI-PUBLISHER-V1: signed current-user UI assets only.\n\n"
+    "SSS 0.4.9.0 加入兩個已知背景元件版本的完整比對與單次操作綁定；UI與首次安裝包分開提供。"
+    "首次安裝包限尚無SSS更新根的電腦，不能用於接管既有安裝。"
+    "本發行不提供本機專用維修工具，也不把UI簽章當成啟動元件維修授權。\n\n"
+    "公開前須另完成實際維修啟用與已知受眾相容性資格。Windows7 POS、登入啟動、遠端連線、"
+    "鍵鼠與持續操作仍須各自實機驗收；不是完整防火牆、NativeReady或操作授權，不宣稱99或100分。")
+
 WAIT_FINAL_ASSETS = "WAIT_FINAL_INITIAL_AND_REPAIR_ASSETS_NOT_RUN"
 # Exact initial/repair delivery tuples come from producer handoffs and Root.
 # These delivery pins and the UI catalog do not prove actual repair activation.
@@ -90,7 +169,7 @@ RELEASE_BODY_047 = ("SSS-UI-PUBLISHER-V1: signed current-user UI assets only.\n\
 
 def release_body(tag):
     """New047 version copy only; stable retains exact historical ownership."""
-    return RELEASE_BODY_047 if tag == VERSION_TAG else RELEASE_BODY
+    return RELEASE_BODY_049 if tag == VERSION_TAG_049 else (RELEASE_BODY_048 if tag == VERSION_TAG_048 else (RELEASE_BODY_047 if tag == VERSION_TAG else RELEASE_BODY))
 
 class PublishError(Exception):
     pass
@@ -327,7 +406,7 @@ def validate_inputs(request_raw, package, envelope, initial, repair, activation)
     _require_metadata_only_renewal(request,catalog,package,envelope,initial,repair,activation)
     return request, catalog, {PACKAGE_NAME:package, ENVELOPE_NAME:envelope, INITIAL_NAME:initial, REPAIR_NAME:repair, ACTIVATION_NAME:activation}
 
-def load_bundle(root):
+def _load_bundle_047(root):
     if INITIAL_FILES is None or REPAIR_FILES is None:
         fail(WAIT_FINAL_ASSETS)
     folder = root / "updates" / "sss-ui"
@@ -423,10 +502,10 @@ class GitHub:
         if path != "/repos/" + REPOSITORY and not path.startswith("/repos/" + REPOSITORY + "/"):
             fail("api-repository")
         suffix = path[len("/repos/"+REPOSITORY):]
-        get_route = suffix == "" or suffix in ("/releases/tags/"+VERSION_TAG,"/releases/tags/"+STABLE_TAG) or re.fullmatch(r"/releases/[1-9][0-9]*(/assets\?per_page=100&page=[1-9][0-9]*)?",suffix)
+        get_route = suffix == "" or suffix in ("/releases/tags/"+VERSION_TAG,"/releases/tags/"+VERSION_TAG_048,"/releases/tags/"+VERSION_TAG_049,"/releases/tags/"+STABLE_TAG) or re.fullmatch(r"/releases/[1-9][0-9]*(/assets\?per_page=100&page=[1-9][0-9]*)?",suffix)
         create = (method == "POST" and suffix == "/releases" and type(value) is dict and
                   set(value) == {"tag_name","target_commitish","name","body","draft","prerelease","make_latest"} and
-                  value["tag_name"] in (VERSION_TAG,STABLE_TAG) and value["name"] == value["tag_name"] and
+                  value["tag_name"] in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049,STABLE_TAG) and value["name"] == value["tag_name"] and
                   re.fullmatch(r"[0-9a-f]{40}",value["target_commitish"]) and value["body"] == release_body(value["tag_name"]) and
                   value["draft"] is True and value["prerelease"] is False and value["make_latest"] == "false")
         publish = method == "PATCH" and re.fullmatch(r"/releases/[1-9][0-9]*",suffix) and value == {"draft":False,"make_latest":"false"}
@@ -445,7 +524,7 @@ class GitHub:
     def validate_release(self, value):
         if (not isinstance(value, dict) or type(value.get("id")) is not int or value["id"] < 1 or
                 type(value.get("draft")) is not bool or type(value.get("immutable")) is not bool or
-                value.get("prerelease") is not False or value.get("tag_name") not in (VERSION_TAG,STABLE_TAG) or
+                value.get("prerelease") is not False or value.get("tag_name") not in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049,STABLE_TAG) or
                 value.get("name") != value["tag_name"] or value.get("body") != release_body(value["tag_name"])):
             fail("release-metadata-unknown")
         if value["immutable"] and value["tag_name"] == STABLE_TAG:
@@ -454,9 +533,9 @@ class GitHub:
 
     def find_releases(self, tags):
         found = {}
-        if set(tags) != {VERSION_TAG,STABLE_TAG}:
+        if set(tags) not in ({VERSION_TAG,STABLE_TAG},{VERSION_TAG_048,STABLE_TAG},{VERSION_TAG_049,STABLE_TAG}):
             fail("fixed-tags-required")
-        for tag in (VERSION_TAG,STABLE_TAG):
+        for tag in (VERSION_TAG_049 if VERSION_TAG_049 in tags else (VERSION_TAG_048 if VERSION_TAG_048 in tags else VERSION_TAG),STABLE_TAG):
             try:
                 value=self.validate_release(self.api("/repos/"+REPOSITORY+"/releases/tags/"+tag))
                 if value["tag_name"] != tag:
@@ -538,9 +617,9 @@ class GitHub:
         current = self.release(release["id"])
         if current.get("tag_name") != release["tag_name"]:
             fail("release-tag-changed")
-        if ((current["tag_name"] == VERSION_TAG and name not in VERSION_ASSET_NAMES) or
+        if ((current["tag_name"] in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049) and name not in version_release_asset_names(current["tag_name"])) or
                 (current["tag_name"] == STABLE_TAG and not allowed_feed_name(name)) or
-                type(data) is not bytes or not 1 <= len(data) <= (MAX_FILE if name in VERSION_ASSET_NAMES else MAX_ENVELOPE)):
+                type(data) is not bytes or not 1 <= len(data) <= (MAX_FILE if name in (PACKAGE_NAME,INITIAL_NAME,REPAIR_NAME,PACKAGE_NAME_048,INITIAL_NAME_048,PACKAGE_NAME_049,INITIAL_NAME_049) else MAX_ENVELOPE)):
             fail("upload-name-or-size")
         assets = self.assets(current)
         if name in assets:
@@ -549,7 +628,7 @@ class GitHub:
             return assets[name]
         if current.get("body") != release_body(current["tag_name"]):
             fail("draft-not-owned-by-publisher")
-        if current["immutable"] or current["tag_name"] == VERSION_TAG and not current["draft"]:
+        if current["immutable"] or current["tag_name"] in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049) and not current["draft"]:
             fail("immutable-version-or-published-missing-asset")
         url = UPLOADS + "/repos/" + REPOSITORY + "/releases/" + str(current["id"]) + "/assets?name=" + urllib.parse.quote(name, safe="")
         self.event("asset-upload-submitted", name=name, releaseId=current["id"], bytes=len(data), sha256=sha(data))
@@ -668,7 +747,7 @@ def restore_old_if_safe(github,stable,old):
     except PublishError as error:
         github.event("restore-not-confirmed",code=str(error))
 
-def publish(github,request,catalog,members,commit):
+def _publish_047(github,request,catalog,members,commit):
     if type(commit) is not str or re.fullmatch(r"[0-9a-f]{40}",commit) is None:
         fail("commit-format")
     if set(members) != {PACKAGE_NAME,ENVELOPE_NAME,INITIAL_NAME,REPAIR_NAME,ACTIVATION_NAME}:
@@ -717,6 +796,389 @@ def publish(github,request,catalog,members,commit):
         restore_old_if_safe(github,stable,old)
         raise
 
+
+def version_delivery_zip_names(version):
+    if version == VERSION:
+        return VERSION_ASSET_NAMES
+    if version == VERSION_048:
+        return (PACKAGE_NAME_048, INITIAL_NAME_048)
+    if version == VERSION_049:
+        return (PACKAGE_NAME_049, INITIAL_NAME_049)
+    fail("fixed-version-required")
+
+def version_release_asset_names(tag):
+    if tag == VERSION_TAG:
+        return VERSION_ASSET_NAMES
+    if tag == VERSION_TAG_048:
+        return (PACKAGE_NAME_048, INITIAL_NAME_048, ENVELOPE_NAME)
+    if tag == VERSION_TAG_049:
+        return (PACKAGE_NAME_049, INITIAL_NAME_049, ENVELOPE_NAME)
+    fail("fixed-version-tag-required")
+
+def require_version_inventory(tag, names):
+    if set(names) != set(version_release_asset_names(tag)):
+        fail("version-specific-inventory")
+
+def require_actual048_activation(raw, request, catalog):
+    # This unconditional default veto is before any API and is not overridable
+    # by validation_only, caller records, booleans or historic047 authority.
+    if (ACTIVATION048_RECORD_BYTES is None or
+            ACTIVATION048_RECORD_SHA256 is None or ACTIVATION048_EXPECTED is None):
+        fail(WAIT_ACTUAL048)
+    if (type(raw) is not bytes or len(raw)!=ACTIVATION048_RECORD_BYTES or
+            sha(raw)!=ACTIVATION048_RECORD_SHA256 or
+            request["activationRecordSha256"]!=ACTIVATION048_RECORD_SHA256):
+        fail("048-activation-record-byte-pin")
+    value=parse_json(raw,4096)
+    exact(value,ACTIVATION048_EXPECTED)
+    if value!=ACTIVATION048_EXPECTED:
+        fail("048-activation-record-domain")
+    if (value["purpose"]!="SSS048.PublicationOrderActivationEvidence.v1" or
+            value["status"]!="Reviewed048MaintenanceActivated" or
+            value["previousVersion"]!=VERSION or value["previousSequence"]!=2 or
+            value["version"]!=VERSION_048 or value["sequence"]!=4 or
+            value["catalogSha256"]!=CATALOG048_SHA256 or
+            value["catalogSha256"]!=request["envelopeSha256"]):
+        fail("048-activation-target-binding")
+    for name in ("sourceQualified","actualActivation","durableCancellationPresent",
+            "originalIoSettled","handlesSettled","originalRootIdentityPreserved",
+            "ordinaryPackageAbsent","exclusionsReleased","ownRunReadback"):
+        if value[name] is not True:fail("048-activation-required-state")
+    for name in ("forcedTermination","machineRestarted","latestVerified",
+            "sssUiLaunchedByMaintenance","sslOrPosOperationStarted","nativeReady",
+            "grantsMaintenanceOrRemoteInput"):
+        if value[name] is not False:fail("048-activation-not-other-authority")
+    if (value["bootstrapExecutableSha256"]!="b457d95ccf64e711e20704bb85a5ca04b66384ebb26ed989b34c8838c6727b8c" or
+            value["bootstrapConfigSha256"]!="008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337" or
+            value["originalCurrentVersionAtQuiescence"]!=VERSION or
+            value["originalCurrentSequenceAtQuiescence"]!=2 or
+            type(value["oldProcessNativeExitCode"]) is not int or value["oldProcessNativeExitCode"]!=0 or
+            type(value["ownedWorkerNativeExitCode"]) is not int or value["ownedWorkerNativeExitCode"] not in (16,18) or
+            value["ownedJobTerminal"] not in ("Cancelled","Failed","WaitingForNetwork") or
+            value["originalFailedHistoryArchivedFileCount"]!=3 or
+            value["originalLedgerBackupFileCount"]!=5 or
+            value["installedSignedRuntimeCount"]!=11 or
+            type(value["maintenanceDoctorMainExitCode"]) is not int or value["maintenanceDoctorMainExitCode"]!=0):
+        fail("048-activation-maintenance-state")
+    if (type(value["sourceReceiptSha256"]) is not str or not re.fullmatch("[0-9a-f]{64}",value["sourceReceiptSha256"]) or
+            type(value["sourceReceiptBytes"]) is not int or not 1<=value["sourceReceiptBytes"]<=1048576 or
+            type(value["sourceObservedUtc"]) is not str or not value["sourceObservedUtc"].endswith("Z")):
+        fail("048-source-receipt-commitment")
+
+def validate048_inputs(request_raw, package, envelope, initial, activation=None, *, validation_only=False):
+    if type(validation_only) is not bool:fail("validation-only-type")
+    request=parse_json(request_raw,4096)
+    exact(request,REQUEST048_FIELDS)
+    if (type(request["schema"]) is not int or request["schema"]!=1 or
+            request["product"]!="SolarSystemShield" or
+            request["purpose"]!="SSS048.PublicationRequest.v1" or
+            request["version"]!=VERSION_048 or type(request["sequence"]) is not int or request["sequence"]!=4):
+        fail("048-request-purpose")
+    if request["publicationGuard"] not in (WAIT_ACTUAL048,"ACTUAL_REPAIR_ACTIVATION_PINNED"):
+        fail("048-publication-guard")
+    if (type(request["packageBytes"]) is not int or request["packageBytes"]!=UI048_BYTES or
+            request["packageSha256"]!=UI048_SHA256 or request["envelopeSha256"]!=CATALOG048_SHA256 or
+            type(request["initialSetupBytes"]) is not int or request["initialSetupBytes"]!=INITIAL048_BYTES or
+            request["initialSetupSha256"]!=INITIAL048_SHA256 or
+            request["expectedStableEnvelopeSha256"]!=PREDECESSOR048_SHA256):
+        fail("048-request-fixed-pins")
+    if (type(request["activationRecordSha256"]) is not str or
+            request["activationRecordSha256"]!=WAIT_ACTUAL048 and
+            not re.fullmatch("[0-9a-f]{64}",request["activationRecordSha256"])):
+        fail("048-activation-request-format")
+    if len(envelope)!=CATALOG048_BYTES or sha(envelope)!=CATALOG048_SHA256:
+        fail("048-catalog-exact-tuple")
+    catalog=verify_envelope(envelope)
+    if catalog["version"]!=VERSION_048 or catalog["sequence"]!=4:
+        fail("048-catalog-purpose")
+    verify_zip(package,catalog)
+    verify_exact_delivery_zip(initial,INITIAL048_BYTES,INITIAL048_SHA256,INITIAL048_FILES,"initial048")
+    members={PACKAGE_NAME_048:package,ENVELOPE_NAME:envelope,INITIAL_NAME_048:initial,ACTIVATION_NAME:activation}
+    if not validation_only:
+        if request["publicationGuard"]!= "ACTUAL_REPAIR_ACTIVATION_PINNED":
+            fail(WAIT_ACTUAL048)
+        require_actual048_activation(activation,request,catalog)
+    return request,catalog,members
+
+def load_bundle(root, *, validation_only=False):
+    folder=root/"updates"/"sss-ui"
+    request_raw=read_local(folder/"publish-request.json",4096)
+    request=parse_json(request_raw,4096)
+    if request.get("version")==VERSION_048:fail(SUPERSEDED048)
+    if request.get("version")!=VERSION_049:
+        return _load_bundle_047(root)
+    # Before reading payload, genuine049 must have been independently qualified.
+    # No048 bytes, guessed artifact or caller pin can satisfy these constants.
+    _require049_assets_bound()
+    for directory in (root,root/"updates",folder,folder/"payload"):
+        if directory.is_symlink() or not directory.is_dir():fail("checkout-directory-type")
+    expected={PACKAGE_NAME_049,INITIAL_NAME_049,ENVELOPE_NAME}
+    if {p.name for p in (folder/"payload").iterdir()}!=expected:fail("049-payload-exact-three")
+    activation=compatibility=None
+    if ACTIVATION049_RECORD_SHA256 is not None:
+        activation=read_local(folder/ACTIVATION_NAME,4096)
+    if COMPATIBILITY049_RECORD_SHA256 is not None:
+        compatibility=read_local(folder/COMPATIBILITY049_NAME,4096)
+    return validate049_inputs(request_raw,
+        read_local(folder/"payload"/PACKAGE_NAME_049,MAX_FILE),
+        read_local(folder/"payload"/ENVELOPE_NAME,MAX_ENVELOPE),
+        read_local(folder/"payload"/INITIAL_NAME_049,MAX_FILE),
+        activation,compatibility,validation_only=validation_only)
+
+def _publish048(github,request,catalog,members,commit):
+    fail(SUPERSEDED048)
+    if type(commit) is not str or re.fullmatch("[0-9a-f]{40}",commit) is None:fail("commit-format")
+    if set(members)!={PACKAGE_NAME_048,INITIAL_NAME_048,ENVELOPE_NAME,ACTIVATION_NAME}:fail("048-fixed-four-inputs")
+    request,actual,members=validate048_inputs(canonical(request),members[PACKAGE_NAME_048],
+        members[ENVELOPE_NAME],members[INITIAL_NAME_048],members[ACTIVATION_NAME])
+    if actual!=catalog:fail("catalog-object-not-verified-bytes")
+    # validate048_inputs above always requires the actual activation record.
+    # There is no validation_only argument on any public path.
+    repo=github.api("/repos/"+REPOSITORY)
+    if (type(repo) is not dict or repo.get("full_name")!=REPOSITORY or repo.get("private") is not False or
+            repo.get("default_branch")!="main" or repo.get("archived") is not False):fail("fixed-public-repository-required")
+    envelope=members[ENVELOPE_NAME]
+    releases=github.find_releases({VERSION_TAG_048,STABLE_TAG})
+    stable=releases.get(STABLE_TAG)
+    old,already=stable_preflight(github,stable,request,catalog,envelope)
+    release=releases.get(VERSION_TAG_048)
+    if release is None:release=github.create_draft(VERSION_TAG_048,commit)
+    existing=github.assets(release)
+    wanted=set(version_release_asset_names(VERSION_TAG_048))
+    if not set(existing).issubset(wanted) or not release["draft"] and set(existing)!=wanted:
+        fail("048-version-inventory")
+    for name in version_release_asset_names(VERSION_TAG_048):
+        github.ensure_asset(release,name,members[name])
+    release=github.publish_draft(release)
+    require_version_inventory(VERSION_TAG_048,github.assets(release))
+    for name in version_release_asset_names(VERSION_TAG_048):
+        github.public_check(VERSION_TAG_048,name,members[name])
+    verify_envelope(envelope)
+    if already is not None:
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope);return
+    if stable is None:stable=github.create_draft(STABLE_TAG,commit)
+    candidate=pending_name(catalog,envelope)
+    pending=github.ensure_asset(stable,candidate,envelope)
+    stable=github.publish_draft(stable)
+    github.public_check(STABLE_TAG,candidate,envelope)
+    verify_envelope(envelope)
+    old,already=stable_preflight(github,stable,request,catalog,envelope)
+    if already is not None:
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope);return
+    try:
+        if old is not None and old[3]==ENVELOPE_NAME:
+            verify_envelope(envelope)
+            github.rename(stable,old[2],ENVELOPE_NAME,archived_name(old[0],old[1]),old[1],admission_envelope=envelope)
+        verify_envelope(envelope)
+        github.rename(stable,pending,candidate,ENVELOPE_NAME,envelope,admission_envelope=envelope)
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope)
+        github.event("stable-feed-verified",sha256=sha(envelope),possibleTemporary404=True)
+    except PublishError:
+        restore_old_if_safe(github,stable,old);raise
+
+def publish(github,request,catalog,members,commit):
+    if request.get("version")==VERSION_048:fail(SUPERSEDED048)
+    if request.get("version")==VERSION_049:
+        return _publish049(github,request,catalog,members,commit)
+    return _publish_047(github,request,catalog,members,commit)
+
+
+def _require049_assets_bound():
+    values=(UI049_BYTES,UI049_SHA256,CATALOG049_BYTES,CATALOG049_SHA256,
+        INITIAL049_BYTES,INITIAL049_SHA256,INITIAL049_FILES,
+        BOOTSTRAP049_EXECUTABLE_SHA256,BOOTSTRAP049_CONFIG_SHA256,
+        ASSET049_PRODUCER_COMMITMENT)
+    if any(value is None for value in values):fail(WAIT_ASSETS049)
+    for value in (UI049_BYTES,CATALOG049_BYTES,INITIAL049_BYTES):
+        if type(value) is not int or not 1<=value<=MAX_FILE:fail("049-bound-size")
+    for value in (UI049_SHA256,CATALOG049_SHA256,INITIAL049_SHA256,
+            BOOTSTRAP049_EXECUTABLE_SHA256,BOOTSTRAP049_CONFIG_SHA256):
+        if type(value) is not str or re.fullmatch("[0-9a-f]{64}",value) is None:fail("049-bound-digest")
+    if type(INITIAL049_FILES) is not dict or len(INITIAL049_FILES)!=7:fail("049-initial-exact-seven-unbound")
+    exact(ASSET049_PRODUCER_COMMITMENT,("productionSourceQualificationSha256",
+        "catalogProducerQualificationSha256","initialProducerQualificationSha256",
+        "independentGenuineVectorQualificationSha256"))
+    if any(value is None for value in ASSET049_PRODUCER_COMMITMENT.values()):
+        fail(WAIT_SOURCE049)
+    for value in ASSET049_PRODUCER_COMMITMENT.values():
+        if type(value) is not str or re.fullmatch("[0-9a-f]{64}",value) is None:fail("049-producer-commitment")
+
+def require_actual049_compatibility(raw,request,catalog):
+    if (COMPATIBILITY049_RECORD_BYTES is None or COMPATIBILITY049_RECORD_SHA256 is None or
+            COMPATIBILITY049_EXPECTED is None):fail(WAIT_COMPATIBILITY049)
+    if (type(raw) is not bytes or len(raw)!=COMPATIBILITY049_RECORD_BYTES or
+            sha(raw)!=COMPATIBILITY049_RECORD_SHA256 or
+            request["compatibilityRecordSha256"]!=COMPATIBILITY049_RECORD_SHA256):
+        fail("049-compatibility-byte-pin")
+    value=parse_json(raw,4096)
+    exact(value,COMPATIBILITY049_EXPECTED)
+    if value!=COMPATIBILITY049_EXPECTED:fail("049-compatibility-domain")
+    if (value["purpose"]!="SSS049.AudienceMigrationCompatibilityEvidence.v1" or
+            value["status"]!="Reviewed049KnownAudienceCompatible" or
+            value["version"]!=VERSION_049 or type(value["sequence"]) is not int or value["sequence"]!=5 or
+            value["catalogSha256"]!=CATALOG049_SHA256 or value["catalogSha256"]!=request["envelopeSha256"] or
+            value["packageSha256"]!=UI049_SHA256 or value["initialSetupSha256"]!=INITIAL049_SHA256 or
+            value["audienceScope"]!="EXACT_KNOWN_R6_R7_TUPLES_ONLY" or
+            type(value["qualifiedKnownBootstrapTupleCount"]) is not int or value["qualifiedKnownBootstrapTupleCount"]!=2):
+        fail("049-compatibility-target")
+    for name in ("productionSourceQualified","completeKnownTupleMatchingQualified",
+            "singleBindingPerOperationQualified","unknownOrMixedTupleRejected",
+            "existing047AudienceQualified","freshInitialExistingRootRejected",
+            "notDerivedFromSingleLocalRoot"):
+        if value[name] is not True:fail("049-compatibility-required")
+    for name in ("grantsMaintenanceOrRemoteInput","nativeReady","posAccepted"):
+        if value[name] is not False:fail("049-compatibility-not-operation-grant")
+    if (type(value["sourceReceiptSha256"]) is not str or re.fullmatch("[0-9a-f]{64}",value["sourceReceiptSha256"]) is None or
+            type(value["sourceReceiptBytes"]) is not int or not 1<=value["sourceReceiptBytes"]<=MAX_JSON or
+            type(value["sourceObservedUtc"]) is not str or not value["sourceObservedUtc"].endswith("Z")):
+        fail("049-compatibility-source-commitment")
+
+def require_actual049_activation(raw, request, catalog):
+    # This unconditional default veto is before any API and is not overridable
+    # by validation_only, caller records, booleans or historic047 authority.
+    if (ACTIVATION049_RECORD_BYTES is None or
+            ACTIVATION049_RECORD_SHA256 is None or ACTIVATION049_EXPECTED is None):
+        fail(WAIT_ACTUAL049)
+    if (type(raw) is not bytes or len(raw)!=ACTIVATION049_RECORD_BYTES or
+            sha(raw)!=ACTIVATION049_RECORD_SHA256 or
+            request["activationRecordSha256"]!=ACTIVATION049_RECORD_SHA256):
+        fail("049-activation-record-byte-pin")
+    value=parse_json(raw,4096)
+    exact(value,ACTIVATION049_EXPECTED)
+    if value!=ACTIVATION049_EXPECTED:
+        fail("049-activation-record-domain")
+    if (value["purpose"]!="SSS049.PublicationOrderActivationEvidence.v1" or
+            value["status"]!="Reviewed049MaintenanceActivated" or
+            value["previousVersion"]!=VERSION or value["previousSequence"]!=2 or
+            value["version"]!=VERSION_049 or value["sequence"]!=5 or
+            value["catalogSha256"]!=CATALOG049_SHA256 or
+            value["catalogSha256"]!=request["envelopeSha256"]):
+        fail("049-activation-target-binding")
+    for name in ("sourceQualified","actualActivation","durableCancellationPresent",
+            "originalIoSettled","handlesSettled","originalRootIdentityPreserved",
+            "ordinaryPackageAbsent","exclusionsReleased","ownRunReadback"):
+        if value[name] is not True:fail("049-activation-required-state")
+    for name in ("forcedTermination","machineRestarted","latestVerified",
+            "sssUiLaunchedByMaintenance","sslOrPosOperationStarted","nativeReady",
+            "grantsMaintenanceOrRemoteInput"):
+        if value[name] is not False:fail("049-activation-not-other-authority")
+    if (value["bootstrapExecutableSha256"]!=BOOTSTRAP049_EXECUTABLE_SHA256 or
+            value["bootstrapConfigSha256"]!=BOOTSTRAP049_CONFIG_SHA256 or
+            value["originalCurrentVersionAtQuiescence"]!=VERSION or
+            value["originalCurrentSequenceAtQuiescence"]!=2 or
+            type(value["oldProcessNativeExitCode"]) is not int or value["oldProcessNativeExitCode"]!=0 or
+            type(value["ownedWorkerNativeExitCode"]) is not int or value["ownedWorkerNativeExitCode"] not in (16,18) or
+            value["ownedJobTerminal"] not in ("Cancelled","Failed","WaitingForNetwork") or
+            value["originalFailedHistoryArchivedFileCount"]!=3 or
+            value["originalLedgerBackupFileCount"]!=5 or
+            value["installedSignedRuntimeCount"]!=11 or
+            type(value["maintenanceDoctorMainExitCode"]) is not int or value["maintenanceDoctorMainExitCode"]!=0):
+        fail("049-activation-maintenance-state")
+    if (type(value["sourceReceiptSha256"]) is not str or not re.fullmatch("[0-9a-f]{64}",value["sourceReceiptSha256"]) or
+            type(value["sourceReceiptBytes"]) is not int or not 1<=value["sourceReceiptBytes"]<=1048576 or
+            type(value["sourceObservedUtc"]) is not str or not value["sourceObservedUtc"].endswith("Z")):
+        fail("049-source-receipt-commitment")
+
+def validate049_inputs(request_raw, package, envelope, initial, activation=None, compatibility=None, *, validation_only=False):
+    if type(validation_only) is not bool:fail("validation-only-type")
+    request=parse_json(request_raw,4096)
+    exact(request,REQUEST049_FIELDS)
+    if (type(request["schema"]) is not int or request["schema"]!=1 or
+            request["product"]!="SolarSystemShield" or
+            request["purpose"]!="SSS049.PublicationRequest.v1" or
+            request["version"]!=VERSION_049 or type(request["sequence"]) is not int or request["sequence"]!=5):
+        fail("049-request-purpose")
+    _require049_assets_bound()
+    if request["publicationGuard"] not in (WAIT_PUBLICATION049,"ACTUAL_REPAIR_ACTIVATION_AND_AUDIENCE_PINNED"):
+        fail("049-publication-guard")
+    if (type(request["packageBytes"]) is not int or request["packageBytes"]!=UI049_BYTES or
+            request["packageSha256"]!=UI049_SHA256 or request["envelopeSha256"]!=CATALOG049_SHA256 or
+            type(request["initialSetupBytes"]) is not int or request["initialSetupBytes"]!=INITIAL049_BYTES or
+            request["initialSetupSha256"]!=INITIAL049_SHA256 or
+            request["expectedStableEnvelopeSha256"]!=PREDECESSOR049_SHA256):
+        fail("049-request-fixed-pins")
+    if (type(request["activationRecordSha256"]) is not str or
+            request["activationRecordSha256"]!=WAIT_ACTUAL049 and
+            not re.fullmatch("[0-9a-f]{64}",request["activationRecordSha256"])):
+        fail("049-activation-request-format")
+    if (request["compatibilityRecordSha256"]!=WAIT_COMPATIBILITY049 and
+            (type(request["compatibilityRecordSha256"]) is not str or re.fullmatch("[0-9a-f]{64}",request["compatibilityRecordSha256"]) is None)):
+        fail("049-compatibility-request-format")
+    if len(envelope)!=CATALOG049_BYTES or sha(envelope)!=CATALOG049_SHA256:
+        fail("049-catalog-exact-tuple")
+    catalog=verify_envelope(envelope)
+    if catalog["version"]!=VERSION_049 or catalog["sequence"]!=5:
+        fail("049-catalog-purpose")
+    verify_zip(package,catalog)
+    verify_exact_delivery_zip(initial,INITIAL049_BYTES,INITIAL049_SHA256,INITIAL049_FILES,"initial049")
+    members={PACKAGE_NAME_049:package,ENVELOPE_NAME:envelope,INITIAL_NAME_049:initial,ACTIVATION_NAME:activation,COMPATIBILITY049_NAME:compatibility}
+    if not validation_only:
+        if request["publicationGuard"]!= "ACTUAL_REPAIR_ACTIVATION_AND_AUDIENCE_PINNED":
+            fail(WAIT_ACTUAL049)
+        require_actual049_activation(activation,request,catalog)
+        require_actual049_compatibility(compatibility,request,catalog)
+    return request,catalog,members
+
+def _publish049(github,request,catalog,members,commit):
+    if type(commit) is not str or re.fullmatch("[0-9a-f]{40}",commit) is None:fail("commit-format")
+    if set(members)!={PACKAGE_NAME_049,INITIAL_NAME_049,ENVELOPE_NAME,ACTIVATION_NAME,COMPATIBILITY049_NAME}:fail("049-fixed-five-inputs")
+    request,actual,members=validate049_inputs(canonical(request),members[PACKAGE_NAME_049],
+        members[ENVELOPE_NAME],members[INITIAL_NAME_049],members[ACTIVATION_NAME],members[COMPATIBILITY049_NAME])
+    if actual!=catalog:fail("catalog-object-not-verified-bytes")
+    # validate049_inputs above always requires the actual activation record.
+    # There is no validation_only argument on any public path.
+    repo=github.api("/repos/"+REPOSITORY)
+    if (type(repo) is not dict or repo.get("full_name")!=REPOSITORY or repo.get("private") is not False or
+            repo.get("default_branch")!="main" or repo.get("archived") is not False):fail("fixed-public-repository-required")
+    envelope=members[ENVELOPE_NAME]
+    releases=github.find_releases({VERSION_TAG_049,STABLE_TAG})
+    stable=releases.get(STABLE_TAG)
+    old,already=stable_preflight(github,stable,request,catalog,envelope)
+    release=releases.get(VERSION_TAG_049)
+    if release is None:release=github.create_draft(VERSION_TAG_049,commit)
+    existing=github.assets(release)
+    wanted=set(version_release_asset_names(VERSION_TAG_049))
+    if not set(existing).issubset(wanted) or not release["draft"] and set(existing)!=wanted:
+        fail("049-version-inventory")
+    for name in version_release_asset_names(VERSION_TAG_049):
+        github.ensure_asset(release,name,members[name])
+    release=github.publish_draft(release)
+    require_version_inventory(VERSION_TAG_049,github.assets(release))
+    for name in version_release_asset_names(VERSION_TAG_049):
+        github.public_check(VERSION_TAG_049,name,members[name])
+    verify_envelope(envelope)
+    if already is not None:
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope);return
+    if stable is None:stable=github.create_draft(STABLE_TAG,commit)
+    candidate=pending_name(catalog,envelope)
+    pending=github.ensure_asset(stable,candidate,envelope)
+    stable=github.publish_draft(stable)
+    github.public_check(STABLE_TAG,candidate,envelope)
+    verify_envelope(envelope)
+    old,already=stable_preflight(github,stable,request,catalog,envelope)
+    if already is not None:
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope);return
+    try:
+        if old is not None and old[3]==ENVELOPE_NAME:
+            verify_envelope(envelope)
+            github.rename(stable,old[2],ENVELOPE_NAME,archived_name(old[0],old[1]),old[1],admission_envelope=envelope)
+        verify_envelope(envelope)
+        github.rename(stable,pending,candidate,ENVELOPE_NAME,envelope,admission_envelope=envelope)
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope)
+        github.event("stable-feed-verified",sha256=sha(envelope),possibleTemporary404=True)
+    except PublishError:
+        restore_old_if_safe(github,stable,old);raise
+
+def publication_version_tag(version):
+    if version==VERSION_049:return VERSION_TAG_049
+    if version==VERSION:return VERSION_TAG
+    fail("publication-version-not-current-or-historical047")
+
+def publication_package_name(version):
+    if version==VERSION_049:return PACKAGE_NAME_049
+    if version==VERSION:return PACKAGE_NAME
+    fail("publication-version-not-current-or-historical047")
+
 def main():
     receipt={"schema":1,"repository":REPOSITORY,"tags":[VERSION_TAG,STABLE_TAG],"status":"not-started","events":[],"productExecuted":False,"nativeReady":False,"remoteInputGranted":False}
     try:
@@ -727,7 +1189,8 @@ def main():
         if Path(__file__).resolve(strict=True) != root/"tools"/"sss_ui_release_publisher.py":
             fail("fixed-checkout-layout")
         request,catalog,members=load_bundle(root)
-        receipt.update({"version":catalog["version"],"sequence":catalog["sequence"],"envelopeSha256":sha(members[ENVELOPE_NAME]),"packageSha256":sha(members[PACKAGE_NAME])})
+        receipt["tags"]=[publication_version_tag(catalog["version"]),STABLE_TAG]
+        receipt.update({"version":catalog["version"],"sequence":catalog["sequence"],"envelopeSha256":sha(members[ENVELOPE_NAME]),"packageSha256":sha(members[publication_package_name(catalog["version"])])})
         publish(GitHub(os.environ.get("GITHUB_TOKEN",""),receipt),request,catalog,members,os.environ.get("GITHUB_SHA",""))
         verify_envelope(members[ENVELOPE_NAME])
         receipt["status"]="public-readback-verified"

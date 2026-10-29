@@ -81,8 +81,37 @@ RELEASE_BODY_071 = (MARKER + "\n\n"
     "本次發行不代表 Native C1／Ready 或100分已完成。")
 
 
+RELEASE_BODY_073 = (MARKER + "\n\n"
+    "Solar System Link 0.7.3 畫面安全檢查維護候選發行\n\n"
+    "按連線會先準備本機 SSS，核對公開最新版，必要時透過固定可信更新器更新並啟動背景程序；"
+    "取得新鮮有效證據後才建立裝置連線。認證後也核對對端 SSS，雙方證據有效後才允許畫面與操作。\n\n"
+    "每張畫面綁定本次會話與檢查證據，佇列、解碼及呈現前會重新核對；"
+    "已過期或撤銷的舊畫面不會因新證據恢復有效。鍵鼠仍須既有有效操作授權，SSS 檢查不會自行授權。\n\n"
+    "保留固定更新公鑰、完整簽章與套件驗證、正常退出後重新開啟、有限重連及回復機制。"
+    "重新開啟或重連不會自行恢復鍵盤滑鼠操作允許。\n\n"
+    "普通 Windows 更新與真實雙端使用、Windows 7 POS 連線／鍵鼠／持續操作及 Native C1／Ready 仍待實機驗收。"
+    "本次發行不代表上述驗收完成，也不宣稱軟體已達 100 分。完整 SSS 安裝檔另列下載。")
+
+
+RELEASE_BODY_074 = (MARKER + "\n\n"
+    "Solar System Link 0.7.4 連線前SSS檢查維護候選發行\n\n"
+    "按連線會先觸發本機SSS準備及最新版檢查，需要時透過既有可信更新器更新與正常重啟。"
+    "取得新鮮有效證據後才建立裝置連線；必要認證後再準備對端，雙方狀態有效後才允許畫面與已授權操作。\n\n"
+    "背景元件只接受兩組已知的完整程式與設定摘要，每次流程綁定同一組已核對的元件。"
+    "未知、混合或中途改變的檔案不會自動納入信任。這項檢查不會自行授予鍵盤滑鼠權限。\n\n"
+    "畫面仍綁定本次會話與有效證據，佇列、解碼及呈現前重新核對。"
+    "保留固定更新公鑰、完整簽章與套件驗證、正常退出後重新開啟、有限重連及回復機制；"
+    "重開或重連不會自行恢復操作允許。\n\n"
+    "SSS本機專用維修工具不在公開套件內，首次安裝另列下載。普通Windows雙端使用、Windows7 POS連線、"
+    "鍵鼠、持續操作及Native C1／Ready仍須各自實機驗收；本次候選不代表上述驗收完成，也不宣稱100分。")
+
+
 def version_body(tag):
     """Only reviewed version copy changes; stable and070 ownership stay exact."""
+    if tag == "ssl-v0.7.4.0":
+        return RELEASE_BODY_074
+    if tag == "ssl-v0.7.3.0":
+        return RELEASE_BODY_073
     if tag == "ssl-v0.7.1.0":
         return RELEASE_BODY_071
     return RELEASE_BODY_070 if tag == "ssl-v0.7.0.0" else RELEASE_BODY

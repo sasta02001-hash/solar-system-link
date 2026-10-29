@@ -24,6 +24,9 @@ PUBLIC = "https://github.com/" + REPOSITORY + "/releases/download/"
 API_VERSION = "2022-11-28"
 VERSION = "0.4.7.0"
 VERSION_TAG = "sss-ui-v" + VERSION
+RENEWAL_SEQUENCE = 3
+RENEWAL_CATALOG_BYTES = 2921
+RENEWAL_CATALOG_SHA256 = "369a16eb4efeca86a7c3f0152e62ba15841692bdca031bafe842b75b82ec39db"
 STABLE_TAG = "sss-ui-stable"
 ENVELOPE_NAME = "sss-ui-update-v1.json"
 PACKAGE_NAME = "SSS-" + VERSION + "-UI-x64.zip"
@@ -248,6 +251,54 @@ def require_actual_repair_activation(raw, request, catalog, envelope, repair):
         fail("activation-record-bundle-binding")
     return value
 
+def _require_metadata_only_renewal(request, catalog, package, envelope, initial, repair, activation):
+    """Only this actual signed047/3 renewal; historic activation stays seq2."""
+    if (request["sequence"]!=RENEWAL_SEQUENCE or catalog["sequence"]!=RENEWAL_SEQUENCE or
+            request["version"]!=VERSION or catalog["version"]!=VERSION or
+            len(envelope)!=RENEWAL_CATALOG_BYTES or sha(envelope)!=RENEWAL_CATALOG_SHA256 or
+            request["expectedStableEnvelopeSha256"]!=KNOWN_CATALOG_SHA256):
+        fail("renewal-fixed-target-or-old-pin")
+    # Both complete ZIPs and exact7 inventories are immutable. No external flag
+    # can disable currentness: current=False exists only for this pinned history.
+    verify_final_initial_and_repair(initial,repair)
+    baselines=[]
+    for data,path in ((initial,"initial-input/sss-ui-update-v1.json"),(repair,"repair-input/sss-ui-update-v1.json")):
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            with archive.open(path) as stream:baseline=stream.read(MAX_ENVELOPE+1)
+        baselines.append(baseline)
+    if (baselines[0]!=baselines[1] or len(baselines[0])!=KNOWN_CATALOG_BYTES or
+            sha(baselines[0])!=KNOWN_CATALOG_SHA256):
+        fail("renewal-embedded-baseline-conflict")
+    baseline_raw=baselines[0]
+    baseline=verify_envelope(baseline_raw,current=False)
+    if baseline["version"]!=VERSION or baseline["sequence"]!=2:
+        fail("renewal-historical-baseline-purpose")
+    verify_zip(package,baseline)
+    # Derived solely from proved baseline bytes, never a caller's history/root.
+    historical_request={"activationRecordSha256":request["activationRecordSha256"],"version":baseline["version"],
+                        "sequence":baseline["sequence"],"envelopeSha256":sha(baseline_raw),"repairSha256":sha(repair)}
+    require_actual_repair_activation(activation,historical_request,baseline,baseline_raw,repair)
+    fixed=codec.FIELDS-{"sequence","publishedUtcTicks","expiresUtcTicks","files"}
+    if any(catalog[name]!=baseline[name] for name in fixed):
+        fail("renewal-nonmetadata-field-change")
+    require_advance(catalog,baseline)  # Existing strict same-URL/package/11 rule.
+    # New metadata is always current, including idempotence and slow final checks.
+    verify_envelope(envelope)
+
+def _require_published_version_readonly(github, release, members):
+    """No version create/upload/ensure/publish helper is reachable from renewal."""
+    if release is None:
+        fail("renewal-existing-published-version-required")
+    current=github.release(release["id"])
+    if current["tag_name"]!=VERSION_TAG or current["draft"]:
+        fail("renewal-existing-published-version-required")
+    assets=github.assets(current)
+    if set(assets)!=set(VERSION_ASSET_NAMES):
+        fail("renewal-version-inventory")
+    for name in VERSION_ASSET_NAMES:
+        github.asset_matches(assets[name],members[name])
+        github.public_check(VERSION_TAG,name,members[name])
+
 def validate_inputs(request_raw, package, envelope, initial, repair, activation):
     request = parse_json(request_raw, 4096)
     exact(request, ("schema", "version", "sequence", "packageBytes", "packageSha256", "envelopeSha256", "initialSetupBytes", "initialSetupSha256", "repairBytes", "repairSha256", "activationRecordSha256", "expectedStableEnvelopeSha256"))
@@ -261,6 +312,8 @@ def validate_inputs(request_raw, package, envelope, initial, repair, activation)
     old = request["expectedStableEnvelopeSha256"]
     if type(old) is not str or old and not re.fullmatch(r"[0-9a-f]{64}", old):
         fail("request-old-pin")
+    if request["sequence"]!=RENEWAL_SEQUENCE:
+        fail("renewal-sequence-required")
     catalog = verify_envelope(envelope)
     if (catalog["version"] != VERSION or catalog["sequence"] != request["sequence"] or
             len(envelope) > MAX_ENVELOPE or sha(envelope) != request["envelopeSha256"] or
@@ -271,7 +324,7 @@ def validate_inputs(request_raw, package, envelope, initial, repair, activation)
             type(request["repairBytes"]) is not int or request["repairBytes"]!=REPAIR_BYTES or request["repairSha256"]!=REPAIR_SHA256):
         fail("initial-or-repair-request-pin")
     verify_final_initial_and_repair(initial,repair)
-    require_actual_repair_activation(activation,request,catalog,envelope,repair)
+    _require_metadata_only_renewal(request,catalog,package,envelope,initial,repair,activation)
     return request, catalog, {PACKAGE_NAME:package, ENVELOPE_NAME:envelope, INITIAL_NAME:initial, REPAIR_NAME:repair, ACTIVATION_NAME:activation}
 
 def load_bundle(root):
@@ -624,7 +677,7 @@ def publish(github,request,catalog,members,commit):
     request,actual,members=validate_inputs(canonical(request),members[PACKAGE_NAME],members[ENVELOPE_NAME],members[INITIAL_NAME],members[REPAIR_NAME],members[ACTIVATION_NAME])
     if actual != catalog:
         fail("catalog-object-not-verified-bytes")
-    require_actual_repair_activation(members[ACTIVATION_NAME],request,actual,members[ENVELOPE_NAME],members[REPAIR_NAME])  # Before first API.
+    _require_metadata_only_renewal(request,actual,members[PACKAGE_NAME],members[ENVELOPE_NAME],members[INITIAL_NAME],members[REPAIR_NAME],members[ACTIVATION_NAME])  # Before first API.
     repo=github.api("/repos/"+REPOSITORY)
     if (type(repo) is not dict or repo.get("full_name") != REPOSITORY or repo.get("private") is not False or
             repo.get("default_branch") != "main" or repo.get("archived") is not False):
@@ -634,17 +687,7 @@ def publish(github,request,catalog,members,commit):
     stable=releases.get(STABLE_TAG)
     old,already=stable_preflight(github,stable,request,catalog,envelope)
     release=releases.get(VERSION_TAG)
-    if release is None:
-        release=github.create_draft(VERSION_TAG,commit)
-    if set(github.assets(release))-set(VERSION_ASSET_NAMES):
-        fail("version-unexpected-assets")
-    for name in VERSION_ASSET_NAMES:
-        github.ensure_asset(release,name,members[name])
-    release=github.publish_draft(release)
-    if set(github.assets(release)) != set(VERSION_ASSET_NAMES):
-        fail("version-inventory")
-    for name in VERSION_ASSET_NAMES:
-        github.public_check(VERSION_TAG,name,members[name])
+    _require_published_version_readonly(github,release,members)
     if already is not None:
         github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope)
         verify_envelope(envelope)

@@ -1,42 +1,35 @@
-"""Three focused activation047 cases. No old19/7/14 or repair suite replay."""
+"""Three grouped metadata-renewal delta cases; no true HTTP/product/root."""
 import ast
-import inspect
-import base64
 import copy
 import hashlib
 import io
 import json
 from pathlib import Path
 import socket
+from unittest.mock import patch
 import urllib.parse
 import urllib.request
 import zipfile
 import sss_ui_release_publisher as p
 def forbidden(*args,**kwargs):raise AssertionError("Real network forbidden")
-socket.socket=forbidden
-socket.create_connection=forbidden
-urllib.request.urlopen=forbidden
-urllib.request.OpenerDirector.open=forbidden
+socket.socket=forbidden;socket.create_connection=forbidden
+urllib.request.urlopen=forbidden;urllib.request.OpenerDirector.open=forbidden
 ROOT=Path(__file__).resolve().parent
 STAGE=ROOT.parent if ROOT.name=="tools" else ROOT/"repository-staging"
-DATA=STAGE/"updates/sss-ui/payload"
 COMMIT="a"*40
-def denied(action,code):
-    try:action()
-    except p.PublishError as error:assert str(error)==code,(str(error),code)
-    else:raise AssertionError("Expected fail-closed result")
 def funcs(tree):
     result={}
     for node in tree.body:
-        if isinstance(node,ast.FunctionDef):result[node.name]=node
+        if isinstance(node,ast.FunctionDef):result[node.name]=ast.dump(node)
         elif isinstance(node,ast.ClassDef):
             for child in node.body:
-                if isinstance(child,ast.FunctionDef):result[node.name+"."+child.name]=child
+                if isinstance(child,ast.FunctionDef):result[node.name+"."+child.name]=ast.dump(child)
     return result
-PROTECTED_AST_SHA256 = {'GitHub.rename': 'f60f0bd422ca1532ca7ef89e7bdd0d82e690b1852d41803c704d219fbc2921f8', 'stable_preflight': 'e1a759d2632ba0c02e79310673b0662abffbcdc1f8c1b69e17bb107c808f499d', 'restore_old_if_safe': '222c9d48f97d9ea24169d6dde1867bdb0f4f3cd097e4006b0ec3f84ee971c21d', 'require_advance': 'c37b8adf6e693e58203ddc51b1f55e5702bda9a8b8b1726b0f45de88d502c278', 'pending_name': '278dfa81a833108892ba5651333b41e4cc1035106082677ff84260cb902c754a', 'archived_name': 'f85ede3e41815ac7548b127a3cb0cf2898e9d2404267c94f642775c80db3f3f3', 'allowed_feed_name': '7f75e6dfafad81d7439a160ac5179a92087dbb4ae69c699a445cb9ccf9168fb6', 'GitHub.fetch': 'a8998d75d99d22777e9a8987d8121193c0eb2867dd6241561870a453b1cbb6af', 'GitHub.public_check': '209c3201a02bf3a343d23e970ecd70dab81ef310539b65709316a2ae93be1ad6', 'main': 'e9dc22904e2f350b0f8d382b41354298f33bf5e478e48a8a4900ca7c7965f5b4'}
-PUBLISH_EXPIRY_CALLS_SHA256 = '91d84e7b15ac5e0186e91d33d219dc87895e346af67e2fd6540652d4a94c4da7'
-OLD_ENV = base64.b64decode('eyJwYXlsb2FkQmFzZTY0IjoiZXlKelkyaGxiV0VpT2pFc0luQnliMlIxWTNRaU9pSlRiMnhoY2xONWMzUmxiVk5vYVdWc1pDSXNJbkIxY25CdmMyVWlPaUpUYjJ4aGNsTjVjM1JsYlZOb2FXVnNaQzVEZFhKeVpXNTBWWE5sY2xWcFZYQmtZWFJsTG5ZeElpd2ljSEp2Wm1sc1pTSTZJbU4xY25KbGJuUXRkWE5sY2kxMWFTMWpZVzVrYVdSaGRHVXRkakVpTENKamFHRnVibVZzSWpvaWMzUmhZbXhsSWl3aWEyVjVTV1FpT2lJeU5HTTFZMk0xWlRNMlpUa3lPR1ZoWlRRMk56ZGxZbUV4WkRaaU1qVTJZMk5qWVRrd05EQTVOalV5WXpObE5ETmlaalk1WkRjek5UZ3hZV1ZrTVdJeElpd2lkbVZ5YzJsdmJpSTZJakF1TkM0MkxqQWlMQ0p6WlhGMVpXNWpaU0k2TVN3aWNIVmliR2x6YUdWa1ZYUmpWR2xqYTNNaU9qWXpPVEk0T0RJM016QXdPREUyTWpJNE5Dd2laWGh3YVhKbGMxVjBZMVJwWTJ0eklqbzJNemt5T1RRek1qRXdNRGd4TmpJeU9EUXNJbkJoWTJ0aFoyVlZjbXdpT2lKb2RIUndjem92TDJkcGRHaDFZaTVqYjIwdmMyRnpkR0V3TWpBd01TMW9ZWE5vTDNOdmJHRnlMWE41YzNSbGJTMXNhVzVyTDNKbGJHVmhjMlZ6TDJSdmQyNXNiMkZrTDNOemN5MTFhUzEyTUM0MExqWXVNQzlUVTFNdE1DNDBMall1TUMxVlNTMTROalF1ZW1sd0lpd2ljR0ZqYTJGblpVSjVkR1Z6SWpvM05qQTNOak1zSW5CaFkydGhaMlZUYUdFeU5UWWlPaUk1WlRRNE56a3pNRFZtTnprd1ltUmlaV0kyTjJSbFlqSTVNekU1TVRRMk5UVXdZVGsxT1RnelpqQmxOR0l5TW1SbU5UWTJaRFl4T0dJNFlXWmhNbUZoSWl3aVptbHNaWE1pT2x0N0luQmhkR2dpT2lKVFUxTXVaWGhsSWl3aVlubDBaWE1pT2pjME56VXlNQ3dpYzJoaE1qVTJJam9pTlRkaU1qSm1ZbVV4T1dKaU16RXhOR0poWVRaaVl6VTBNekF4TVRJek9UQmxOVEF3WWpNNE16aGpaVEl5TkdSa05UYzJPV0ZpWm1ZeU1qbGlOR1UwT0NKOUxIc2ljR0YwYUNJNklsTlRVeTVEYjNKbExtUnNiQ0lzSW1KNWRHVnpJam8xT1RNNU1pd2ljMmhoTWpVMklqb2lNekV4TkRjM09UZzVZekU0WVdJNE9XWm1Oak5rWldReU56SXpaamxoTTJGbU9EWTBZVGMyTVRSa09EQmpOR0ZrWWpGbE5UVTFOamhqTVRjM01EVmxNU0o5TEhzaWNHRjBhQ0k2SWxOVFV5NUdkVzVqZEdsdmJtRnNMbVJzYkNJc0ltSjVkR1Z6SWpveE56azNNVElzSW5Ob1lUSTFOaUk2SW1WbE9UbGtaRGRtTm1ZNVpHRTNNRFU0TldJMU1UWTNOVFV3WlRjd09UbGtaalJpT1dNM01HVm1Zak0yTWpreU56QmpaVGMxWTJKa01tVXdZemhpWkRraWZTeDdJbkJoZEdnaU9pSlRVMU11VDNCbGNtRjBhVzl1Y3k1a2JHd2lMQ0ppZVhSbGN5STZNVEUwTVRjMkxDSnphR0V5TlRZaU9pSmpZamsxTkRrek1qRmpNbVZsWldVME1USm1aVFZqTm1FNU1Ea3hNREJsWlRoa1lXSTJaVGN3TTJJMU5tTmhOalk0WVRRNFlqQmtObU01TVdRNFlqTmhJbjBzZXlKd1lYUm9Jam9pVTFOVExsVndaR0YwWlhNdVpHeHNJaXdpWW5sMFpYTWlPalEyTURnd0xDSnphR0V5TlRZaU9pSmtaRE00Tm1Kak5XSXlaVFV3TmpZeU9XUXpNamszWVRrd05qaGlNRFV5WkRsbE5EZGlaREF6TUdZM1lqTmhNMkUzTlRrMlpqUTRaamhoWmpZek5ETXhJbjBzZXlKd1lYUm9Jam9pVTFOVExrOXdaWEpoZEdsdmJuTkliM04wTG1WNFpTSXNJbUo1ZEdWeklqbzBNRGsyTENKemFHRXlOVFlpT2lJd016QmhZVE5tTmpVNU1UVm1NV1ZtWkdOa05UQmtOams1WkdJeE5EWTFNems1WVRZMk5tVTBPVGs1TWpFek4yWTFOMlk1TWpaaE5qQmtPVEV6TkROa0luMHNleUp3WVhSb0lqb2lVMU5UTGs5d1pYSmhkR2x2Ym5OSWIzTjBMbVY0WlM1amIyNW1hV2NpTENKaWVYUmxjeUk2TWpVNExDSnphR0V5TlRZaU9pSXhZV1JoWmpNM09XWXhaR05pTjJZeFlUUTVNVFUyTkdGa1pqTm1OR0ZsTmpFNFpqZzVZVFEzWXpBek1UQXdNRFZoTm1KbE5UZzVaVGs1TlRNMU5XUTVJbjBzZXlKd1lYUm9Jam9pVTFOVExtVjRaUzVqYjI1bWFXY2lMQ0ppZVhSbGN5STZNekk1TENKemFHRXlOVFlpT2lJeVpXRTBZems1WlROak1HRXlaamRtWVRVd1pEZzBaR1EyTjJRME4yVmxNVFkxWm1Nek1qUXpZVEJsTlRJMllqZ3pOekkwWkRsaU1qa3hNRFkwTkRKaEluMHNleUp3WVhSb0lqb2lVMk55YVhCMGN5OVNaV0ZrVTNSaGRIVnpMbkJ6TVNJc0ltSjVkR1Z6SWpveE16QXhOeXdpYzJoaE1qVTJJam9pWXpNM09XSTFObVkwTnpBd05tUTRNbVppWVdNMk1HRmlNbUU0TTJFNE56ZzNNV1UyTkRGa05tUTRNbVZqTmpSaU9EZ3dPV05rTkRrM01XRTNNVEl3TUNKOUxIc2ljR0YwYUNJNklsTmpjbWx3ZEhNdlJtbHlaWGRoYkd4UGNHVnlZWFJwYjI0dWNITXhJaXdpWW5sMFpYTWlPakV4T1RJd0xDSnphR0V5TlRZaU9pSTFabVkwT1RFelpqUTRabUU1TVdGak0yUXpNRFF3TlRsbFptVXhZamM1TW1ZM05USTNZelV5TWpVMk1EWmtNbVJpTnpNMk56VTVOV1JpWldNMk5ESXlJbjBzZXlKd1lYUm9Jam9pVWtWQlJFMUZMbnBvTFZSWExuUjRkQ0lzSW1KNWRHVnpJam94TlRVNExDSnphR0V5TlRZaU9pSTNORGhsWkdObE5tTTJOMlE0TW1JNU0yUTFaR1l5WWpWbE9UUmhaV1EwTmpFM09UY3hOVEpoWmprMlpESTVORGc1WmpSbU1ETXdNekU0WTJaaU5XRXhJbjFkZlE9PSIsInNpZ25hdHVyZUJhc2U2NCI6ImJPM2kxRmtlcmI1dW1STWdRM01IQ2h2Y3lwcXdUeHFtbkFVUlRYV1pwWnBVQ0dGb1lEUWV1Z0hxamFPVjFBQzQyMGx6WCtjWVpiMWZ6Z2h1cUlLUDRleklJdWZMdVJ5bGsrSDJ4RUxvRHAzYVpyV2gzb0xuWDFaR09pM1Z3c1A1bTJ1SVh4VDNsMHdpbFVkVnYyNGhrdXYrV3A1RFA0M3Exb0pNQ1dlN090TzdEYmdzNXVEZXFSMk81eVB6bnEvWCtkR3d3cXJkeUptV3JWYWNockZvanpaUDB4VENEWHVTQk43YTAxTW5XSzcybDVFWFN5M2h6V3pBdVJKM0ZnZWxuTVpiaUNjZU5OQ256N3BzQmJJSVRqdmY1SDdrRmh6VVphaWJ4VFhvd0wzOWc0bVIrc1BVSHFEYW5QNTExODlSbmVlbU5DVjBVTWdJaEw2ZXFKam8xQT09In0=')
-LEGACY_BODY = 'SSS-UI-PUBLISHER-V1: signed current-user UI assets only.\n\nSSS 0.4.6.0 CurrentUser UI 更新通道；不是 NativeReady/C1 或操作授權。Windows7 POS、無人值守與持續鍵鼠操作仍待實機驗收，非100分交付。\n\n既有0.4.5須先正常選一次『結束SSS』，再由新背景更新流程接續；不強殺舊程序。新Run登入啟動登錄已讀回，但下次真登入自啟尚未測試；不是Native全功能驗收。'
+def denied(action,code):
+    try:action()
+    except p.PublishError as error:assert str(error)==code,(str(error),code)
+    else:raise AssertionError("Expected refusal: "+code)
+PROTECTED_AST = {'release_body': '77a145733342a6bbfa4482b1eecbf642c90f0d03ea065541549d186fd452bf83', 'fail': '405c438d0b16008e47c9c1b0838043c0f8ea4f51b88cdac89953ea4f4c04ff7f', 'sha': '87191a4a1d6f9f9404d87bb99ad2beeb2e96ca92d77fbcf51ac3740484fdfda6', 'canonical': '66031fdc6e9a26d38d835d2478409427d5a0c60e92525b7b83af097bfaa5ab5f', 'parse_json': 'c006c926ab340a828d99a64c103510ee37c2f2b8e38145d55419b364c86b7675', 'exact': 'f7c599a29a9ba70149cccbb07db0f917f5a9be6dafdae2b4c5554e945d5f0ba3', 'verify_envelope': '3b81447b3bf0e57e331305be3a7d5ac0e60863672fdf9ff83b2c70100d2d6bdd', 'read_local': 'fd2133f0bff14a5d0dcec682dd6d8d9264dd7888d017aa83f089e930e9dd732b', 'verify_zip': '4545d68910aacc6d486027845208202ff4013b7e2bfa9660c3fa1400170e6975', 'verify_known_ui': '4596efe528836852b0ce660d21806444ce33a6b42cce5e634daaec4aea0115f9', 'verify_known_bootstrap': 'a52199220178565a160dec18d663356ce0377afae4f01d74be728493abd5cd7a', 'verify_exact_delivery_zip': '5171d67c65c89ae95111b1e417f9e0db0c2fe92a8e6f376986aed665c897184f', 'verify_final_initial_and_repair': 'cd8dc65ec080d8b0f7cc890017f2e8f75610c534da42b59b2b4a64cf7f8269e5', 'require_actual_repair_activation': '996727f110021464b4839aaec5526023d8c68fac442d4a992cd545016240914f', 'load_bundle': '4062d826af84d07bfacdc157cb359a1bcc45770351802931d45dc34a6478501e', 'NoRedirect.redirect_request': '31941de59306b0430a7f327b1df97ea8f0d56975bbfb0249ea521b4740e90a48', 'GitHub.__init__': 'b95e5dacfd5a80b8f9b0cdf0b367d3d1ce797c05d5a1fab2751a1a49ce925e9a', 'GitHub.event': '6708d4fc1b6fc51b27957395e316b3a1a582adcbf3b5533d2de8f1215963d1e9', 'GitHub.fetch': 'a8998d75d99d22777e9a8987d8121193c0eb2867dd6241561870a453b1cbb6af', 'GitHub.api': '39c7b2273233581ac32b955056f2e8a05086d31df4b203f4f82ac16086e17905', 'GitHub.release': '3b951f28a58f5c8e9f9e135a803bd2a7769f8410d7995a4b09effb4f3178abfa', 'GitHub.validate_release': 'dde0da7886ecca6d3f5d345aa821657f9371b1c5d336a32a7248de74e9390d40', 'GitHub.find_releases': '637d29d4bd18e564badf421540ef140d44efbb756d4a76ab9c7c5970d32bf02f', 'GitHub.assets': '18c537262f744f138a4c4a8c92dec9da67323838f2cd3e4470e41cec4e8f0783', 'GitHub.asset_bytes': '4cb6a93ede2a5f1858639637ac369f710d86bab951bf7dba130a43d0c5074b7d', 'GitHub.asset_matches': '2909967fe52d212b0d5fa02d8a970d32d44779cc0b4f68d71aecf30d7e487a71', 'GitHub.public_check': '209c3201a02bf3a343d23e970ecd70dab81ef310539b65709316a2ae93be1ad6', 'GitHub.create_draft': '8cfac675bdc7f7212a88c1b9e11bb37b685643862d405f7479168d93e731bb50', 'GitHub.publish_draft': '874ace40a8e386f5cd37e1501a0b58c646d4c5d5263809a0fe9290258926c721', 'GitHub.ensure_asset': 'e6a1b7aa335dc7e31170dd369e1250e8032a48ca98be8fa0000e7bdec5653504', 'GitHub.rename': 'f60f0bd422ca1532ca7ef89e7bdd0d82e690b1852d41803c704d219fbc2921f8', 'pending_name': '278dfa81a833108892ba5651333b41e4cc1035106082677ff84260cb902c754a', 'archived_name': 'f85ede3e41815ac7548b127a3cb0cf2898e9d2404267c94f642775c80db3f3f3', 'allowed_feed_name': '7f75e6dfafad81d7439a160ac5179a92087dbb4ae69c699a445cb9ccf9168fb6', 'require_advance': 'c37b8adf6e693e58203ddc51b1f55e5702bda9a8b8b1726b0f45de88d502c278', 'stable_preflight': 'e1a759d2632ba0c02e79310673b0662abffbcdc1f8c1b69e17bb107c808f499d', 'restore_old_if_safe': '222c9d48f97d9ea24169d6dde1867bdb0f4f3cd097e4006b0ec3f84ee971c21d', 'main': 'e9dc22904e2f350b0f8d382b41354298f33bf5e478e48a8a4900ca7c7965f5b4'}
 
 class MemoryGitHub(p.GitHub):
     """Actual GitHub adapter/state machine, replacing only its HTTP boundary."""
@@ -102,89 +95,95 @@ class MemoryGitHub(p.GitHub):
         raise AssertionError("unexpected HTTP operation")
     def fixed(self,tag):return next(r for r in self.releases.values() if r["tag_name"]==tag)
 
-def test_true_four_delivery_inputs_and_request_bindings():
-    request,catalog,members=p.load_bundle(STAGE)
-    assert set(members)==set(p.VERSION_ASSET_NAMES)|{p.ENVELOPE_NAME,p.ACTIVATION_NAME}
-    assert catalog["version"]=="0.4.7.0" and catalog["sequence"]==2
-    assert request["initialSetupBytes"]==849998 and request["repairBytes"]==914735
-    assert len(p.INITIAL_FILES)==7 and len(p.REPAIR_FILES)==7
-    for data,vector in ((members[p.INITIAL_NAME],p.INITIAL_FILES),(members[p.REPAIR_NAME],p.REPAIR_FILES)):
-        with zipfile.ZipFile(io.BytesIO(data)) as archive:
-            assert len(archive.infolist())==7 and set(archive.namelist())==set(vector)
-            for name,(size,digest) in vector.items():
-                raw=archive.read(name);assert len(raw)==size and p.sha(raw)==digest
-    p.verify_known_ui(members[p.PACKAGE_NAME],members[p.ENVELOPE_NAME])
-    with zipfile.ZipFile(io.BytesIO(members[p.REPAIR_NAME])) as archive:
-        p.verify_known_bootstrap({name:archive.read("repair-input/"+name) for name in p.KNOWN_BOOTSTRAP})
-    for field,value in (("initialSetupBytes",True),("repairSha256","0"*64)):
-        changed=dict(request);changed[field]=value
-        denied(lambda:p.validate_inputs(p.canonical(changed),members[p.PACKAGE_NAME],members[p.ENVELOPE_NAME],members[p.INITIAL_NAME],members[p.REPAIR_NAME],members[p.ACTIVATION_NAME]),"initial-or-repair-request-pin")
-    denied(lambda:p.verify_final_initial_and_repair(members[p.INITIAL_NAME],members[p.PACKAGE_NAME]),"repair-approved-package-binding")
-    bad=members[p.REPAIR_NAME][:-1]+bytes([members[p.REPAIR_NAME][-1]^1])
-    denied(lambda:p.verify_final_initial_and_repair(members[p.INITIAL_NAME],bad),"repair-approved-package-binding")
-    return request,catalog,members
-
-def assert_protected_ast_and_ownership():
-    assert p.VERSION_ASSET_NAMES==("SSS-0.4.7.0-UI-x64.zip","SSS-0.4.7.0-Background-Initial-Setup.zip","SSS-0.4.7.0-Background-Repair-From-0.4.6.zip")
-    assert p.RELEASE_BODY==LEGACY_BODY and p.release_body(p.STABLE_TAG)==LEGACY_BODY
-    assert p.release_body(p.VERSION_TAG)==p.RELEASE_BODY_047!=LEGACY_BODY
-    current=funcs(ast.parse(Path(p.__file__).read_text(encoding="utf-8-sig")))
-    for name,digest in PROTECTED_AST_SHA256.items():assert hashlib.sha256(ast.dump(current[name]).encode("utf-8")).hexdigest()==digest,name
-    expiry=[ast.dump(call) for call in ast.walk(current["publish"]) if isinstance(call,ast.Call) and isinstance(call.func,ast.Name) and call.func.id=="verify_envelope"]
-    assert hashlib.sha256(json.dumps(expiry,separators=(",",":")).encode("utf-8")).hexdigest()==PUBLISH_EXPIRY_CALLS_SHA256
-
-def test_real_record_allows_only_memory_publish(request,catalog,members):
-    assert_protected_ast_and_ownership()
-    record=members[p.ACTIVATION_NAME]
-    assert len(record)==1247 and p.sha(record)=="9336e58820af11d9f26f0b3b837f2378cc3611e860e13183ef0c76c917c96bbc"
-    value=p.require_actual_repair_activation(record,request,catalog,members[p.ENVELOPE_NAME],members[p.REPAIR_NAME])
-    assert value["sourceReceiptSha256"]=="b01f2d5eed23e701e13ab410987cc60784a4c5e6817a8623e541e18a8f52ce7f"
-    assert value["sourceReceiptBytes"]==3592 and value["sourceObservedUtc"]=="2026-10-29T07:59:27.8704907Z"
-    assert value["latestVerified"] is False and value["nativeReady"] is False and value["grantsMaintenanceOrRemoteInput"] is False
+def fixture(members,base_raw):
     client=MemoryGitHub()
-    # Seed only the actual historical signed046 feed in memory. Existing046
-    # version assets are outside both new target tags and are never requested.
-    stable=client.create_draft(p.STABLE_TAG,COMMIT);client.ensure_asset(stable,p.ENVELOPE_NAME,OLD_ENV);stable=client.publish_draft(stable)
-    client.calls.clear();client.mutations.clear()
-    p.publish(client,request,catalog,members,COMMIT)
-    version=client.fixed(p.VERSION_TAG)
-    assert set(client.assets(version))==set(p.VERSION_ASSET_NAMES)
-    stable=client.fixed(p.STABLE_TAG)
-    assert client.release(stable["id"])["body"]==LEGACY_BODY
-    assert client.asset_bytes(client.assets(stable)[p.ENVELOPE_NAME],8192)==members[p.ENVELOPE_NAME]
-    assert p.ACTIVATION_NAME not in client.assets(version) and p.ACTIVATION_NAME not in client.assets(stable)
-    assert any(event["operation"]=="stable-feed-verified" for event in client.receipt["events"])
-    count=len(client.mutations)
-    denied(lambda:client.ensure_asset(version,p.ACTIVATION_NAME,record),"upload-name-or-size")
-    denied(lambda:client.validate_release(dict(stable,body=p.RELEASE_BODY_047)),"release-metadata-unknown")
-    assert len(client.mutations)==count
+    version=client.create_draft(p.VERSION_TAG,COMMIT)
+    for name in p.VERSION_ASSET_NAMES:client.ensure_asset(version,name,members[name])
+    version=client.publish_draft(version);client.releases[version["id"]]["immutable"]=True
+    stable=client.create_draft(p.STABLE_TAG,COMMIT);client.ensure_asset(stable,p.ENVELOPE_NAME,base_raw);client.publish_draft(stable)
+    create=client.create_draft;ensure=client.ensure_asset;draft=client.publish_draft
+    def no_create(tag,commit):raise AssertionError("Renewal must not create any release")
+    def no_version_ensure(release,name,data):
+        assert release["tag_name"]!=p.VERSION_TAG,"Version ensure helper entered"
+        return ensure(release,name,data)
+    def no_version_draft(release):
+        assert release["tag_name"]!=p.VERSION_TAG,"Version publish-draft helper entered"
+        return draft(release)
+    client.create_draft=no_create;client.ensure_asset=no_version_ensure;client.publish_draft=no_version_draft
+    client.calls.clear();client.mutations.clear();return client
 
-def test_bad_or_missing_record_wrong_tuple_and_caller_flags_before_api(request,catalog,members):
-    cases=[]
-    client=MemoryGitHub();missing=dict(members);missing.pop(p.ACTIVATION_NAME)
-    denied(lambda:p.publish(client,request,catalog,missing,COMMIT),"fixed-five-inputs");cases.append("missing-record")
-    changed=dict(members);changed[p.ACTIVATION_NAME]=members[p.ACTIVATION_NAME][:-1]+bytes([members[p.ACTIVATION_NAME][-1]^1])
-    denied(lambda:p.publish(client,request,catalog,changed,COMMIT),"activation-record-byte-pin");cases.append("changed-raw-bytes")
-    for fake in (True,b"true"):
-        changed=dict(members);changed[p.ACTIVATION_NAME]=fake
-        denied(lambda:p.publish(client,request,catalog,changed,COMMIT),"activation-record-size")
-    cases.append("bool-or-true-is-not-a-record")
-    changed_request=dict(request);changed_request["activationRecordSha256"]="0"*64
-    denied(lambda:p.publish(client,changed_request,catalog,members,COMMIT),"activation-record-request-pin");cases.append("wrong-request-binding")
-    changed_request=dict(request);changed_request["envelopeSha256"]="0"*64
-    denied(lambda:p.require_actual_repair_activation(members[p.ACTIVATION_NAME],changed_request,catalog,members[p.ENVELOPE_NAME],members[p.REPAIR_NAME]),"activation-record-bundle-binding");cases.append("real-record-wrong-catalog-tuple")
-    changed_catalog=dict(catalog);changed_catalog["sequence"]=3
-    denied(lambda:p.publish(client,request,changed_catalog,members,COMMIT),"catalog-object-not-verified-bytes");cases.append("caller-manifest-replaced")
-    for key,value in (("activationAllowed",True),("root","owned-alternate-root")):
-        changed_request=dict(request);changed_request[key]=value
-        denied(lambda:p.publish(client,changed_request,catalog,members,COMMIT),"unexpected-fields")
-    cases.append("caller-bool-or-root-not-accepted")
-    assert tuple(inspect.signature(p.require_actual_repair_activation).parameters)==("raw","request","catalog","envelope","repair")
-    assert not client.calls and not client.mutations
-    return cases
+def test_real_renewal_old_expired_new_fresh_idempotence_and_expired_new(request,catalog,members,base_raw,base):
+    current=funcs(ast.parse(Path(p.__file__).read_text(encoding="utf-8-sig")))
+    for name,digest in PROTECTED_AST.items():assert hashlib.sha256(current[name].encode()).hexdigest()==digest,name
+    assert set(current)-set(PROTECTED_AST)=={"validate_inputs","publish","_require_metadata_only_renewal","_require_published_version_readonly"}
+    assert request["sequence"]==3 and request["expectedStableEnvelopeSha256"]==p.KNOWN_CATALOG_SHA256
+    assert p.sha(base_raw)==p.KNOWN_CATALOG_SHA256 and base["sequence"]==2
+    assert p.sha(members[p.ENVELOPE_NAME])=="369a16eb4efeca86a7c3f0152e62ba15841692bdca031bafe842b75b82ec39db"
+    assert p.sha(members[p.ACTIVATION_NAME])=="9336e58820af11d9f26f0b3b837f2378cc3611e860e13183ef0c76c917c96bbc"
+    tick=base["expiresUtcTicks"]+1
+    assert catalog["publishedUtcTicks"]<=tick<catalog["expiresUtcTicks"]
+    with patch.object(p.codec.time,"time_ns",return_value=(tick-621355968000000000)*100):
+        denied(lambda:p.verify_envelope(base_raw),"signed-catalog-invalid")
+        client=fixture(members,base_raw)
+        version=client.fixed(p.VERSION_TAG)
+        before=tuple((name,client.asset_bytes(item,p.MAX_FILE)) for name,item in sorted(client.assets(version).items()))
+        body=client.release(version["id"])["body"]
+        p.publish(client,request,catalog,members,COMMIT)
+        assert all(row[0] in ("upload","rename") for row in client.mutations)
+        assert [row for row in client.mutations if row[0]=="upload"][0][1].startswith("sss-ui-update-pending-")
+        assert before==tuple((name,client.asset_bytes(item,p.MAX_FILE)) for name,item in sorted(client.assets(version).items()))
+        assert client.release(version["id"])["body"]==body
+        stable=client.fixed(p.STABLE_TAG)
+        assert client.asset_bytes(client.assets(stable)[p.ENVELOPE_NAME],8192)==members[p.ENVELOPE_NAME]
+        client.calls.clear();client.mutations.clear();p.publish(client,request,catalog,members,COMMIT)
+        assert client.mutations==[]
+        # Idempotence must still demand all pre-existing version bytes.
+        del client.assets_by_release[version["id"]][p.PACKAGE_NAME]
+        denied(lambda:p.publish(client,request,catalog,members,COMMIT),"renewal-version-inventory")
+        assert client.mutations==[]
+    client=fixture(members,base_raw)
+    with patch.object(p.codec.time,"time_ns",return_value=(catalog["expiresUtcTicks"]-621355968000000000)*100):
+        denied(lambda:p.publish(client,request,catalog,members,COMMIT),"signed-catalog-invalid")
+    assert client.calls==[] and client.mutations==[]
+
+def test_version_missing_draft_inventory_body_or_bytes_never_mutated(request,catalog,members,base_raw):
+    for variant in ("missing-release","draft","missing-zip","extra-asset","wrong-body","wrong-bytes"):
+        client=fixture(members,base_raw);version=client.fixed(p.VERSION_TAG);assets=client.assets_by_release[version["id"]]
+        code="renewal-version-inventory"
+        if variant=="missing-release":
+            del client.releases[version["id"]];code="renewal-existing-published-version-required"
+        elif variant=="draft":
+            client.releases[version["id"]]["draft"]=True;code="renewal-existing-published-version-required"
+        elif variant=="missing-zip":del assets[p.INITIAL_NAME]
+        elif variant=="extra-asset":assets["owned-extra"]={"id":9999,"name":"owned-extra","size":1,"state":"uploaded"};client.data[9999]=b"x"
+        elif variant=="wrong-body":client.releases[version["id"]]["body"]="not publisher owned";code="release-metadata-unknown"
+        else:
+            item=assets[p.PACKAGE_NAME];data=client.data[item["id"]];client.data[item["id"]]=bytes([data[0]^1])+data[1:];code="existing-asset-bytes-conflict"
+        denied(lambda:p.publish(client,request,catalog,members,COMMIT),code)
+        assert client.mutations==[],variant
+
+def test_fixed_cas_activation_and_nonmetadata_identity_fail_before_api(request,catalog,members,base_raw):
+    client=fixture(members,base_raw)
+    for pin in ("","0"*64):
+        changed=dict(request);changed["expectedStableEnvelopeSha256"]=pin
+        denied(lambda:p.publish(client,changed,catalog,members,COMMIT),"renewal-fixed-target-or-old-pin")
+    changed=dict(request);changed["sequence"]=2
+    denied(lambda:p.publish(client,changed,catalog,members,COMMIT),"renewal-sequence-required")
+    changed=dict(members);changed[p.ACTIVATION_NAME]=b"true"
+    denied(lambda:p.publish(client,request,catalog,changed,COMMIT),"activation-record-size")
+    # These are explicit negative data-only seams, not invented valid signatures.
+    synthetic=copy.deepcopy(catalog);synthetic["packageUrl"]+="/owned-change"
+    denied(lambda:p._require_metadata_only_renewal(request,synthetic,members[p.PACKAGE_NAME],members[p.ENVELOPE_NAME],members[p.INITIAL_NAME],members[p.REPAIR_NAME],members[p.ACTIVATION_NAME]),"renewal-nonmetadata-field-change")
+    synthetic=copy.deepcopy(catalog);synthetic["files"][0]["sha256"]="0"*64
+    denied(lambda:p._require_metadata_only_renewal(request,synthetic,members[p.PACKAGE_NAME],members[p.ENVELOPE_NAME],members[p.INITIAL_NAME],members[p.REPAIR_NAME],members[p.ACTIVATION_NAME]),"same-version-bits-change")
+    assert client.calls==[] and client.mutations==[]
 
 if __name__=="__main__":
-    request,catalog,members=test_true_four_delivery_inputs_and_request_bindings()
-    test_real_record_allows_only_memory_publish(request,catalog,members)
-    negatives=test_bad_or_missing_record_wrong_tuple_and_caller_flags_before_api(request,catalog,members)
-    print(json.dumps({"owned047R3FocusedResult":{"passed":3,"failed":0,"negativeSubcases":negatives,"exactSanitizedRaw1247AndAllFields":True,"realRecordBoundToActualBundle":True,"sourceCommitmentB01Fixed":True,"validRecordMemoryPublishOnly":True,"activationNotAReleaseAssetOrKeyProof":True,"badInputsRejectedBeforeAnyApi":True,"protectedStableAndExpiryAstUnchanged":True,"old19OrExpiry7OrInitial14OrRepairSuitesRerun":False,"privateRawReceiptRead":False,"realHTTP":False,"productExecuted":False,"actualPublicationExecuted":False,"newFees":0,"paidCredits":0,"exactTaskTokens":None}},separators=(",",":")))
+    request,catalog,members=p.load_bundle(STAGE)
+    with zipfile.ZipFile(io.BytesIO(members[p.INITIAL_NAME])) as z:base_raw=z.read("initial-input/sss-ui-update-v1.json")
+    with zipfile.ZipFile(io.BytesIO(members[p.REPAIR_NAME])) as z:assert z.read("repair-input/sss-ui-update-v1.json")==base_raw
+    base=p.verify_envelope(base_raw,current=False)
+    test_real_renewal_old_expired_new_fresh_idempotence_and_expired_new(request,catalog,members,base_raw,base)
+    test_version_missing_draft_inventory_body_or_bytes_never_mutated(request,catalog,members,base_raw)
+    test_fixed_cas_activation_and_nonmetadata_identity_fail_before_api(request,catalog,members,base_raw)
+    print(json.dumps({"ownedRenewalResult":{"passed":3,"failed":0,"realSeq3SignatureAndHistoricalSeq2Baseline":True,"bothPinnedEmbeddedBaselinesIdentical":True,"oldExpiredOnlyHistoricalNewAlwaysFresh":True,"newSame3IdempotentStillReadsAllThreeZips":True,"versionMissingDraftInventoryBodyOrBytesRejected":True,"versionCreateEnsurePublishHelpersNeverEntered":True,"versionZipsAndBodyNeverMutated":True,"old19OrExpiry7OrRepairSuitesRerun":False,"negativeDataOnlySeamsNotValidSignatures":True,"realHTTP":False,"productOrRootOrMainExecuted":False,"actualPublication":False,"newFees":0,"paidCredits":0,"exactTaskTokens":None}},separators=(",",":")))

@@ -1373,15 +1373,16 @@ VERSION_050 = "0.5.0.0"
 VERSION_TAG_050 = "sss-ui-v0.5.0.0"
 PACKAGE_NAME_050 = "SSS-0.5.0.0-UI-x64.zip"
 INITIAL_NAME_050 = "SSS-0.5.0.0-Background-Initial-Setup.zip"
-README_NAME_050 = "安裝說明.zh-TW.txt"
-PURPOSE_050 = "SSS050.NormalUiForward.PublicationRequest.v1"
-GUARD_050 = "SIGNED0507_FIXED11_FRESH7_HISTORICAL049_ROOT_ONLY"
+README_NAME_050 = "zh-TW.txt"
+PAYLOAD_README_NAME_050 = "安裝說明.zh-TW.txt"
+PURPOSE_050 = "SSS050.ExistingDraftAsciiRecovery.PublicationRequest.v1"
+GUARD_050 = "EXACT_DRAFT431577992_NOTES702073336_FRESH_EF02_FORWARD"
 PREDECESSOR050_SHA256 = "ef02c7e78c223cc27e10a2693618a2efe7a1fbc1f736e2c20b406416b8e0876e"
 # Replaced by generator from closed artifacts; no caller parameter or wildcard.
-PUBLIC050_PINS = {'SSS-0.5.0.0-Background-Initial-Setup.zip': (866724, 'cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781'), 'SSS-0.5.0.0-UI-x64.zip': (774220, '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f'), 'sss-ui-update-v1.json': (2921, '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a'), '安裝說明.zh-TW.txt': (1465, '0a0085f59080993ab7f246d61827c46c9b4419aed4ca417ab11ab39a7cfd375f')}
+PUBLIC050_PINS = {'SSS-0.5.0.0-Background-Initial-Setup.zip': (866724, 'cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781'), 'SSS-0.5.0.0-UI-x64.zip': (774220, '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f'), 'sss-ui-update-v1.json': (2921, '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a'), 'zh-TW.txt': (1465, '0a0085f59080993ab7f246d61827c46c9b4419aed4ca417ab11ab39a7cfd375f')}
 INITIAL050_FILES = {'SSS.UiInitialSetup.exe': (61952, 'd0dfe17b706bebd8fa6577264926dfbe41ff58814fac9203e86dd44b232c5d6b'), 'SSS.UiInitialSetup.exe.config': (138, '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'), 'Install-SSS-Background.vbs': (306, 'd1a614d9926ee6ddb86ede0ec575010fec93d70dd3399bee426a957aada86963'), 'initial-input/SSS.UiUpdateCoordinator.exe': (146432, 'b457d95ccf64e711e20704bb85a5ca04b66384ebb26ed989b34c8838c6727b8c'), 'initial-input/SSS.UiUpdateCoordinator.exe.config': (138, '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'), 'initial-input/sss-ui-update-v1.json': (2921, '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a'), 'initial-input/SSS-0.5.0.0-UI-x64.zip': (774220, '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f')}
-REQUEST050_EXPECTED = {'schema': 1, 'product': 'SolarSystemShield', 'purpose': 'SSS050.NormalUiForward.PublicationRequest.v1', 'version': '0.5.0.0', 'sequence': 7, 'publicationGuard': 'SIGNED0507_FIXED11_FRESH7_HISTORICAL049_ROOT_ONLY', 'packageBytes': 774220, 'packageSha256': '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f', 'envelopeSha256': '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a', 'initialSetupBytes': 866724, 'initialSetupSha256': 'cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781', 'readmeBytes': 1465, 'readmeSha256': '0a0085f59080993ab7f246d61827c46c9b4419aed4ca417ab11ab39a7cfd375f', 'expectedStableEnvelopeSha256': 'ef02c7e78c223cc27e10a2693618a2efe7a1fbc1f736e2c20b406416b8e0876e', 'historical049RootRepairQualificationSha256': '3d5fdd3a03624163c20084b78cfc3a05b5cd4319c50160cb7f9c101c7406fc11', 'signedAssetsIndependentQualificationSha256': '2abbe1b5be17bdaa119ed22d17e32b0c6e4b596ff3d0dd4d02ea328a141b05fa', 'normalForwardSourceIndependentQualificationSha256': '169ec1aa6822cf0ab2bb42f895db6c056f5c24d3016167487549309db3cbfbac', 'normalForwardSourceBindingSha256': 'e69800173b7d988a49ec111335e116a7232fa0df08c86a25ae971a4024360781', 'deliveryFinalCheckpointSha256': '88c5092f1c063e838b4c47ff82bd18e0d1223a2328e4f3aaf40ff1e9c07aa735'}
-REQUEST050_PIN = (1250, '03643d6aca5af13190218bdd527c67933c1b31f40f5ccc58fa26a9b3752783b7')
+REQUEST050_EXPECTED = {'schema': 1, 'product': 'SolarSystemShield', 'purpose': 'SSS050.ExistingDraftAsciiRecovery.PublicationRequest.v1', 'version': '0.5.0.0', 'sequence': 7, 'publicationGuard': 'EXACT_DRAFT431577992_NOTES702073336_FRESH_EF02_FORWARD', 'packageBytes': 774220, 'packageSha256': '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f', 'envelopeSha256': '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a', 'initialSetupBytes': 866724, 'initialSetupSha256': 'cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781', 'readmeBytes': 1465, 'readmeSha256': '0a0085f59080993ab7f246d61827c46c9b4419aed4ca417ab11ab39a7cfd375f', 'expectedStableEnvelopeSha256': 'ef02c7e78c223cc27e10a2693618a2efe7a1fbc1f736e2c20b406416b8e0876e', 'historical049RootRepairQualificationSha256': '3d5fdd3a03624163c20084b78cfc3a05b5cd4319c50160cb7f9c101c7406fc11', 'signedAssetsIndependentQualificationSha256': '2abbe1b5be17bdaa119ed22d17e32b0c6e4b596ff3d0dd4d02ea328a141b05fa', 'normalForwardSourceIndependentQualificationSha256': '169ec1aa6822cf0ab2bb42f895db6c056f5c24d3016167487549309db3cbfbac', 'normalForwardSourceBindingSha256': 'e69800173b7d988a49ec111335e116a7232fa0df08c86a25ae971a4024360781', 'deliveryFinalCheckpointSha256': '88c5092f1c063e838b4c47ff82bd18e0d1223a2328e4f3aaf40ff1e9c07aa735', 'readmeAssetName': 'zh-TW.txt', 'readmePayloadName': '安裝說明.zh-TW.txt', 'recoveryOfRunId': 41464665069, 'expectedDraftReleaseId': 431577992, 'expectedDraftTargetCommit': '493fe51bd8a12ca6accb9c92d44efe02dbec5035', 'recoveryObservationSha256': 'a9e1b3aaeea5917c4a342818cdc693e461b892f0f663678966fed07da7a02647'}
+REQUEST050_PIN = (1584, 'ca96e8e637240255d2610c0a48b47ad764808d03e910531da0d144ddca230bc6')
 RELEASE_BODY_050 = ("SSS-UI-PUBLISHER-V1: signed current-user UI assets only.\n\n"
     "SSS 0.5.0.0 提供背景健康觀察與狀態呈現整合。UI更新包與全新安裝包分開提供。"
     "全新安裝包會拒絕既有安裝；既有安裝透過原啟動元件驗證並正常更新，保留資料與裝置身分。"
@@ -1434,10 +1435,37 @@ def _load050_bundle(root,request_raw):
     folder=root/"updates"/"sss-ui"; payload=folder/"payload050"
     for directory in (root,root/"updates",folder,payload):
         if directory.is_symlink() or not directory.is_dir():fail("050-checkout-directory-type")
-    if {p.name for p in payload.iterdir()}!=set(PUBLIC050_PINS):fail("050-payload-exact-four")
-    data={name:read_local(payload/name,MAX_FILE) for name in PUBLIC050_PINS}
+    local_names={name:(PAYLOAD_README_NAME_050 if name==README_NAME_050 else name) for name in PUBLIC050_PINS}
+    if {p.name for p in payload.iterdir()}!=set(local_names.values()):fail("050-payload-exact-four")
+    data={name:read_local(payload/local_names[name],MAX_FILE) for name in PUBLIC050_PINS}
     return validate050_inputs(request_raw,data[PACKAGE_NAME_050],data[ENVELOPE_NAME],
         data[INITIAL_NAME_050],data[README_NAME_050],read_local(folder/ACTIVATION_NAME,4096))
+
+# Recovery is a new guarded forward transition, not a replay of the failed run.
+RECOVERY050_RELEASE_ID = 431577992
+RECOVERY050_TARGET = "493fe51bd8a12ca6accb9c92d44efe02dbec5035"
+RECOVERY050_ASSETS = {'SSS-0.5.0.0-Background-Initial-Setup.zip': (702073131, 866724, 'sha256:cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781'), 'SSS-0.5.0.0-UI-x64.zip': (702073038, 774220, 'sha256:78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f'), 'sss-ui-update-v1.json': (702073236, 2921, 'sha256:9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a'), 'zh-TW.txt': (702073336, 1465, 'sha256:0a0085f59080993ab7f246d61827c46c9b4419aed4ca417ab11ab39a7cfd375f')}
+
+def _require050_existing_recovery_draft(github,release,members):
+    if type(release) is not dict or type(release.get("id")) is not int or release["id"]!=RECOVERY050_RELEASE_ID:
+        fail("050-recovery-existing-exact-draft-required")
+    current=github.release(RECOVERY050_RELEASE_ID)
+    if (type(current) is not dict or type(current.get("id")) is not int or current["id"]!=RECOVERY050_RELEASE_ID or
+            current.get("tag_name")!=VERSION_TAG_050 or current.get("name")!=VERSION_TAG_050 or
+            current.get("draft") is not True or current.get("immutable") is not False or
+            current.get("prerelease") is not False or current.get("body")!=RELEASE_BODY_050 or
+            current.get("target_commitish")!=RECOVERY050_TARGET):fail("050-recovery-draft-identity-state-target")
+    assets=github.assets(current)
+    if type(assets) is not dict or set(assets)!=set(RECOVERY050_ASSETS):fail("050-recovery-exact-existing-four")
+    for name,(asset_id,size,digest) in RECOVERY050_ASSETS.items():
+        asset=assets[name]
+        if (type(asset) is not dict or type(asset.get("id")) is not int or asset["id"]!=asset_id or
+                asset.get("name")!=name or type(asset.get("size")) is not int or asset["size"]!=size or
+                asset.get("digest")!=digest or asset.get("state")!="uploaded"):
+            fail("050-recovery-existing-asset-id-size-digest-state")
+        github.asset_matches(asset,members[name]) # Real raw GET equality, metadata digest alone is insufficient.
+    verify_envelope(members[ENVELOPE_NAME]) # Current real time after all asset reads.
+    return current
 
 def _publish050(github,request,catalog,members,commit):
     if type(commit) is not str or re.fullmatch("[0-9a-f]{40}",commit) is None:fail("commit-format")
@@ -1454,13 +1482,11 @@ def _publish050(github,request,catalog,members,commit):
     if stable is None or stable["draft"]:fail("050-existing-published-stable-required")
     # Original stable CAS/signature/monotonic check; no oldtarget bypass or reset.
     old,already=stable_preflight(github,stable,request,catalog,envelope)
-    release=releases.get(VERSION_TAG_050)
-    if release is None:release=github.create_draft(VERSION_TAG_050,commit)
-    existing=github.assets(release);wanted=set(PUBLIC050_PINS)
-    if not set(existing).issubset(wanted) or not release["draft"] and set(existing)!=wanted:fail("050-version-inventory")
-    for name in version_release_asset_names(VERSION_TAG_050):
-        github.ensure_asset(release,name,members[name],admission_envelope=envelope)
-    verify_envelope(envelope)
+    if already is not None or old is None or old[3]!=ENVELOPE_NAME or sha(old[1])!=PREDECESSOR050_SHA256:
+        fail("050-recovery-exact-canonical-predecessor-no-replay")
+    release=_require050_existing_recovery_draft(github,releases.get(VERSION_TAG_050),members)
+    # No version upload, create, rename or deletion is permitted on this path.
+    # The exact existing4 must all be present, with the same IDs and raw bytes.
     release=github.publish_draft(release)
     require_version_inventory(VERSION_TAG_050,github.assets(release))
     for name in version_release_asset_names(VERSION_TAG_050):github.public_check(VERSION_TAG_050,name,members[name])

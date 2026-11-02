@@ -613,7 +613,7 @@ class GitHub:
             current = self.validate_release(result)
         return current
 
-    def ensure_asset(self, release, name, data):
+    def ensure_asset(self, release, name, data, admission_envelope=None):
         current = self.release(release["id"])
         if current.get("tag_name") != release["tag_name"]:
             fail("release-tag-changed")
@@ -631,6 +631,11 @@ class GitHub:
         if current["immutable"] or current["tag_name"] in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049) and not current["draft"]:
             fail("immutable-version-or-published-missing-asset")
         url = UPLOADS + "/repos/" + REPOSITORY + "/releases/" + str(current["id"]) + "/assets?name=" + urllib.parse.quote(name, safe="")
+        # Release and asset identity reads can outlive the prior catalog check.
+        # New metadata renewal supplies its candidate at this final boundary;
+        # older callers omit it and retain their original admission behavior.
+        if admission_envelope is not None:
+            verify_envelope(admission_envelope)
         self.event("asset-upload-submitted", name=name, releaseId=current["id"], bytes=len(data), sha256=sha(data))
         result = parse_json(self.fetch(url, MAX_JSON, "POST", data, True, "application/octet-stream"), MAX_JSON)
         self.event("asset-upload-returned", name=name, releaseId=current["id"])
@@ -904,6 +909,8 @@ def load_bundle(root, *, validation_only=False):
     folder=root/"updates"/"sss-ui"
     request_raw=read_local(folder/"publish-request.json",4096)
     request=parse_json(request_raw,4096)
+    if request.get("purpose")==RENEWAL049_PURPOSE:
+        return _load049_renewal_bundle(root,request_raw)
     if request.get("version")==VERSION_048:fail(SUPERSEDED048)
     if request.get("version")!=VERSION_049:
         return _load_bundle_047(root)
@@ -977,6 +984,8 @@ def _publish048(github,request,catalog,members,commit):
         restore_old_if_safe(github,stable,old);raise
 
 def publish(github,request,catalog,members,commit):
+    if request.get("purpose")==RENEWAL049_PURPOSE:
+        return _publish049_renewal(github,request,catalog,members,commit)
     if request.get("version")==VERSION_048:fail(SUPERSEDED048)
     if request.get("version")==VERSION_049:
         return _publish049(github,request,catalog,members,commit)
@@ -1153,6 +1162,176 @@ def _publish049(github,request,catalog,members,commit):
     candidate=pending_name(catalog,envelope)
     pending=github.ensure_asset(stable,candidate,envelope)
     stable=github.publish_draft(stable)
+    github.public_check(STABLE_TAG,candidate,envelope)
+    verify_envelope(envelope)
+    old,already=stable_preflight(github,stable,request,catalog,envelope)
+    if already is not None:
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope);return
+    try:
+        if old is not None and old[3]==ENVELOPE_NAME:
+            verify_envelope(envelope)
+            github.rename(stable,old[2],ENVELOPE_NAME,archived_name(old[0],old[1]),old[1],admission_envelope=envelope)
+        verify_envelope(envelope)
+        github.rename(stable,pending,candidate,ENVELOPE_NAME,envelope,admission_envelope=envelope)
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope)
+        github.event("stable-feed-verified",sha256=sha(envelope),possibleTemporary404=True)
+    except PublishError:
+        restore_old_if_safe(github,stable,old);raise
+
+# This separate049/6 route renews only stable metadata. Original049/5 payload,
+# Initial embedded catalog and version release remain exact immutable history.
+RENEWAL049_PURPOSE = "SSS049.MetadataRenewal6.PublicationRequest.v1"
+RENEWAL049_GUARD = "GENUINE_METADATA_RENEWAL6_AND_ACTUAL_STARTUP5_PINNED"
+RENEWAL049_SEQUENCE = 6
+RENEWAL049_CATALOG_BYTES = 2921
+RENEWAL049_CATALOG_SHA256 = "ef02c7e78c223cc27e10a2693618a2efe7a1fbc1f736e2c20b406416b8e0876e"
+BASELINE049_NAME = "sss-ui-update-baseline-seq5.json"
+RENEWAL049_EVIDENCE = {
+    "genuine-renewal-handoff-v1.json": (2331,"511ac0e16cee70ede2442d882dbb20a8fe7af2952d20228aa62d2a45ee50feec","genuineRenewalHandoffSha256"),
+    "genuine-renewal-verifier-v1.json": (2820,"81912de93fa886272b0aa40d47d6aa27aded2dbaad2a010ba74fbd2aade19637","genuineRenewalVerifierSha256"),
+    "startup-seq5-safe-v1.json": (1004,"2930fb080037131457a94b206328981d65c471842aacd9f6af1dcd81423aabe7","startupEvidenceSha256"),
+}
+REQUEST049_RENEWAL_FIELDS = ("schema","product","purpose","version","sequence",
+    "publicationGuard","packageBytes","packageSha256","envelopeSha256",
+    "initialSetupBytes","initialSetupSha256","expectedStableEnvelopeSha256",
+    "genuineRenewalHandoffSha256","genuineRenewalVerifierSha256","startupEvidenceSha256")
+
+def _require049_renewal_evidence(request,members):
+    # Only three already redacted, named public-safe exports are consumed.
+    # Their commitments are evidence; neither text nor key24c grants repair,
+    # NativeReady, remote input, or proof of an actual sequence6 update.
+    values={}
+    for name,(size,digest,field) in RENEWAL049_EVIDENCE.items():
+        raw=members[name]
+        if (type(raw) is not bytes or len(raw)!=size or sha(raw)!=digest or
+                request[field]!=digest):fail("049-renewal-safe-evidence-byte-pin")
+        values[name]=parse_json(raw,4096)
+    handoff=values["genuine-renewal-handoff-v1.json"]
+    verifier=values["genuine-renewal-verifier-v1.json"]
+    startup=values["startup-seq5-safe-v1.json"]
+    if (handoff["purpose"]!="SSS049.GenuineMetadataRenewal6.Handoff.v1" or
+            handoff["status"]!="GENUINE_SIGNED_AND_FIXED24C_VERIFIED_NOT_PUBLIC" or
+            handoff["keyId"]!=codec.KEY_ID or handoff["version"]!=VERSION_049 or
+            handoff["previousSequence"]!=5 or handoff["sequence"]!=RENEWAL049_SEQUENCE or
+            handoff["previousCatalogSha256"]!=CATALOG049_SHA256 or
+            handoff["catalog"]["bytes"]!=RENEWAL049_CATALOG_BYTES or
+            handoff["catalog"]["sha256"]!=RENEWAL049_CATALOG_SHA256 or
+            handoff["actualSigningObservedNativeExit0"] is not True or
+            handoff["initialSetup993CMustRemainOriginalSequence5"] is not True or
+            handoff["originalUiAd10AndVersionTagCatalogF881RemainOriginal"] is not True or
+            verifier["keyId"]!=codec.KEY_ID or verifier["version"]!=VERSION_049 or
+            verifier["previousSequence"]!=5 or verifier["sequence"]!=RENEWAL049_SEQUENCE or
+            verifier["previousEnvelopeSha256"]!=CATALOG049_SHA256 or
+            verifier["envelopeBytes"]!=RENEWAL049_CATALOG_BYTES or
+            verifier["envelopeSha256"]!=RENEWAL049_CATALOG_SHA256 or
+            verifier["packageSha256"]!=UI049_SHA256 or
+            verifier["originalMetadataOnlyRenewalValidationPassed"] is not True or
+            verifier["exact11AndSamePackage"] is not True or
+            verifier["bootstrapReplacementAuthorityFromUiCatalog"] is not False):
+        fail("049-renewal-genuine-evidence-domain")
+    if (startup["purpose"]!="SSS049.NormalStartup.SafeEvidence.v1" or
+            startup["status"]!="ACTUAL_LATEST_BACKGROUND_RUNNING" or
+            startup["version"]!=VERSION_049 or startup["sequence"]!=5 or
+            startup["catalogSha256"]!=CATALOG049_SHA256 or
+            startup["bootstrapSha256"]!=BOOTSTRAP049_EXECUTABLE_SHA256 or
+            startup["actualCliExitCode"]!=0 or startup["stdoutFields"]!=25 or startup["stderrBytes"]!=0):
+        fail("049-renewal-startup5-domain")
+    for name in ("actualCliNativeExitObserved","actualReplyVerified","privateStartupAckConfirmed",
+            "actualLatestBackgroundRunning","ownRunReadbackBeforeAndAfter","ordinaryPrimaryOwner",
+            "packageIdentityAbsent","heldInputsSettled"):
+        if startup[name] is not True:fail("049-renewal-startup5-required")
+    if startup["forcedTermination"] is not False:fail("049-renewal-startup5-not-forced")
+
+def validate049_renewal_inputs(request_raw,package,envelope,initial,baseline_raw,evidence):
+    request=parse_json(request_raw,4096)
+    exact(request,REQUEST049_RENEWAL_FIELDS)
+    if (type(request["schema"]) is not int or request["schema"]!=1 or
+            request["product"]!="SolarSystemShield" or request["purpose"]!=RENEWAL049_PURPOSE or
+            request["publicationGuard"]!=RENEWAL049_GUARD or request["version"]!=VERSION_049 or
+            type(request["sequence"]) is not int or request["sequence"]!=RENEWAL049_SEQUENCE):
+        fail("049-renewal-request-purpose")
+    _require049_assets_bound()
+    if (type(request["packageBytes"]) is not int or request["packageBytes"]!=UI049_BYTES or
+            request["packageSha256"]!=UI049_SHA256 or request["envelopeSha256"]!=RENEWAL049_CATALOG_SHA256 or
+            type(request["initialSetupBytes"]) is not int or request["initialSetupBytes"]!=INITIAL049_BYTES or
+            request["initialSetupSha256"]!=INITIAL049_SHA256 or
+            request["expectedStableEnvelopeSha256"]!=CATALOG049_SHA256):fail("049-renewal-request-fixed-pins")
+    if (type(envelope) is not bytes or len(envelope)!=RENEWAL049_CATALOG_BYTES or
+            sha(envelope)!=RENEWAL049_CATALOG_SHA256 or type(baseline_raw) is not bytes or
+            len(baseline_raw)!=CATALOG049_BYTES or sha(baseline_raw)!=CATALOG049_SHA256):
+        fail("049-renewal-exact-catalog-pins")
+    exact(evidence,RENEWAL049_EVIDENCE)
+    members={PACKAGE_NAME_049:package,INITIAL_NAME_049:initial,ENVELOPE_NAME:envelope,BASELINE049_NAME:baseline_raw,**evidence}
+    _require049_renewal_evidence(request,members)
+    catalog=verify_envelope(envelope)
+    baseline=verify_envelope(baseline_raw,current=False)  # Only exact pinned history.
+    if (catalog["version"]!=VERSION_049 or catalog["sequence"]!=RENEWAL049_SEQUENCE or
+            baseline["version"]!=VERSION_049 or baseline["sequence"]!=5):fail("049-renewal-catalog-purpose")
+    verify_exact_delivery_zip(initial,INITIAL049_BYTES,INITIAL049_SHA256,INITIAL049_FILES,"initial049")
+    with zipfile.ZipFile(io.BytesIO(initial)) as archive:
+        with archive.open("initial-input/"+ENVELOPE_NAME) as stream:embedded=stream.read(MAX_ENVELOPE+1)
+    if embedded!=baseline_raw:fail("049-renewal-initial-baseline-conflict")
+    verify_zip(package,baseline)
+    verify_zip(package,catalog)
+    fixed=codec.FIELDS-{"sequence","publishedUtcTicks","expiresUtcTicks"}
+    if any(catalog[name]!=baseline[name] for name in fixed):fail("049-renewal-nonmetadata-change")
+    require_advance(catalog,baseline)
+    verify_envelope(envelope)
+    return request,catalog,members
+
+def _load049_renewal_bundle(root,request_raw):
+    folder=root/"updates"/"sss-ui"
+    renewal=folder/"renewal049-seq6"
+    payload=folder/"payload049"
+    for directory in (root,root/"updates",folder,payload,renewal):
+        if directory.is_symlink() or not directory.is_dir():fail("checkout-directory-type")
+    if {p.name for p in payload.iterdir()}!={PACKAGE_NAME_049,INITIAL_NAME_049,ENVELOPE_NAME}:
+        fail("049-payload-exact-three")
+    if {p.name for p in renewal.iterdir()}!={ENVELOPE_NAME,BASELINE049_NAME,*RENEWAL049_EVIDENCE}:
+        fail("049-renewal-exact-five")
+    baseline=read_local(renewal/BASELINE049_NAME,MAX_ENVELOPE)
+    if read_local(payload/ENVELOPE_NAME,MAX_ENVELOPE)!=baseline:fail("049-renewal-version-catalog-conflict")
+    return validate049_renewal_inputs(request_raw,read_local(payload/PACKAGE_NAME_049,MAX_FILE),
+        read_local(renewal/ENVELOPE_NAME,MAX_ENVELOPE),read_local(payload/INITIAL_NAME_049,MAX_FILE),baseline,
+        {name:read_local(renewal/name,4096) for name in RENEWAL049_EVIDENCE})
+
+def _require_published049_version_readonly(github,release,members):
+    if release is None:fail("049-renewal-existing-published-version-required")
+    current=github.release(release["id"])
+    if current["tag_name"]!=VERSION_TAG_049 or current["draft"]:
+        fail("049-renewal-existing-published-version-required")
+    assets=github.assets(current)
+    if set(assets)!=set(version_release_asset_names(VERSION_TAG_049)):
+        fail("049-renewal-version-exact-three")
+    original={PACKAGE_NAME_049:members[PACKAGE_NAME_049],INITIAL_NAME_049:members[INITIAL_NAME_049],
+        ENVELOPE_NAME:members[BASELINE049_NAME]}
+    for name in version_release_asset_names(VERSION_TAG_049):
+        github.asset_matches(assets[name],original[name])
+        github.public_check(VERSION_TAG_049,name,original[name])
+
+def _publish049_renewal(github,request,catalog,members,commit):
+    if type(commit) is not str or re.fullmatch("[0-9a-f]{40}",commit) is None:fail("commit-format")
+    exact(members,{PACKAGE_NAME_049,INITIAL_NAME_049,ENVELOPE_NAME,BASELINE049_NAME,*RENEWAL049_EVIDENCE})
+    request,actual,members=validate049_renewal_inputs(canonical(request),members[PACKAGE_NAME_049],
+        members[ENVELOPE_NAME],members[INITIAL_NAME_049],members[BASELINE049_NAME],
+        {name:members[name] for name in RENEWAL049_EVIDENCE})
+    if actual!=catalog:fail("catalog-object-not-verified-bytes")
+    # All genuine049/6, current TTL, exact historical5 and safe startup5 pins
+    # above are checked before the first API. This never replays full049/5.
+    repo=github.api("/repos/"+REPOSITORY)
+    if (type(repo) is not dict or repo.get("full_name")!=REPOSITORY or repo.get("private") is not False or
+            repo.get("default_branch")!="main" or repo.get("archived") is not False):fail("fixed-public-repository-required")
+    envelope=members[ENVELOPE_NAME]
+    releases=github.find_releases({VERSION_TAG_049,STABLE_TAG})
+    _require_published049_version_readonly(github,releases.get(VERSION_TAG_049),members)
+    verify_envelope(envelope)
+    stable=releases.get(STABLE_TAG)
+    if stable is None or stable["draft"]:fail("049-renewal-existing-published-stable-required")
+    old,already=stable_preflight(github,stable,request,catalog,envelope)
+    if already is not None:
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope);return
+    candidate=pending_name(catalog,envelope)
+    pending=github.ensure_asset(stable,candidate,envelope,admission_envelope=envelope)
     github.public_check(STABLE_TAG,candidate,envelope)
     verify_envelope(envelope)
     old,already=stable_preflight(github,stable,request,catalog,envelope)

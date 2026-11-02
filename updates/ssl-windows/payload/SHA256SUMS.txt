@@ -1,3 +1,3 @@
-db403a277532857b4f4ebb4c7e8a87d911a849fd508057ebaa1db23cd6d05e6c  SolarSystemLink-Windows-x64-Setup-0.7.4-r1.exe
-b7a2d70057d1e16bca4d609908325f37af74b94fd7d1016a83530c4083856fe3  SolarSystemLink-Windows-x64-Setup-0.7.4-r1.zip
-ccbaa5882067ff8dc0ed976d3207f85fb2319f49b3ac6740a88da0b2667af22e  README-SETUP.txt
+ba140bb36133f7cf29aa2429d9c2806452317ab4f64df0cb2d1e5f850e27e894  SolarSystemLink-Windows-x64-Setup-0.7.6-r1.exe
+a9e3b3303345d49d7abf8649927daa045ccab0c5883958fe33d822d048c98bc4  SolarSystemLink-Windows-x64-Setup-0.7.6-r1.zip
+83d732752911a033fd43f78a07a61f2e10c192b990408e2bad80dc512480b247  README-SETUP.txt

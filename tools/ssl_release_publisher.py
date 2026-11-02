@@ -106,8 +106,21 @@ RELEASE_BODY_074 = (MARKER + "\n\n"
     "鍵鼠、持續操作及Native C1／Ready仍須各自實機驗收；本次候選不代表上述驗收完成，也不宣稱100分。")
 
 
+RELEASE_BODY_076 = (MARKER + "\n\n"
+    "Solar System Link 0.7.6 維護開發候選發行\n\n"
+    "改善本機執行條件與無法確認安裝狀態時的提示，保留開始連線前的本機與對端SSS版本、背景狀態及有效證據檢查。\n\n"
+    "本機維護材料與交接機制已整合至候選來源並完成有限編譯檢查；"
+    "M1真實程序交接、更新續行及完整安裝仍待各自驗收，不代表已可自動停止舊程式或恢復遠端操作。\n\n"
+    "保留原固定更新公鑰、完整套件簽章驗證、裝置信任、有效操作授權及既有更新與回復門檻；"
+    "重新開啟或重連不會自行恢復鍵盤滑鼠操作允許。\n\n"
+    "普通Windows雙端使用、Windows7 POS更新、連線、鍵鼠、持續操作及Native C1／Ready仍須實機驗收。"
+    "本次候選不代表M1或POS已驗收，也不宣稱軟體已達100分；完整SSS安裝檔另列下載。")
+
+
 def version_body(tag):
     """Only reviewed version copy changes; stable and070 ownership stay exact."""
+    if tag == "ssl-v0.7.6.0":
+        return RELEASE_BODY_076
     if tag == "ssl-v0.7.4.0":
         return RELEASE_BODY_074
     if tag == "ssl-v0.7.3.0":

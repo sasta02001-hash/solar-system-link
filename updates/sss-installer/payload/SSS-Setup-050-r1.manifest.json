@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "purpose": "SSS.SingleFileInstaller.PublicDeliveryManifest.v1",
+  "product": "Solar System Shield",
+  "installerRevision": "0.5.0-r1",
+  "releaseTag": "sss-installer-v0.5.0-r1",
+  "classification": "development-single-file-installer-candidate",
+  "installer": {
+    "name": "SSS-Setup-050-r1.exe",
+    "bytes": 1015808,
+    "sha256": "03023035a7acd5594fbbc7eb22952f1caa0133f58dc1869aa5a49ab02edee040"
+  },
+  "runtime": {
+    "version": "0.5.0.0",
+    "sequence": 7,
+    "embeddedInitialZip": {
+      "name": "SSS-0.5.0.0-Background-Initial-Setup.zip",
+      "bytes": 866724,
+      "sha256": "cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781",
+      "url": "https://github.com/sasta02001-hash/solar-system-link/releases/download/sss-ui-v0.5.0.0/SSS-0.5.0.0-Background-Initial-Setup.zip"
+    },
+    "signedCatalogSha256": "9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a"
+  },
+  "embeddedOriginalMembers": [
+    {
+      "name": "SSS.UiInitialSetup.exe",
+      "bytes": 61952,
+      "sha256": "d0dfe17b706bebd8fa6577264926dfbe41ff58814fac9203e86dd44b232c5d6b"
+    },
+    {
+      "name": "SSS.UiInitialSetup.exe.config",
+      "bytes": 138,
+      "sha256": "008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337"
+    },
+    {
+      "name": "Install-SSS-Background.vbs",
+      "bytes": 306,
+      "sha256": "d1a614d9926ee6ddb86ede0ec575010fec93d70dd3399bee426a957aada86963"
+    },
+    {
+      "name": "initial-input/SSS.UiUpdateCoordinator.exe",
+      "bytes": 146432,
+      "sha256": "b457d95ccf64e711e20704bb85a5ca04b66384ebb26ed989b34c8838c6727b8c"
+    },
+    {
+      "name": "initial-input/SSS.UiUpdateCoordinator.exe.config",
+      "bytes": 138,
+      "sha256": "008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337"
+    },
+    {
+      "name": "initial-input/sss-ui-update-v1.json",
+      "bytes": 2921,
+      "sha256": "9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a"
+    },
+    {
+      "name": "initial-input/SSS-0.5.0.0-UI-x64.zip",
+      "bytes": 774220,
+      "sha256": "78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f"
+    }
+  ],
+  "environment": {
+    "architecture": "AMD64",
+    "role": "current-user-background-UI installer",
+    "osSourcePrerequisite": [
+      "Windows7 SP1 x64",
+      "Windows10/11 x64 build>=19041"
+    ],
+    "alreadyInstalledNetFramework": "4.8 required; not bundled",
+    "privilege": "asInvoker/current ordinary user"
+  },
+  "qualification": {
+    "sourcePeerAndClosedMaterialQualified": true,
+    "authenticodeSigned": false,
+    "installerMainExecuted": false,
+    "ordinaryInstallAccepted": false,
+    "win7PosAccepted": false,
+    "sslUpdateRestartReconnectAccepted": false,
+    "nativeProtectionOrRemoteInputAccepted": false
+  },
+  "limitations": [
+    "This is a new wrapper delivery revision, not a new SSS runtime version, sequence, key or signed catalog.",
+    "Existing versions below0.4.9.0 and updater reply11 lack a qualified migration/normal-exit entry and must stop; no overwrite, identity reset or forced termination.",
+    "NET4.8 must already be installed; a machine missing CLR4 cannot enter the managed wizard.",
+    "OS/POS, ordinary installation, SSL restart/reconnect and full native protection require separate actual acceptance."
+  ],
+  "sourceEvidenceDigests": {
+    "delivery-manifest-r1": {
+      "bytes": 14349,
+      "sha256": "0f2acb837abd92182d89c71d44cd8c567c44bd8e89d066ba62efb910a8f93fc1"
+    },
+    "independent-source-peer-r1": {
+      "bytes": 9322,
+      "sha256": "7a8437d88c0638336224c845cb20a6ca085da43f2d5ecf69380e440a47af74c8"
+    },
+    "candidate-build-receipt-r1": {
+      "bytes": 24711,
+      "sha256": "586f9d829bb330278be27d91e1690e74015a8f22219159abb934d270c88214cb"
+    },
+    "source-preflight-r3": {
+      "bytes": 13183,
+      "sha256": "41441f189e0b01bb605f00fe4c2903b5fd05e3994330f0d7794cd0dc1468be30"
+    }
+  },
+  "provenanceScope": "Sanitized file digests and source qualification only; source receipts remain local and are not uploaded."
+}

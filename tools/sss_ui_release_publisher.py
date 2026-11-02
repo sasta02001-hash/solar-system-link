@@ -169,7 +169,7 @@ RELEASE_BODY_047 = ("SSS-UI-PUBLISHER-V1: signed current-user UI assets only.\n\
 
 def release_body(tag):
     """New047 version copy only; stable retains exact historical ownership."""
-    return RELEASE_BODY_049 if tag == VERSION_TAG_049 else (RELEASE_BODY_048 if tag == VERSION_TAG_048 else (RELEASE_BODY_047 if tag == VERSION_TAG else RELEASE_BODY))
+    return RELEASE_BODY_050 if tag == VERSION_TAG_050 else RELEASE_BODY_049 if tag == VERSION_TAG_049 else (RELEASE_BODY_048 if tag == VERSION_TAG_048 else (RELEASE_BODY_047 if tag == VERSION_TAG else RELEASE_BODY))
 
 class PublishError(Exception):
     pass
@@ -502,10 +502,10 @@ class GitHub:
         if path != "/repos/" + REPOSITORY and not path.startswith("/repos/" + REPOSITORY + "/"):
             fail("api-repository")
         suffix = path[len("/repos/"+REPOSITORY):]
-        get_route = suffix == "" or suffix in ("/releases/tags/"+VERSION_TAG,"/releases/tags/"+VERSION_TAG_048,"/releases/tags/"+VERSION_TAG_049,"/releases/tags/"+STABLE_TAG) or re.fullmatch(r"/releases/[1-9][0-9]*(/assets\?per_page=100&page=[1-9][0-9]*)?",suffix)
+        get_route = suffix == "" or suffix in ("/releases/tags/"+VERSION_TAG,"/releases/tags/"+VERSION_TAG_048,"/releases/tags/"+VERSION_TAG_049,"/releases/tags/"+VERSION_TAG_050,"/releases/tags/"+STABLE_TAG) or re.fullmatch(r"/releases/[1-9][0-9]*(/assets\?per_page=100&page=[1-9][0-9]*)?",suffix)
         create = (method == "POST" and suffix == "/releases" and type(value) is dict and
                   set(value) == {"tag_name","target_commitish","name","body","draft","prerelease","make_latest"} and
-                  value["tag_name"] in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049,STABLE_TAG) and value["name"] == value["tag_name"] and
+                  value["tag_name"] in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049,VERSION_TAG_050,STABLE_TAG) and value["name"] == value["tag_name"] and
                   re.fullmatch(r"[0-9a-f]{40}",value["target_commitish"]) and value["body"] == release_body(value["tag_name"]) and
                   value["draft"] is True and value["prerelease"] is False and value["make_latest"] == "false")
         publish = method == "PATCH" and re.fullmatch(r"/releases/[1-9][0-9]*",suffix) and value == {"draft":False,"make_latest":"false"}
@@ -524,7 +524,7 @@ class GitHub:
     def validate_release(self, value):
         if (not isinstance(value, dict) or type(value.get("id")) is not int or value["id"] < 1 or
                 type(value.get("draft")) is not bool or type(value.get("immutable")) is not bool or
-                value.get("prerelease") is not False or value.get("tag_name") not in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049,STABLE_TAG) or
+                value.get("prerelease") is not False or value.get("tag_name") not in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049,VERSION_TAG_050,STABLE_TAG) or
                 value.get("name") != value["tag_name"] or value.get("body") != release_body(value["tag_name"])):
             fail("release-metadata-unknown")
         if value["immutable"] and value["tag_name"] == STABLE_TAG:
@@ -533,9 +533,9 @@ class GitHub:
 
     def find_releases(self, tags):
         found = {}
-        if set(tags) not in ({VERSION_TAG,STABLE_TAG},{VERSION_TAG_048,STABLE_TAG},{VERSION_TAG_049,STABLE_TAG}):
+        if set(tags) not in ({VERSION_TAG,STABLE_TAG},{VERSION_TAG_048,STABLE_TAG},{VERSION_TAG_049,STABLE_TAG},{VERSION_TAG_050,STABLE_TAG}):
             fail("fixed-tags-required")
-        for tag in (VERSION_TAG_049 if VERSION_TAG_049 in tags else (VERSION_TAG_048 if VERSION_TAG_048 in tags else VERSION_TAG),STABLE_TAG):
+        for tag in (VERSION_TAG_050 if VERSION_TAG_050 in tags else (VERSION_TAG_049 if VERSION_TAG_049 in tags else (VERSION_TAG_048 if VERSION_TAG_048 in tags else VERSION_TAG)),STABLE_TAG):
             try:
                 value=self.validate_release(self.api("/repos/"+REPOSITORY+"/releases/tags/"+tag))
                 if value["tag_name"] != tag:
@@ -617,9 +617,9 @@ class GitHub:
         current = self.release(release["id"])
         if current.get("tag_name") != release["tag_name"]:
             fail("release-tag-changed")
-        if ((current["tag_name"] in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049) and name not in version_release_asset_names(current["tag_name"])) or
+        if ((current["tag_name"] in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049,VERSION_TAG_050) and name not in version_release_asset_names(current["tag_name"])) or
                 (current["tag_name"] == STABLE_TAG and not allowed_feed_name(name)) or
-                type(data) is not bytes or not 1 <= len(data) <= (MAX_FILE if name in (PACKAGE_NAME,INITIAL_NAME,REPAIR_NAME,PACKAGE_NAME_048,INITIAL_NAME_048,PACKAGE_NAME_049,INITIAL_NAME_049) else MAX_ENVELOPE)):
+                type(data) is not bytes or not 1 <= len(data) <= (MAX_FILE if name in (PACKAGE_NAME,INITIAL_NAME,REPAIR_NAME,PACKAGE_NAME_048,INITIAL_NAME_048,PACKAGE_NAME_049,INITIAL_NAME_049,PACKAGE_NAME_050,INITIAL_NAME_050) else MAX_ENVELOPE)):
             fail("upload-name-or-size")
         assets = self.assets(current)
         if name in assets:
@@ -628,7 +628,7 @@ class GitHub:
             return assets[name]
         if current.get("body") != release_body(current["tag_name"]):
             fail("draft-not-owned-by-publisher")
-        if current["immutable"] or current["tag_name"] in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049) and not current["draft"]:
+        if current["immutable"] or current["tag_name"] in (VERSION_TAG,VERSION_TAG_048,VERSION_TAG_049,VERSION_TAG_050) and not current["draft"]:
             fail("immutable-version-or-published-missing-asset")
         url = UPLOADS + "/repos/" + REPOSITORY + "/releases/" + str(current["id"]) + "/assets?name=" + urllib.parse.quote(name, safe="")
         # Release and asset identity reads can outlive the prior catalog check.
@@ -809,6 +809,8 @@ def version_delivery_zip_names(version):
         return (PACKAGE_NAME_048, INITIAL_NAME_048)
     if version == VERSION_049:
         return (PACKAGE_NAME_049, INITIAL_NAME_049)
+    if version == VERSION_050:
+        return (PACKAGE_NAME_050, INITIAL_NAME_050)
     fail("fixed-version-required")
 
 def version_release_asset_names(tag):
@@ -818,6 +820,8 @@ def version_release_asset_names(tag):
         return (PACKAGE_NAME_048, INITIAL_NAME_048, ENVELOPE_NAME)
     if tag == VERSION_TAG_049:
         return (PACKAGE_NAME_049, INITIAL_NAME_049, ENVELOPE_NAME)
+    if tag == VERSION_TAG_050:
+        return (PACKAGE_NAME_050, INITIAL_NAME_050, ENVELOPE_NAME, README_NAME_050)
     fail("fixed-version-tag-required")
 
 def require_version_inventory(tag, names):
@@ -909,6 +913,8 @@ def load_bundle(root, *, validation_only=False):
     folder=root/"updates"/"sss-ui"
     request_raw=read_local(folder/"publish-request.json",4096)
     request=parse_json(request_raw,4096)
+    if request.get("purpose")==PURPOSE_050:
+        return _load050_bundle(root,request_raw)
     if request.get("purpose")==RENEWAL049_PURPOSE:
         return _load049_renewal_bundle(root,request_raw)
     if request.get("version")==VERSION_048:fail(SUPERSEDED048)
@@ -984,6 +990,8 @@ def _publish048(github,request,catalog,members,commit):
         restore_old_if_safe(github,stable,old);raise
 
 def publish(github,request,catalog,members,commit):
+    if request.get("purpose")==PURPOSE_050:
+        return _publish050(github,request,catalog,members,commit)
     if request.get("purpose")==RENEWAL049_PURPOSE:
         return _publish049_renewal(github,request,catalog,members,commit)
     if request.get("version")==VERSION_048:fail(SUPERSEDED048)
@@ -1349,14 +1357,132 @@ def _publish049_renewal(github,request,catalog,members,commit):
         restore_old_if_safe(github,stable,old);raise
 
 def publication_version_tag(version):
+    if version==VERSION_050:return VERSION_TAG_050
     if version==VERSION_049:return VERSION_TAG_049
     if version==VERSION:return VERSION_TAG
     fail("publication-version-not-current-or-historical047")
 
 def publication_package_name(version):
+    if version==VERSION_050:return PACKAGE_NAME_050
     if version==VERSION_049:return PACKAGE_NAME_049
     if version==VERSION:return PACKAGE_NAME
     fail("publication-version-not-current-or-historical047")
+
+# Explicit050 ordinary signed UI forward branch; no new bootstrap/root authority.
+VERSION_050 = "0.5.0.0"
+VERSION_TAG_050 = "sss-ui-v0.5.0.0"
+PACKAGE_NAME_050 = "SSS-0.5.0.0-UI-x64.zip"
+INITIAL_NAME_050 = "SSS-0.5.0.0-Background-Initial-Setup.zip"
+README_NAME_050 = "安裝說明.zh-TW.txt"
+PURPOSE_050 = "SSS050.NormalUiForward.PublicationRequest.v1"
+GUARD_050 = "SIGNED0507_FIXED11_FRESH7_HISTORICAL049_ROOT_ONLY"
+PREDECESSOR050_SHA256 = "ef02c7e78c223cc27e10a2693618a2efe7a1fbc1f736e2c20b406416b8e0876e"
+# Replaced by generator from closed artifacts; no caller parameter or wildcard.
+PUBLIC050_PINS = {'SSS-0.5.0.0-Background-Initial-Setup.zip': (866724, 'cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781'), 'SSS-0.5.0.0-UI-x64.zip': (774220, '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f'), 'sss-ui-update-v1.json': (2921, '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a'), '安裝說明.zh-TW.txt': (1465, '0a0085f59080993ab7f246d61827c46c9b4419aed4ca417ab11ab39a7cfd375f')}
+INITIAL050_FILES = {'SSS.UiInitialSetup.exe': (61952, 'd0dfe17b706bebd8fa6577264926dfbe41ff58814fac9203e86dd44b232c5d6b'), 'SSS.UiInitialSetup.exe.config': (138, '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'), 'Install-SSS-Background.vbs': (306, 'd1a614d9926ee6ddb86ede0ec575010fec93d70dd3399bee426a957aada86963'), 'initial-input/SSS.UiUpdateCoordinator.exe': (146432, 'b457d95ccf64e711e20704bb85a5ca04b66384ebb26ed989b34c8838c6727b8c'), 'initial-input/SSS.UiUpdateCoordinator.exe.config': (138, '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'), 'initial-input/sss-ui-update-v1.json': (2921, '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a'), 'initial-input/SSS-0.5.0.0-UI-x64.zip': (774220, '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f')}
+REQUEST050_EXPECTED = {'schema': 1, 'product': 'SolarSystemShield', 'purpose': 'SSS050.NormalUiForward.PublicationRequest.v1', 'version': '0.5.0.0', 'sequence': 7, 'publicationGuard': 'SIGNED0507_FIXED11_FRESH7_HISTORICAL049_ROOT_ONLY', 'packageBytes': 774220, 'packageSha256': '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f', 'envelopeSha256': '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a', 'initialSetupBytes': 866724, 'initialSetupSha256': 'cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781', 'readmeBytes': 1465, 'readmeSha256': '0a0085f59080993ab7f246d61827c46c9b4419aed4ca417ab11ab39a7cfd375f', 'expectedStableEnvelopeSha256': 'ef02c7e78c223cc27e10a2693618a2efe7a1fbc1f736e2c20b406416b8e0876e', 'historical049RootRepairQualificationSha256': '3d5fdd3a03624163c20084b78cfc3a05b5cd4319c50160cb7f9c101c7406fc11', 'signedAssetsIndependentQualificationSha256': '2abbe1b5be17bdaa119ed22d17e32b0c6e4b596ff3d0dd4d02ea328a141b05fa', 'normalForwardSourceIndependentQualificationSha256': '169ec1aa6822cf0ab2bb42f895db6c056f5c24d3016167487549309db3cbfbac', 'normalForwardSourceBindingSha256': 'e69800173b7d988a49ec111335e116a7232fa0df08c86a25ae971a4024360781', 'deliveryFinalCheckpointSha256': '88c5092f1c063e838b4c47ff82bd18e0d1223a2328e4f3aaf40ff1e9c07aa735'}
+REQUEST050_PIN = (1250, '03643d6aca5af13190218bdd527c67933c1b31f40f5ccc58fa26a9b3752783b7')
+RELEASE_BODY_050 = ("SSS-UI-PUBLISHER-V1: signed current-user UI assets only.\n\n"
+    "SSS 0.5.0.0 提供背景健康觀察與狀態呈現整合。UI更新包與全新安裝包分開提供。"
+    "全新安裝包會拒絕既有安裝；既有安裝透過原啟動元件驗證並正常更新，保留資料與裝置身分。"
+    "Unknown/Partial不表示完整防護正常。\n\n"
+    "Windows 7 SP1 x64 / Windows 10或11 x64（build19041以上）與.NET Framework 4.8為來源層前置條件，"
+    "Win7 POS、登入啟動、遠端連線、更新重啟重連仍待新版實機驗收。"
+    "本發行未提供啟動元件維修或原生防火牆/掃毒授權，不宣稱NativeReady、完整防護或已實測。")
+
+def _require050_historical_root_qualification(raw):
+    # Exact immutable redacted historical049/5 record only. It does not attest050.
+    if (type(raw) is not bytes or len(raw)!=ACTIVATION049_RECORD_BYTES or
+            sha(raw)!=ACTIVATION049_RECORD_SHA256):fail("050-historical049-safe-record-pin")
+    value=parse_json(raw,4096)
+    if canonical(value)!=canonical(ACTIVATION049_EXPECTED):fail("050-historical049-safe-domain")
+    if (value["version"]!="0.4.9.0" or type(value["sequence"]) is not int or value["sequence"]!=5 or
+            value["catalogSha256"]!="f881f72b5ad759138c58a8201f2292c0df03f298d3ca4afb662e12756635eea1" or
+            value["bootstrapExecutableSha256"]!=BOOTSTRAP049_EXECUTABLE_SHA256 or
+            value["bootstrapConfigSha256"]!=BOOTSTRAP049_CONFIG_SHA256 or
+            value["originalRootIdentityPreserved"] is not True or value["actualActivation"] is not True or
+            value["nativeReady"] is not False or value["grantsMaintenanceOrRemoteInput"] is not False):
+        fail("050-historical049-not-new-target-activation")
+
+def validate050_inputs(request_raw, package, envelope, initial, readme, historical049):
+    if (type(request_raw) is not bytes or len(request_raw)!=REQUEST050_PIN[0] or
+            sha(request_raw)!=REQUEST050_PIN[1]):fail("050-fixed-new-request-pin")
+    request=parse_json(request_raw,4096)
+    if canonical(request)!=canonical(REQUEST050_EXPECTED):fail("050-fixed-new-request-domain")
+    public={PACKAGE_NAME_050:package,ENVELOPE_NAME:envelope,INITIAL_NAME_050:initial,README_NAME_050:readme}
+    if set(public)!=set(PUBLIC050_PINS):fail("050-exact-four-public-inputs")
+    for name,(size,digest) in PUBLIC050_PINS.items():
+        data=public[name]
+        if type(data) is not bytes or len(data)!=size or sha(data)!=digest:fail("050-public-byte-pin")
+    catalog=verify_envelope(envelope) # Existing fixed24c RSA/purpose/profile/channel/time verifier.
+    if (catalog["version"]!=VERSION_050 or type(catalog["sequence"]) is not int or catalog["sequence"]!=7 or
+            catalog["packageBytes"]!=PUBLIC050_PINS[PACKAGE_NAME_050][0] or
+            catalog["packageSha256"]!=PUBLIC050_PINS[PACKAGE_NAME_050][1] or
+            catalog["packageUrl"]!=PUBLIC+VERSION_TAG_050+"/"+PACKAGE_NAME_050):fail("050-signed-target-domain")
+    verify_zip(package,catalog)
+    verify_exact_delivery_zip(initial,*PUBLIC050_PINS[INITIAL_NAME_050],INITIAL050_FILES,"050-fresh")
+    # Exact initial ZIP fixes original B457/008D and embeds these same signed bytes.
+    if (INITIAL050_FILES["initial-input/SSS.UiUpdateCoordinator.exe"]!=(146432,BOOTSTRAP049_EXECUTABLE_SHA256) or
+            INITIAL050_FILES["initial-input/SSS.UiUpdateCoordinator.exe.config"]!=(138,BOOTSTRAP049_CONFIG_SHA256) or
+            INITIAL050_FILES["initial-input/"+ENVELOPE_NAME]!=PUBLIC050_PINS[ENVELOPE_NAME] or
+            INITIAL050_FILES["initial-input/"+PACKAGE_NAME_050]!=PUBLIC050_PINS[PACKAGE_NAME_050]):fail("050-original-bootstrap-and-embedded-tuple")
+    _require050_historical_root_qualification(historical049)
+    public[ACTIVATION_NAME]=historical049 # Local/repository evidence only, never version release asset.
+    return request,catalog,public
+
+def _load050_bundle(root,request_raw):
+    folder=root/"updates"/"sss-ui"; payload=folder/"payload050"
+    for directory in (root,root/"updates",folder,payload):
+        if directory.is_symlink() or not directory.is_dir():fail("050-checkout-directory-type")
+    if {p.name for p in payload.iterdir()}!=set(PUBLIC050_PINS):fail("050-payload-exact-four")
+    data={name:read_local(payload/name,MAX_FILE) for name in PUBLIC050_PINS}
+    return validate050_inputs(request_raw,data[PACKAGE_NAME_050],data[ENVELOPE_NAME],
+        data[INITIAL_NAME_050],data[README_NAME_050],read_local(folder/ACTIVATION_NAME,4096))
+
+def _publish050(github,request,catalog,members,commit):
+    if type(commit) is not str or re.fullmatch("[0-9a-f]{40}",commit) is None:fail("commit-format")
+    exact(members,{*PUBLIC050_PINS,ACTIVATION_NAME})
+    if canonical(request)!=canonical(REQUEST050_EXPECTED):fail("050-publish-fixed-request")
+    request,actual,members=validate050_inputs(canonical(request),members[PACKAGE_NAME_050],members[ENVELOPE_NAME],
+        members[INITIAL_NAME_050],members[README_NAME_050],members[ACTIVATION_NAME])
+    if actual!=catalog:fail("catalog-object-not-verified-bytes")
+    repo=github.api("/repos/"+REPOSITORY)
+    if (type(repo) is not dict or repo.get("full_name")!=REPOSITORY or repo.get("private") is not False or
+            repo.get("default_branch")!="main" or repo.get("archived") is not False):fail("fixed-public-repository-required")
+    envelope=members[ENVELOPE_NAME]
+    releases=github.find_releases({VERSION_TAG_050,STABLE_TAG});stable=releases.get(STABLE_TAG)
+    if stable is None or stable["draft"]:fail("050-existing-published-stable-required")
+    # Original stable CAS/signature/monotonic check; no oldtarget bypass or reset.
+    old,already=stable_preflight(github,stable,request,catalog,envelope)
+    release=releases.get(VERSION_TAG_050)
+    if release is None:release=github.create_draft(VERSION_TAG_050,commit)
+    existing=github.assets(release);wanted=set(PUBLIC050_PINS)
+    if not set(existing).issubset(wanted) or not release["draft"] and set(existing)!=wanted:fail("050-version-inventory")
+    for name in version_release_asset_names(VERSION_TAG_050):
+        github.ensure_asset(release,name,members[name],admission_envelope=envelope)
+    verify_envelope(envelope)
+    release=github.publish_draft(release)
+    require_version_inventory(VERSION_TAG_050,github.assets(release))
+    for name in version_release_asset_names(VERSION_TAG_050):github.public_check(VERSION_TAG_050,name,members[name])
+    verify_envelope(envelope)
+    if already is not None:
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope);return
+    candidate=pending_name(catalog,envelope)
+    pending=github.ensure_asset(stable,candidate,envelope,admission_envelope=envelope)
+    github.public_check(STABLE_TAG,candidate,envelope)
+    verify_envelope(envelope)
+    old,already=stable_preflight(github,stable,request,catalog,envelope)
+    if already is not None:
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope);return
+    try:
+        if old is not None and old[3]==ENVELOPE_NAME:
+            github.rename(stable,old[2],ENVELOPE_NAME,archived_name(old[0],old[1]),old[1],admission_envelope=envelope)
+        github.rename(stable,pending,candidate,ENVELOPE_NAME,envelope,admission_envelope=envelope)
+        github.public_check(STABLE_TAG,ENVELOPE_NAME,envelope);verify_envelope(envelope)
+        github.event("stable-feed-verified",sha256=sha(envelope),possibleTemporary404=True)
+    except PublishError:
+        restore_old_if_safe(github,stable,old);raise
+
 
 def main():
     receipt={"schema":1,"repository":REPOSITORY,"tags":[VERSION_TAG,STABLE_TAG],"status":"not-started","events":[],"productExecuted":False,"nativeReady":False,"remoteInputGranted":False}

@@ -1375,14 +1375,14 @@ PACKAGE_NAME_050 = "SSS-0.5.0.0-UI-x64.zip"
 INITIAL_NAME_050 = "SSS-0.5.0.0-Background-Initial-Setup.zip"
 README_NAME_050 = "zh-TW.txt"
 PAYLOAD_README_NAME_050 = "安裝說明.zh-TW.txt"
-PURPOSE_050 = "SSS050.ExistingDraftAsciiRecovery.PublicationRequest.v1"
-GUARD_050 = "EXACT_DRAFT431577992_NOTES702073336_FRESH_EF02_FORWARD"
+PURPOSE_050 = "SSS050.ExistingDraftDirectIdRecovery.PublicationRequest.v1"
+GUARD_050 = "EXACT_RELEASEID431577992_GET_NO_TAG_DRAFT_DISCOVERY"
 PREDECESSOR050_SHA256 = "ef02c7e78c223cc27e10a2693618a2efe7a1fbc1f736e2c20b406416b8e0876e"
 # Replaced by generator from closed artifacts; no caller parameter or wildcard.
 PUBLIC050_PINS = {'SSS-0.5.0.0-Background-Initial-Setup.zip': (866724, 'cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781'), 'SSS-0.5.0.0-UI-x64.zip': (774220, '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f'), 'sss-ui-update-v1.json': (2921, '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a'), 'zh-TW.txt': (1465, '0a0085f59080993ab7f246d61827c46c9b4419aed4ca417ab11ab39a7cfd375f')}
 INITIAL050_FILES = {'SSS.UiInitialSetup.exe': (61952, 'd0dfe17b706bebd8fa6577264926dfbe41ff58814fac9203e86dd44b232c5d6b'), 'SSS.UiInitialSetup.exe.config': (138, '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'), 'Install-SSS-Background.vbs': (306, 'd1a614d9926ee6ddb86ede0ec575010fec93d70dd3399bee426a957aada86963'), 'initial-input/SSS.UiUpdateCoordinator.exe': (146432, 'b457d95ccf64e711e20704bb85a5ca04b66384ebb26ed989b34c8838c6727b8c'), 'initial-input/SSS.UiUpdateCoordinator.exe.config': (138, '008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337'), 'initial-input/sss-ui-update-v1.json': (2921, '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a'), 'initial-input/SSS-0.5.0.0-UI-x64.zip': (774220, '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f')}
-REQUEST050_EXPECTED = {'schema': 1, 'product': 'SolarSystemShield', 'purpose': 'SSS050.ExistingDraftAsciiRecovery.PublicationRequest.v1', 'version': '0.5.0.0', 'sequence': 7, 'publicationGuard': 'EXACT_DRAFT431577992_NOTES702073336_FRESH_EF02_FORWARD', 'packageBytes': 774220, 'packageSha256': '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f', 'envelopeSha256': '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a', 'initialSetupBytes': 866724, 'initialSetupSha256': 'cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781', 'readmeBytes': 1465, 'readmeSha256': '0a0085f59080993ab7f246d61827c46c9b4419aed4ca417ab11ab39a7cfd375f', 'expectedStableEnvelopeSha256': 'ef02c7e78c223cc27e10a2693618a2efe7a1fbc1f736e2c20b406416b8e0876e', 'historical049RootRepairQualificationSha256': '3d5fdd3a03624163c20084b78cfc3a05b5cd4319c50160cb7f9c101c7406fc11', 'signedAssetsIndependentQualificationSha256': '2abbe1b5be17bdaa119ed22d17e32b0c6e4b596ff3d0dd4d02ea328a141b05fa', 'normalForwardSourceIndependentQualificationSha256': '169ec1aa6822cf0ab2bb42f895db6c056f5c24d3016167487549309db3cbfbac', 'normalForwardSourceBindingSha256': 'e69800173b7d988a49ec111335e116a7232fa0df08c86a25ae971a4024360781', 'deliveryFinalCheckpointSha256': '88c5092f1c063e838b4c47ff82bd18e0d1223a2328e4f3aaf40ff1e9c07aa735', 'readmeAssetName': 'zh-TW.txt', 'readmePayloadName': '安裝說明.zh-TW.txt', 'recoveryOfRunId': 41464665069, 'expectedDraftReleaseId': 431577992, 'expectedDraftTargetCommit': '493fe51bd8a12ca6accb9c92d44efe02dbec5035', 'recoveryObservationSha256': 'a9e1b3aaeea5917c4a342818cdc693e461b892f0f663678966fed07da7a02647'}
-REQUEST050_PIN = (1584, 'ca96e8e637240255d2610c0a48b47ad764808d03e910531da0d144ddca230bc6')
+REQUEST050_EXPECTED = {'schema': 1, 'product': 'SolarSystemShield', 'purpose': 'SSS050.ExistingDraftDirectIdRecovery.PublicationRequest.v1', 'version': '0.5.0.0', 'sequence': 7, 'publicationGuard': 'EXACT_RELEASEID431577992_GET_NO_TAG_DRAFT_DISCOVERY', 'packageBytes': 774220, 'packageSha256': '78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f', 'envelopeSha256': '9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a', 'initialSetupBytes': 866724, 'initialSetupSha256': 'cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781', 'readmeBytes': 1465, 'readmeSha256': '0a0085f59080993ab7f246d61827c46c9b4419aed4ca417ab11ab39a7cfd375f', 'expectedStableEnvelopeSha256': 'ef02c7e78c223cc27e10a2693618a2efe7a1fbc1f736e2c20b406416b8e0876e', 'historical049RootRepairQualificationSha256': '3d5fdd3a03624163c20084b78cfc3a05b5cd4319c50160cb7f9c101c7406fc11', 'signedAssetsIndependentQualificationSha256': '2abbe1b5be17bdaa119ed22d17e32b0c6e4b596ff3d0dd4d02ea328a141b05fa', 'normalForwardSourceIndependentQualificationSha256': '169ec1aa6822cf0ab2bb42f895db6c056f5c24d3016167487549309db3cbfbac', 'normalForwardSourceBindingSha256': 'e69800173b7d988a49ec111335e116a7232fa0df08c86a25ae971a4024360781', 'deliveryFinalCheckpointSha256': '88c5092f1c063e838b4c47ff82bd18e0d1223a2328e4f3aaf40ff1e9c07aa735', 'readmeAssetName': 'zh-TW.txt', 'readmePayloadName': '安裝說明.zh-TW.txt', 'recoveryOfRunId': 41468995325, 'expectedDraftReleaseId': 431577992, 'expectedDraftTargetCommit': '493fe51bd8a12ca6accb9c92d44efe02dbec5035', 'recoveryObservationSha256': 'a9e1b3aaeea5917c4a342818cdc693e461b892f0f663678966fed07da7a02647', 'priorRecoveryOfRunId': 41464665069, 'recoveryOfJobId': 125357290036, 'lookupMode': 'fixed-release-id-direct-get'}
+REQUEST050_PIN = (1693, '29755afd35a8c2b78ebd62c69eadbff07c5d8aa5e4c435ac683c24915cfa7e0a')
 RELEASE_BODY_050 = ("SSS-UI-PUBLISHER-V1: signed current-user UI assets only.\n\n"
     "SSS 0.5.0.0 提供背景健康觀察與狀態呈現整合。UI更新包與全新安裝包分開提供。"
     "全新安裝包會拒絕既有安裝；既有安裝透過原啟動元件驗證並正常更新，保留資料與裝置身分。"
@@ -1446,9 +1446,9 @@ RECOVERY050_RELEASE_ID = 431577992
 RECOVERY050_TARGET = "493fe51bd8a12ca6accb9c92d44efe02dbec5035"
 RECOVERY050_ASSETS = {'SSS-0.5.0.0-Background-Initial-Setup.zip': (702073131, 866724, 'sha256:cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781'), 'SSS-0.5.0.0-UI-x64.zip': (702073038, 774220, 'sha256:78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f'), 'sss-ui-update-v1.json': (702073236, 2921, 'sha256:9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a'), 'zh-TW.txt': (702073336, 1465, 'sha256:0a0085f59080993ab7f246d61827c46c9b4419aed4ca417ab11ab39a7cfd375f')}
 
-def _require050_existing_recovery_draft(github,release,members):
-    if type(release) is not dict or type(release.get("id")) is not int or release["id"]!=RECOVERY050_RELEASE_ID:
-        fail("050-recovery-existing-exact-draft-required")
+def _require050_existing_recovery_draft(github,members):
+    # Drafts are not discovered through the published-release tag endpoint.
+    # Only the compiled exact release ID is read; HTTP/visibility failure stops.
     current=github.release(RECOVERY050_RELEASE_ID)
     if (type(current) is not dict or type(current.get("id")) is not int or current["id"]!=RECOVERY050_RELEASE_ID or
             current.get("tag_name")!=VERSION_TAG_050 or current.get("name")!=VERSION_TAG_050 or
@@ -1478,13 +1478,15 @@ def _publish050(github,request,catalog,members,commit):
     if (type(repo) is not dict or repo.get("full_name")!=REPOSITORY or repo.get("private") is not False or
             repo.get("default_branch")!="main" or repo.get("archived") is not False):fail("fixed-public-repository-required")
     envelope=members[ENVELOPE_NAME]
-    releases=github.find_releases({VERSION_TAG_050,STABLE_TAG});stable=releases.get(STABLE_TAG)
-    if stable is None or stable["draft"]:fail("050-existing-published-stable-required")
+    # Canonical stable is published, so its fixed tag endpoint remains valid.
+    # The existing draft is read separately by exact ID after stable CAS checks.
+    stable=github.validate_release(github.api("/repos/"+REPOSITORY+"/releases/tags/"+STABLE_TAG))
+    if stable.get("tag_name")!=STABLE_TAG or stable["draft"]:fail("050-existing-published-stable-required")
     # Original stable CAS/signature/monotonic check; no oldtarget bypass or reset.
     old,already=stable_preflight(github,stable,request,catalog,envelope)
     if already is not None or old is None or old[3]!=ENVELOPE_NAME or sha(old[1])!=PREDECESSOR050_SHA256:
         fail("050-recovery-exact-canonical-predecessor-no-replay")
-    release=_require050_existing_recovery_draft(github,releases.get(VERSION_TAG_050),members)
+    release=_require050_existing_recovery_draft(github,members)
     # No version upload, create, rename or deletion is permitted on this path.
     # The exact existing4 must all be present, with the same IDs and raw bytes.
     release=github.publish_draft(release)

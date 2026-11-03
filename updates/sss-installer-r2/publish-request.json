@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "product": "SSS",
+  "tag": "sss-installer-v0.5.0-r2",
+  "classification": "development-single-file-installer-candidate",
+  "wrapper": {
+    "identity": "SolarSystemShield.SingleFileInstaller.Candidate.R2",
+    "assemblyVersion": "1.0.1.0",
+    "installerRevision": "0.5.0-r2"
+  },
+  "runtime": {
+    "version": "0.5.0.0",
+    "sequence": 7,
+    "embeddedInitialZip": {
+      "name": "SSS-0.5.0.0-Background-Initial-Setup.zip",
+      "bytes": 866724,
+      "sha256": "cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781",
+      "url": "https://github.com/sasta02001-hash/solar-system-link/releases/download/sss-ui-v0.5.0.0/SSS-0.5.0.0-Background-Initial-Setup.zip"
+    },
+    "signedCatalogSha256": "9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a"
+  },
+  "sourceEvidenceDigests": {
+    "delivery-manifest-r1.json": {
+      "bytes": 20887,
+      "sha256": "93ec2ad129be2c97746626cf2f2ceab86fee8c9d3c4df547421898d3fe00f9b4"
+    },
+    "independent-postexecution-peer-r1.json": {
+      "bytes": 6964,
+      "sha256": "ec8db9bcc25d4b123b1608beb8f97fca430444091f2287ee7037c611acab26c5"
+    },
+    "prepared-source-closure-r1.json": {
+      "bytes": 13803,
+      "sha256": "b1dbdc222e9a53065ac4b2dc197a970089dc4a1f1600eaf67b6f56136b3d6444"
+    },
+    "compile-owned-receipt-r1.json": {
+      "bytes": 14928,
+      "sha256": "50caba61e9d9d40e2d424ecf894c898ea89c60d90950e6511befb847212a9570"
+    },
+    "README.zh-TW.md": {
+      "bytes": 2855,
+      "sha256": "1cdbee6682da731eec6762316fd7f06c83a0ae928a034d93af8aaa2bb740a3e8"
+    }
+  },
+  "files": [
+    {
+      "name": "SSS-Setup-050-r2.exe",
+      "encoding": "raw",
+      "size": 1016320,
+      "sha256": "69866a812834a6ca4d1b113ac54077359ccbe7dfd9538dc6f9064a2f142555a4"
+    },
+    {
+      "name": "SSS-Setup-050-r2.manifest.json",
+      "encoding": "raw",
+      "size": 6856,
+      "sha256": "577f464b8c758134cb384ed55a51fa82a474fdbfda8119fe644d48d2679c8714"
+    },
+    {
+      "name": "README-SSS-SETUP.txt",
+      "encoding": "raw",
+      "size": 2322,
+      "sha256": "9b6fba3e702648929aaee3738d1ef90db25a0c86e49fba9480b0932fdf4ea625"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "encoding": "raw",
+      "size": 271,
+      "sha256": "9f40dfce3c3c8d05b48c82fa6c2276e243ffb1d4269a381ff1063eb4125982c2"
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "purpose": "SSS.SingleFileInstaller.PublicDeliveryManifest.v1",
+  "product": "Solar System Shield",
+  "wrapper": {
+    "identity": "SolarSystemShield.SingleFileInstaller.Candidate.R2",
+    "assemblyVersion": "1.0.1.0",
+    "installerRevision": "0.5.0-r2"
+  },
+  "releaseTag": "sss-installer-v0.5.0-r2",
+  "classification": "development-single-file-installer-candidate",
+  "installer": {
+    "name": "SSS-Setup-050-r2.exe",
+    "bytes": 1016320,
+    "sha256": "69866a812834a6ca4d1b113ac54077359ccbe7dfd9538dc6f9064a2f142555a4"
+  },
+  "runtime": {
+    "version": "0.5.0.0",
+    "sequence": 7,
+    "embeddedInitialZip": {
+      "name": "SSS-0.5.0.0-Background-Initial-Setup.zip",
+      "bytes": 866724,
+      "sha256": "cc6882d6b61fb0218ca2318a35454d2826de078a85d10814393579b952235781",
+      "url": "https://github.com/sasta02001-hash/solar-system-link/releases/download/sss-ui-v0.5.0.0/SSS-0.5.0.0-Background-Initial-Setup.zip"
+    },
+    "signedCatalogSha256": "9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a"
+  },
+  "embeddedOriginalMembers": [
+    {
+      "name": "SSS.UiInitialSetup.exe",
+      "bytes": 61952,
+      "sha256": "d0dfe17b706bebd8fa6577264926dfbe41ff58814fac9203e86dd44b232c5d6b"
+    },
+    {
+      "name": "SSS.UiInitialSetup.exe.config",
+      "bytes": 138,
+      "sha256": "008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337"
+    },
+    {
+      "name": "Install-SSS-Background.vbs",
+      "bytes": 306,
+      "sha256": "d1a614d9926ee6ddb86ede0ec575010fec93d70dd3399bee426a957aada86963"
+    },
+    {
+      "name": "initial-input/SSS.UiUpdateCoordinator.exe",
+      "bytes": 146432,
+      "sha256": "b457d95ccf64e711e20704bb85a5ca04b66384ebb26ed989b34c8838c6727b8c"
+    },
+    {
+      "name": "initial-input/SSS.UiUpdateCoordinator.exe.config",
+      "bytes": 138,
+      "sha256": "008d5c22af1b051c44f2fca2c8f0897cd5763ba687a55372cb480d2d7bc72337"
+    },
+    {
+      "name": "initial-input/sss-ui-update-v1.json",
+      "bytes": 2921,
+      "sha256": "9b99ea951150efe8b36e02d46c9a2a7d46b4ae82955fd454586630140bed147a"
+    },
+    {
+      "name": "initial-input/SSS-0.5.0.0-UI-x64.zip",
+      "bytes": 774220,
+      "sha256": "78e647848abd5aadf31593e844c915ea8bcf41150a5c8dd8db9a4f652541de4f"
+    }
+  ],
+  "environment": {
+    "architecture": "AMD64",
+    "role": "current-user-background-UI installer",
+    "osSourcePrerequisite": [
+      "Windows7 SP1 x64",
+      "Windows10/11 x64 build>=19041"
+    ],
+    "alreadyInstalledNetFramework": "4.8 required; not bundled",
+    "privilege": "asInvoker/current ordinary user"
+  },
+  "legacy048Delta": {
+    "version": "0.4.8.0",
+    "exactPackageSha256": "8bb2dda57da5a8eceb95853939c13cab65d0d9385ec92d42ebb5368962524764",
+    "requiredOriginalUpdaterTuple": "ReviewedR7, actual files verified by original matcher",
+    "route": "Original lawful updater only; no new bootstrap adoption or identity/root/highwater reset.",
+    "unresolved": [
+      "0.4.6/075A",
+      "0.4.7/R6",
+      "unknown updater tuples",
+      "reply11 normal-exit/migration gap"
+    ]
+  },
+  "qualification": {
+    "sourceAndPostexecutionPeerAccepted": true,
+    "wrapperCsharpCompilerCalls": 1,
+    "wrapperSourceCount": 13,
+    "reusedOriginalSources": 12,
+    "nativeOrOtherTargetCompilers": 0,
+    "processHistory": [
+      {
+        "name": "compile-wrapper-once",
+        "actualExit": 0,
+        "actualExited": true,
+        "stdoutEof": true,
+        "stderrEof": true,
+        "retried": false
+      },
+      {
+        "name": "owned-048-three-cases-once",
+        "actualExit": 1,
+        "actualExited": true,
+        "stdoutEof": true,
+        "stderrEof": true,
+        "retried": false
+      },
+      {
+        "name": "owned048-revised-data-host-once",
+        "actualExit": 0,
+        "actualExited": true,
+        "stdoutEof": true,
+        "stderrEof": true,
+        "retried": false
+      },
+      {
+        "name": "original-unrun-metadata-only-once",
+        "actualExit": 0,
+        "actualExited": true,
+        "stdoutEof": true,
+        "stderrEof": true,
+        "retried": false
+      }
+    ],
+    "originalFirstDataHostFailurePreserved": true,
+    "initialCompletedCases": 0,
+    "correctedDataHostPassedCases": 3,
+    "oldTwelveCasesRerun": false,
+    "inputEvidenceLayers": {
+      "newUtf8Inputs": 40,
+      "retainedPriorRuntimeHashInputs": 15,
+      "fixtureMetadataItemsSeparate": 3,
+      "all57InputsFreshlyRehashedClaimed": false,
+      "scope": "Distinct evidence layers supplied by owner; no all57-fresh claim or additive total inferred."
+    },
+    "authenticodeSigned": false,
+    "prerequisiteRuntimeBundled": false,
+    "installerMainExecuted": false,
+    "actualInstallationAccepted": false,
+    "actualLegacy048Updated": false,
+    "actualWin7PosAccepted": false,
+    "sslRestartReconnectAccepted": false,
+    "legacy046075AOr047R6Or11Resolved": false
+  },
+  "oldR1Installer": {
+    "name": "SSS-Setup-050-r1.exe",
+    "bytes": 1015808,
+    "sha256": "03023035a7acd5594fbbc7eb22952f1caa0133f58dc1869aa5a49ab02edee040",
+    "changed": false
+  },
+  "limitations": [
+    "Wrapper1.0.1.0 is a new delivery identity; SSS runtime0.5.0.0/sequence7 and all issued catalog/bootstrap/ZIP bytes remain unchanged.",
+    "Only exact048 package plus file-verified R7 extends the original source route; other legacy/normal-exit gaps stay unresolved.",
+    "NET4.8 already installed is required; no native CLR prerequisite bootstrap or Authenticode signature is included.",
+    "Source/compiler/owned-data evidence is not ordinary Windows/Win7/POS/SSL reconnect or native/input acceptance.",
+    "Only the named R2 installer is a delivery artifact; owned R6/R7/Unknown data programs are excluded."
+  ],
+  "sourceEvidenceDigests": {
+    "delivery-manifest-r1.json": {
+      "bytes": 20887,
+      "sha256": "93ec2ad129be2c97746626cf2f2ceab86fee8c9d3c4df547421898d3fe00f9b4"
+    },
+    "independent-postexecution-peer-r1.json": {
+      "bytes": 6964,
+      "sha256": "ec8db9bcc25d4b123b1608beb8f97fca430444091f2287ee7037c611acab26c5"
+    },
+    "prepared-source-closure-r1.json": {
+      "bytes": 13803,
+      "sha256": "b1dbdc222e9a53065ac4b2dc197a970089dc4a1f1600eaf67b6f56136b3d6444"
+    },
+    "compile-owned-receipt-r1.json": {
+      "bytes": 14928,
+      "sha256": "50caba61e9d9d40e2d424ecf894c898ea89c60d90950e6511befb847212a9570"
+    },
+    "README.zh-TW.md": {
+      "bytes": 2855,
+      "sha256": "1cdbee6682da731eec6762316fd7f06c83a0ae928a034d93af8aaa2bb740a3e8"
+    }
+  },
+  "provenanceScope": "New sanitized projection of necessary source and process facts. Original local manifests, process paths/commands and fixtures are not public assets."
+}
